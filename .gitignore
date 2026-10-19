@@ -1,0 +1,8 @@
+node_modules/
+dist/
+.angular/
+target/
+.idea/
+*.iml
+*.log
+Backend/src/main/webapp/META-INF/context.xml

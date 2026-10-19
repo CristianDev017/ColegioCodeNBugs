@@ -36,26 +36,26 @@ public class LoginServlet extends HttpServlet {
         try {
             Usuario usuario = usuarioDao.buscarPorUsernameOCorreo(datos.username.trim());
 
-            if (usuario == null || !PasswordService.coincide(datos.password, usuario.password())) {
+            if (usuario == null || !PasswordService.coincide(datos.password, usuario.getPassword())) {
                 Json.error(resp, 401, "Usuario o contraseña incorrectos");
                 return;
             }
 
-            if (!"ACTIVO".equals(usuario.estado())) {
+            if (!"ACTIVO".equals(usuario.getEstado())) {
                 Json.error(resp, 403, "El usuario está inactivo");
                 return;
             }
 
-            usuarioDao.actualizarUltimoAcceso(usuario.id());
-            String token = JwtUtil.crear(usuario.id(), usuario.username(), usuario.rol());
+            usuarioDao.actualizarUltimoAcceso(usuario.getId());
+            String token = JwtUtil.crear(usuario.getId(), usuario.getUsername(), usuario.getRol());
 
             Json.escribir(resp, 200, Map.of(
                     "token", token,
                     "expiraEnMinutos", JwtUtil.MINUTOS,
                     "usuario", Map.of(
-                            "id", usuario.id(),
-                            "username", usuario.username(),
-                            "rol", usuario.rol())));
+                            "id", usuario.getId(),
+                            "username", usuario.getUsername(),
+                            "rol", usuario.getRol())));
         } catch (Exception e) {
             e.printStackTrace();
             Json.error(resp, 500, "Error interno del servidor");

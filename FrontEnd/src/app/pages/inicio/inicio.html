@@ -1,0 +1,20 @@
+<main class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h1 class="h4 mb-0">Inicio</h1>
+      @if (auth.usuario$ | async; as usuario) {
+        <p class="text-secondary mb-0">{{ usuario.username }} - {{ usuario.rol }}</p>
+      }
+    </div>
+    <button type="button" class="btn btn-outline-secondary" (click)="cerrarSesion()">Cerrar sesión</button>
+  </div>
+
+  <div class="d-flex gap-2 mb-3">
+    <button type="button" class="btn btn-primary" (click)="probarToken()">Probar mi token</button>
+    <button type="button" class="btn btn-outline-primary" (click)="probarAdmin()">Probar ruta de admin</button>
+  </div>
+
+  @if (mensaje) {
+    <div class="alert py-2" [class.alert-success]="!esError" [class.alert-danger]="esError">{{ mensaje }}</div>
+  }
+</main>

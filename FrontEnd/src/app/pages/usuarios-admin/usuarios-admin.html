@@ -1,0 +1,169 @@
+<main class="container py-4">
+  <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+    <div>
+      <h1 class="h4 mb-0">Usuarios administrativos</h1>
+      <a routerLink="/inicio">Volver al inicio</a>
+    </div>
+    <button type="button" class="btn btn-primary" (click)="nuevo()">Nuevo usuario</button>
+  </div>
+
+  @if (mensaje) {
+    <div class="alert py-2" [class.alert-success]="!mensajeEsError" [class.alert-danger]="mensajeEsError">
+      {{ mensaje }}
+    </div>
+  }
+
+  <div class="d-flex flex-wrap gap-2 align-items-center mb-3">
+    <input type="text" class="form-control w-auto" placeholder="Buscar por usuario o correo"
+           [formControl]="buscarControl" (keyup.enter)="buscar()" />
+    <button type="button" class="btn btn-outline-primary" (click)="buscar()">Buscar</button>
+    <button type="button" class="btn btn-outline-secondary" (click)="limpiarBusqueda()">Limpiar</button>
+
+    <div class="ms-auto d-flex align-items-center gap-2">
+      <label for="tamano" class="mb-0">Registros por página</label>
+      <select id="tamano" class="form-select w-auto" [value]="tamano"
+              (change)="cambiarTamano($any($event.target).value)">
+        <option value="5">5</option>
+        <option value="10">10</option>
+        <option value="20">20</option>
+        <option value="50">50</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table table-hover align-middle">
+      <thead>
+        <tr>
+          <th>Usuario</th>
+          <th>Correo</th>
+          <th>Rol</th>
+          <th>Estado</th>
+          <th>Último acceso</th>
+          <th class="text-end">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (u of usuarios; track u.id) {
+          <tr>
+            <td>{{ u.username }}</td>
+            <td>{{ u.correo }}</td>
+            <td>{{ u.rol }}</td>
+            <td>
+              <span class="badge" [class.text-bg-success]="u.estado === 'ACTIVO'"
+                    [class.text-bg-secondary]="u.estado !== 'ACTIVO'">{{ u.estado }}</span>
+            </td>
+            <td>{{ u.ultimoAcceso ?? 'Nunca' }}</td>
+            <td class="text-end">
+              <button type="button" class="btn btn-sm btn-outline-primary me-1" (click)="editar(u)">Editar</button>
+              <button type="button" class="btn btn-sm"
+                      [class.btn-outline-danger]="u.estado === 'ACTIVO'"
+                      [class.btn-outline-success]="u.estado !== 'ACTIVO'"
+                      (click)="pedirConfirmacion(u)">
+                {{ u.estado === 'ACTIVO' ? 'Desactivar' : 'Activar' }}
+              </button>
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="6" class="text-center text-secondary">No hay usuarios para mostrar</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <div class="d-flex flex-wrap justify-content-between align-items-center gap-2">
+    <span class="text-secondary">Mostrando {{ desde }} a {{ hasta }} de {{ total }} registros</span>
+    <ul class="pagination mb-0">
+      <li class="page-item" [class.disabled]="pagina === 1">
+        <button type="button" class="page-link" (click)="cambiarPagina(pagina - 1)">Anterior</button>
+      </li>
+      @for (p of paginas; track p) {
+        <li class="page-item" [class.active]="p === pagina">
+          <button type="button" class="page-link" (click)="cambiarPagina(p)">{{ p }}</button>
+        </li>
+      }
+      <li class="page-item" [class.disabled]="pagina === totalPaginas">
+        <button type="button" class="page-link" (click)="cambiarPagina(pagina + 1)">Siguiente</button>
+      </li>
+    </ul>
+  </div>
+</main>
+
+@if (mostrarFormulario) {
+  <div class="modal d-block" tabindex="-1">
+    <div class="modal-dialog">
+      <form class="modal-content" [formGroup]="formulario" (ngSubmit)="guardar()" novalidate>
+        <div class="modal-header">
+          <h2 class="modal-title h5">{{ idEditando === null ? 'Nuevo usuario' : 'Editar usuario' }}</h2>
+        </div>
+        <div class="modal-body">
+          @if (errorFormulario) {
+            <div class="alert alert-danger py-2">{{ errorFormulario }}</div>
+          }
+
+          <div class="mb-3">
+            <label class="form-label" for="username">Usuario</label>
+            <input id="username" type="text" class="form-control" formControlName="username"
+                   [class.is-invalid]="invalido('username')" />
+            <div class="invalid-feedback">Ingrese un usuario de 3 a 50 caracteres.</div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label" for="correo">Correo</label>
+            <input id="correo" type="email" class="form-control" formControlName="correo"
+                   [class.is-invalid]="invalido('correo')" />
+            <div class="invalid-feedback">Ingrese un correo válido.</div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label" for="password">Contraseña</label>
+            <input id="password" type="password" class="form-control" formControlName="password"
+                   autocomplete="new-password" [class.is-invalid]="invalido('password')" />
+            @if (idEditando !== null) {
+              <div class="form-text">Déjela vacía para no cambiarla.</div>
+            }
+            <div class="invalid-feedback">La contraseña debe tener al menos 6 caracteres.</div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label" for="rol">Rol</label>
+            <select id="rol" class="form-select" formControlName="rol">
+              <option value="ADMIN">Admin</option>
+              <option value="SUPER_ADMIN">Super Admin</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" (click)="cancelarFormulario()">Cancelar</button>
+          <button type="submit" class="btn btn-primary" [disabled]="guardando">
+            {{ guardando ? 'Guardando...' : 'Guardar' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="modal-backdrop show"></div>
+}
+
+@if (usuarioAConfirmar) {
+  <div class="modal d-block" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title h5">Confirmar</h2>
+        </div>
+        <div class="modal-body">
+          ¿Seguro que desea {{ usuarioAConfirmar.estado === 'ACTIVO' ? 'desactivar' : 'activar' }}
+          al usuario <strong>{{ usuarioAConfirmar.username }}</strong>?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" (click)="cancelarConfirmacion()">Cancelar</button>
+          <button type="button" class="btn btn-primary" (click)="confirmar()">Confirmar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-backdrop show"></div>
+}

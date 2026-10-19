@@ -9,12 +9,7 @@
     <button type="button" class="btn btn-outline-secondary" (click)="cerrarSesion()">Cerrar sesión</button>
   </div>
 
-  <div class="d-flex gap-2 mb-3">
-    <button type="button" class="btn btn-primary" (click)="probarToken()">Probar mi token</button>
-    <button type="button" class="btn btn-outline-primary" (click)="probarAdmin()">Probar ruta de admin</button>
-  </div>
-
-  @if (mensaje) {
-    <div class="alert py-2" [class.alert-success]="!esError" [class.alert-danger]="esError">{{ mensaje }}</div>
+  @if (auth.tieneRol(['SUPER_ADMIN'])) {
+    <a class="btn btn-outline-dark" routerLink="/usuarios-admin">Usuarios administrativos</a>
   }
 </main>

@@ -5,6 +5,7 @@ import { Login } from './pages/login/login';
 import { Inicio } from './pages/inicio/inicio';
 import { UsuariosAdmin } from './pages/usuarios-admin/usuarios-admin';
 import { NoAutorizado } from './pages/no-autorizado/no-autorizado';
+import { Ciclos } from './pages/ciclos/ciclos';
 
 export const routes: Routes = [
   { path: 'login', component: Login },
@@ -15,8 +16,10 @@ export const routes: Routes = [
     canActivate: [authGuard],
     data: { roles: ['SUPER_ADMIN'] }
   },
+  { path: 'ciclos', component: Ciclos, canActivate: [authGuard], data: { roles: ['SUPER_ADMIN'] } },
   { path: 'no-autorizado', component: NoAutorizado },
   { path: '', pathMatch: 'full', redirectTo: 'inicio' },
   { path: '**', redirectTo: 'inicio' }
+  
 ];
 

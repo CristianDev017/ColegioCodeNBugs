@@ -1,0 +1,130 @@
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="mb-0">Años lectivos</h2>
+    <div>
+      <a routerLink="/inicio" class="btn btn-outline-secondary me-2">Volver</a>
+      <button class="btn btn-primary" (click)="abrirNuevo()">Nuevo año lectivo</button>
+    </div>
+  </div>
+
+  @if (mensaje) {
+    <div class="alert alert-success">{{ mensaje }}</div>
+  }
+  @if (error) {
+    <div class="alert alert-danger">{{ error }}</div>
+  }
+
+  <table class="table table-striped align-middle">
+    <thead>
+      <tr>
+        <th>Año</th>
+        <th>Inicio</th>
+        <th>Fin</th>
+        <th>Estado</th>
+        <th class="text-end">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (c of ciclos; track c.id) {
+        <tr>
+          <td>{{ c.anio }}</td>
+          <td>{{ c.fechaInicio }}</td>
+          <td>{{ c.fechaFin }}</td>
+          <td><span class="badge" [class]="'badge ' + claseEstado(c.estado)">{{ c.estado }}</span></td>
+          <td class="text-end">
+            @if (c.estado === 'PLANIFICADO') {
+              <button class="btn btn-sm btn-outline-primary me-1" (click)="abrirEditar(c)">Editar</button>
+              <button class="btn btn-sm btn-success" (click)="pedirConfirmacion('activar', c)">Activar</button>
+            }
+            @if (c.estado === 'ACTIVO') {
+              <button class="btn btn-sm btn-danger" (click)="pedirConfirmacion('cerrar', c)">Cerrar</button>
+            }
+          </td>
+        </tr>
+      } @empty {
+        <tr>
+          <td colspan="5" class="text-center text-muted">No hay años lectivos registrados</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  <div class="d-flex justify-content-between align-items-center">
+    <span class="text-muted">Total: {{ total }}</span>
+    <div>
+      <button class="btn btn-outline-secondary btn-sm me-2" [disabled]="pagina === 1" (click)="irAPagina(pagina - 1)">Anterior</button>
+      <span>Página {{ pagina }} de {{ totalPaginas }}</span>
+      <button class="btn btn-outline-secondary btn-sm ms-2" [disabled]="pagina === totalPaginas" (click)="irAPagina(pagina + 1)">Siguiente</button>
+    </div>
+  </div>
+</div>
+
+@if (mostrarFormulario) {
+  <div class="modal d-block" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <form [formGroup]="formulario" (ngSubmit)="guardar()">
+          <div class="modal-header">
+            <h5 class="modal-title">{{ editandoId === null ? 'Nuevo año lectivo' : 'Editar año lectivo' }}</h5>
+            <button type="button" class="btn-close" (click)="cerrarFormulario()"></button>
+          </div>
+          <div class="modal-body">
+            @if (errorFormulario) {
+              <div class="alert alert-danger">{{ errorFormulario }}</div>
+            }
+            <div class="mb-3">
+              <label class="form-label">Año</label>
+              <input type="number" class="form-control" formControlName="anio">
+              @if (formulario.get('anio')?.touched && formulario.get('anio')?.invalid) {
+                <div class="text-danger small">Ingrese un año entre 2000 y 2100</div>
+              }
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Fecha de inicio</label>
+              <input type="date" class="form-control" formControlName="fechaInicio">
+              @if (formulario.get('fechaInicio')?.touched && formulario.get('fechaInicio')?.invalid) {
+                <div class="text-danger small">La fecha de inicio es obligatoria</div>
+              }
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Fecha de fin</label>
+              <input type="date" class="form-control" formControlName="fechaFin">
+              @if (formulario.get('fechaFin')?.touched && formulario.get('fechaFin')?.invalid) {
+                <div class="text-danger small">La fecha de fin es obligatoria</div>
+              }
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="cerrarFormulario()">Cancelar</button>
+            <button type="submit" class="btn btn-primary">Guardar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="modal-backdrop show"></div>
+}
+
+@if (cicloPendiente) {
+  <div class="modal d-block" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Confirmar</h5>
+        </div>
+        <div class="modal-body">
+          @if (accionPendiente === 'activar') {
+            <p>¿Activar el año lectivo {{ cicloPendiente.anio }}? Solo puede haber uno activo a la vez.</p>
+          } @else {
+            <p>¿Cerrar el año lectivo {{ cicloPendiente.anio }}? Las notas y la asistencia quedarán en solo lectura y no se podrá reabrir.</p>
+          }
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" (click)="cancelarConfirmacion()">Cancelar</button>
+          <button class="btn btn-primary" (click)="confirmar()">Confirmar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-backdrop show"></div>
+}

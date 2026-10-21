@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { API_URL } from './rest-constants';
 
 export interface UsuarioSesion {
   id: number;
@@ -27,7 +28,7 @@ export class AuthService {
   constructor(private http: HttpClient, private router: Router) {}
 
   login(username: string, password: string): Observable<LoginRespuesta> {
-    return this.http.post<LoginRespuesta>('/api/auth/login', { username, password }).pipe(
+    return this.http.post<LoginRespuesta>(`${API_URL}/auth/login`, { username, password }).pipe(
       tap((respuesta) => {
         localStorage.setItem(CLAVE_TOKEN, respuesta.token);
         localStorage.setItem(CLAVE_USUARIO, JSON.stringify(respuesta.usuario));

@@ -3,10 +3,11 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { CicloEscolar, DatosCiclo } from '../models/ciclo-escolar';
 import { Pagina } from '../models/pagina';
+import { API_URL } from './rest-constants';
 
 @Injectable({ providedIn: 'root' })
 export class CicloEscolarService {
-  private url = '/api/ciclos';
+private url = `${API_URL}/ciclos`;
 
   constructor(private http: HttpClient) {}
 

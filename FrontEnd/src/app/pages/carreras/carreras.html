@@ -1,0 +1,120 @@
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="mb-0">Carreras de Diversificado</h2>
+    <div>
+      <a routerLink="/inicio" class="btn btn-outline-secondary me-2">Volver</a>
+      <button class="btn btn-primary" (click)="abrirNuevo()">Nueva carrera</button>
+    </div>
+  </div>
+
+  @if (mensaje) {
+    <div class="alert alert-success">{{ mensaje }}</div>
+  }
+  @if (error) {
+    <div class="alert alert-danger">{{ error }}</div>
+  }
+
+  <table class="table table-striped align-middle">
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Descripción</th>
+        <th>Estado</th>
+        <th class="text-end">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (c of carreras; track c.id) {
+        <tr>
+          <td>{{ c.nombre }}</td>
+          <td>{{ c.descripcion || '-' }}</td>
+          <td>
+            <span class="badge" [class]="c.activo ? 'badge bg-success' : 'badge bg-secondary'">
+              {{ c.activo ? 'Activa' : 'Inactiva' }}
+            </span>
+          </td>
+          <td class="text-end">
+            <button class="btn btn-sm btn-outline-primary me-1" (click)="abrirEditar(c)">Editar</button>
+            @if (c.activo) {
+              <button class="btn btn-sm btn-danger" (click)="pedirDesactivar(c)">Desactivar</button>
+            } @else {
+              <button class="btn btn-sm btn-success" (click)="activar(c)">Activar</button>
+            }
+          </td>
+        </tr>
+      } @empty {
+        <tr>
+          <td colspan="4" class="text-center text-muted">No hay carreras registradas</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  <div class="d-flex justify-content-between align-items-center">
+    <span class="text-muted">Total: {{ total }}</span>
+    <div>
+      <button class="btn btn-outline-secondary btn-sm me-2" [disabled]="pagina === 1" (click)="irAPagina(pagina - 1)">Anterior</button>
+      <span>Página {{ pagina }} de {{ totalPaginas }}</span>
+      <button class="btn btn-outline-secondary btn-sm ms-2" [disabled]="pagina === totalPaginas" (click)="irAPagina(pagina + 1)">Siguiente</button>
+    </div>
+  </div>
+</div>
+
+@if (mostrarFormulario) {
+  <div class="modal d-block" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <form [formGroup]="formulario" (ngSubmit)="guardar()">
+          <div class="modal-header">
+            <h5 class="modal-title">{{ editandoId === null ? 'Nueva carrera' : 'Editar carrera' }}</h5>
+            <button type="button" class="btn-close" (click)="cerrarFormulario()"></button>
+          </div>
+          <div class="modal-body">
+            @if (errorFormulario) {
+              <div class="alert alert-danger">{{ errorFormulario }}</div>
+            }
+            <div class="mb-3">
+              <label class="form-label">Nombre</label>
+              <input class="form-control" formControlName="nombre">
+              @if (formulario.get('nombre')?.touched && formulario.get('nombre')?.invalid) {
+                <div class="text-danger small">El nombre es obligatorio (máximo 100 caracteres)</div>
+              }
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Descripción</label>
+              <textarea class="form-control" rows="3" formControlName="descripcion"></textarea>
+              @if (formulario.get('descripcion')?.invalid) {
+                <div class="text-danger small">Máximo 255 caracteres</div>
+              }
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="cerrarFormulario()">Cancelar</button>
+            <button type="submit" class="btn btn-primary">Guardar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="modal-backdrop show"></div>
+}
+
+@if (carreraPendiente) {
+  <div class="modal d-block" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Confirmar</h5>
+        </div>
+        <div class="modal-body">
+          <p>¿Desactivar la carrera {{ carreraPendiente.nombre }}? Ya no se podrá elegir en grados nuevos.</p>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" (click)="cancelarDesactivar()">Cancelar</button>
+          <button class="btn btn-danger" (click)="confirmarDesactivar()">Desactivar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-backdrop show"></div>
+}

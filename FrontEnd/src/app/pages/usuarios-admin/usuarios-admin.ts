@@ -9,7 +9,6 @@ import { UsuarioAdmin } from '../../models/usuario-admin';
   selector: 'app-usuarios-admin',
   imports: [ReactiveFormsModule, RouterLink],
   templateUrl: './usuarios-admin.html',
-  styleUrl: './usuarios-admin.scss'
 })
 export class UsuariosAdmin implements OnInit {
 

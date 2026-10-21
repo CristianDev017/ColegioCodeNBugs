@@ -1,16 +1,64 @@
-<main class="container py-4">
-  <div class="d-flex justify-content-between align-items-center mb-4">
+<main class="container py-5">
+  <header class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 mb-5">
     <div>
-      <h1 class="h4 mb-0">Inicio</h1>
+      <h1 class="h3 mb-2">Panel de administración</h1>
       @if (auth.usuario$ | async; as usuario) {
-        <p class="text-secondary mb-0">{{ usuario.username }} - {{ usuario.rol }}</p>
+        <div class="d-flex flex-wrap align-items-center gap-2">
+          <p class="text-secondary mb-0">¡Hola, {{ usuario.username }}!</p>
+          <span class="badge rounded-pill text-bg-light border text-secondary">{{ usuario.rol }}</span>
+        </div>
       }
     </div>
-    <button type="button" class="btn btn-outline-secondary" (click)="cerrarSesion()">Cerrar sesión</button>
-  </div>
+    <button type="button" class="btn btn-outline-secondary align-self-sm-center" (click)="cerrarSesion()">Cerrar sesión</button>
+  </header>
 
-  @if (auth.tieneRol(['SUPER_ADMIN'])) {
-    <a class="btn btn-outline-dark" routerLink="/usuarios-admin">Usuarios administrativos</a>
-    <a routerLink="/ciclos" class="btn btn-primary">Años lectivos</a>
-  }
+  <section aria-labelledby="accesos-title">
+    <h2 id="accesos-title" class="h5 mb-3">Accesos</h2>
+
+    <div class="row g-4">
+      @if (auth.tieneRol(['SUPER_ADMIN'])) {
+        <div class="col-12 col-md-6 col-lg-4">
+          <article class="h-100 border rounded p-4">
+            <h3 class="h5 mb-2">Usuarios administrativos</h3>
+            <p class="text-secondary mb-4">Administra las cuentas y los accesos del personal.</p>
+            <a class="btn btn-outline-dark" routerLink="/usuarios-admin">Ver usuarios</a>
+          </article>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-4">
+          <article class="h-100 border rounded p-4">
+            <h3 class="h5 mb-2">Años lectivos</h3>
+            <p class="text-secondary mb-4">Consulta y administra los ciclos escolares.</p>
+            <a routerLink="/ciclos" class="btn btn-primary">Ver años lectivos</a>
+          </article>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-4">
+          <article class="h-100 border rounded p-4">
+            <h3 class="h5 mb-2">Carreras</h3>
+            <p class="text-secondary mb-4">Administra las carreras del nivel Diversificado.</p>
+            <a routerLink="/carreras" class="btn btn-primary">Ver carreras</a>
+          </article>
+        </div>
+      }
+
+      @if (auth.tieneRol(['SUPER_ADMIN', 'ADMIN'])) {
+        <div class="col-12 col-md-6 col-lg-4">
+          <article class="h-100 border rounded p-4">
+            <h3 class="h5 mb-2">Grados</h3>
+            <p class="text-secondary mb-4">Consulta y administra los grados de la institución.</p>
+            <a routerLink="/grados" class="btn btn-primary">Ver grados</a>
+          </article>
+        </div>
+      }
+
+        <div class="col-12 col-md-6 col-lg-4">
+        <article class="h-100 border rounded p-4">
+          <h3 class="h5 mb-2">Secciones</h3>
+          <p class="text-secondary mb-4">Administra las secciones de cada grado.</p>
+          <a routerLink="/secciones" class="btn btn-primary">Ver secciones</a>
+        </article>
+        </div>
+    </div>
+  </section>
 </main>

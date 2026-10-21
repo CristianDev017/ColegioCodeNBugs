@@ -8,7 +8,6 @@ import { AuthService } from '../../core/auth.service';
   selector: 'app-inicio',
   imports: [AsyncPipe, RouterLink],
   templateUrl: './inicio.html',
-  styleUrl: './inicio.scss'
 })
 export class Inicio {
 

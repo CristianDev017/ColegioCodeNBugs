@@ -5,6 +5,5 @@ import { RouterLink } from '@angular/router';
   selector: 'app-no-autorizado',
   imports: [RouterLink],
   templateUrl: './no-autorizado.html',
-  styleUrl: './no-autorizado.scss'
 })
 export class NoAutorizado {}

@@ -1,10 +1,10 @@
 <main class="container py-4">
   <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+    <h1 class="h4 mb-0">Usuarios administrativos</h1>
     <div>
-      <h1 class="h4 mb-0">Usuarios administrativos</h1>
-      <a routerLink="/inicio">Volver al inicio</a>
+      <a routerLink="/inicio" class="btn btn-outline-secondary me-2">Volver</a>
+      <button type="button" class="btn btn-primary" (click)="nuevo()">Nuevo usuario</button>
     </div>
-    <button type="button" class="btn btn-primary" (click)="nuevo()">Nuevo usuario</button>
   </div>
 
   @if (mensaje) {

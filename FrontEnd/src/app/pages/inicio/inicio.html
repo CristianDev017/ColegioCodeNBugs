@@ -21,7 +21,7 @@
           <article class="h-100 border rounded p-4">
             <h3 class="h5 mb-2">Usuarios administrativos</h3>
             <p class="text-secondary mb-4">Administra las cuentas y los accesos del personal.</p>
-            <a class="btn btn-outline-dark" routerLink="/usuarios-admin">Ver usuarios</a>
+            <a class="btn btn-primary" routerLink="/usuarios-admin">Ver usuarios</a>
           </article>
         </div>
 
@@ -35,9 +35,9 @@
 
         <div class="col-12 col-md-6 col-lg-4">
           <article class="h-100 border rounded p-4">
-            <h3 class="h5 mb-2">Carreras</h3>
-            <p class="text-secondary mb-4">Administra las carreras del nivel Diversificado.</p>
-            <a routerLink="/carreras" class="btn btn-primary">Ver carreras</a>
+            <h3 class="h5 mb-2">Grados por defecto</h3>
+            <p class="text-secondary mb-4">Ajusta el cupo por defecto de cada grado.</p>
+            <a routerLink="/grados-defecto" class="btn btn-primary">Ver grados por defecto</a>
           </article>
         </div>
       }
@@ -45,20 +45,38 @@
       @if (auth.tieneRol(['SUPER_ADMIN', 'ADMIN'])) {
         <div class="col-12 col-md-6 col-lg-4">
           <article class="h-100 border rounded p-4">
-            <h3 class="h5 mb-2">Grados</h3>
-            <p class="text-secondary mb-4">Consulta y administra los grados de la institución.</p>
-            <a routerLink="/grados" class="btn btn-primary">Ver grados</a>
+            <h3 class="h5 mb-2">Carreras</h3>
+            <p class="text-secondary mb-4">Carreras del nivel Diversificado.</p>
+            <a routerLink="/carreras" class="btn btn-primary">Ver carreras</a>
           </article>
         </div>
       }
 
+      @if (auth.tieneRol(['ADMIN'])) {
         <div class="col-12 col-md-6 col-lg-4">
-        <article class="h-100 border rounded p-4">
-          <h3 class="h5 mb-2">Secciones</h3>
-          <p class="text-secondary mb-4">Administra las secciones de cada grado.</p>
-          <a routerLink="/secciones" class="btn btn-primary">Ver secciones</a>
-        </article>
+          <article class="h-100 border rounded p-4">
+            <h3 class="h5 mb-2">Grados</h3>
+            <p class="text-secondary mb-4">Administra los grados de la institución.</p>
+            <a routerLink="/grados" class="btn btn-primary">Ver grados</a>
+          </article>
         </div>
+
+        <div class="col-12 col-md-6 col-lg-4">
+          <article class="h-100 border rounded p-4">
+            <h3 class="h5 mb-2">Secciones</h3>
+            <p class="text-secondary mb-4">Administra las secciones de cada grado.</p>
+            <a routerLink="/secciones" class="btn btn-primary">Ver secciones</a>
+          </article>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-4">
+          <article class="h-100 border rounded p-4">
+            <h3 class="h5 mb-2">Cursos</h3>
+            <p class="text-secondary mb-4">Administra el catálogo de cursos de la institución.</p>
+            <a routerLink="/cursos" class="btn btn-primary">Ver cursos</a>
+          </article>
+        </div>
+      }
     </div>
   </section>
 </main>

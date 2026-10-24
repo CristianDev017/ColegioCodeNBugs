@@ -9,6 +9,7 @@ import { Ciclos } from './pages/ciclos/ciclos';
 import { Grados } from './pages/grados/grados';
 import { Carreras } from './pages/carreras/carreras';
 import { Secciones } from './pages/secciones/secciones';
+import { GradosDefecto } from './pages/grados-defecto/grados-defecto';
 
 
 export const routes: Routes = [
@@ -23,8 +24,9 @@ export const routes: Routes = [
 
   { path: 'carreras', component: Carreras, canActivate: [authGuard], data: { roles: ['SUPER_ADMIN'] } },
   { path: 'ciclos', component: Ciclos, canActivate: [authGuard], data: { roles: ['SUPER_ADMIN'] } },
-  { path: 'grados', component: Grados, canActivate: [authGuard], data: { roles: ['SUPER_ADMIN', 'ADMIN'] } },
-  { path: 'secciones', component: Secciones, canActivate: [authGuard], data: { roles: ['SUPER_ADMIN', 'ADMIN'] } },
+  { path: 'grados-defecto', component: GradosDefecto, canActivate: [authGuard], data: { roles: ['SUPER_ADMIN'] } },
+  { path: 'grados', component: Grados, canActivate: [authGuard], data: { roles: ['ADMIN'] } },
+  
   { path: 'no-autorizado', component: NoAutorizado },
   { path: '', pathMatch: 'full', redirectTo: 'inicio' },
   { path: '**', redirectTo: 'inicio' }

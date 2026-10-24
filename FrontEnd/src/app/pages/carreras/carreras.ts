@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { RouterLink } from '@angular/router';
 import { CarreraService } from '../../core/carrera.service';
 import { Carrera } from '../../models/carrera';
+import { AuthService } from '../../core/auth.service';
 
 @Component({
   selector: 'app-carreras',
@@ -25,7 +26,7 @@ export class Carreras implements OnInit {
 
   carreraPendiente: Carrera | null = null;
 
-  constructor(private fb: FormBuilder, private servicio: CarreraService) {
+  constructor(public auth: AuthService, private fb: FormBuilder, private servicio: CarreraService) {
     this.formulario = this.fb.group({
       nombre: ['', [Validators.required, Validators.maxLength(100)]],
       descripcion: ['', Validators.maxLength(255)]

@@ -1,9 +1,13 @@
+
+
 <div class="container py-4">
   <div class="d-flex justify-content-between align-items-center mb-3">
     <h2 class="mb-0">Carreras de Diversificado</h2>
     <div>
       <a routerLink="/inicio" class="btn btn-outline-secondary me-2">Volver</a>
-      <button class="btn btn-primary" (click)="abrirNuevo()">Nueva carrera</button>
+      @if (auth.tieneRol(['SUPER_ADMIN'])) {
+        <button class="btn btn-primary" (click)="abrirNuevo()">Nueva carrera</button>
+  }
     </div>
   </div>
 
@@ -33,14 +37,16 @@
               {{ c.activo ? 'Activa' : 'Inactiva' }}
             </span>
           </td>
-          <td class="text-end">
-            <button class="btn btn-sm btn-outline-primary me-1" (click)="abrirEditar(c)">Editar</button>
-            @if (c.activo) {
-              <button class="btn btn-sm btn-danger" (click)="pedirDesactivar(c)">Desactivar</button>
-            } @else {
-              <button class="btn btn-sm btn-success" (click)="activar(c)">Activar</button>
-            }
-          </td>
+            <td class="text-end">
+              @if (auth.tieneRol(['SUPER_ADMIN'])) {
+                <button class="btn btn-sm btn-outline-primary me-1" (click)="abrirEditar(c)">Editar</button>
+                @if (c.activo) {
+                  <button class="btn btn-sm btn-danger" (click)="pedirDesactivar(c)">Desactivar</button>
+                } @else {
+                  <button class="btn btn-sm btn-success" (click)="activar(c)">Activar</button>
+                }
+              }
+            </td>
         </tr>
       } @empty {
         <tr>

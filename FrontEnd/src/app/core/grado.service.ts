@@ -31,4 +31,9 @@ private url = `${API_URL}/grados`;
   desactivar(id: number): Observable<Grado> {
     return this.http.put<Grado>(`${this.url}/${id}/desactivar`, {});
   }
+
+  cambiarCupo(id: number, cupoDefault: number): Observable<Grado> {
+  return this.http.put<Grado>(`${this.url}/${id}/cupo`, { cupoDefault });
+}
+
 }

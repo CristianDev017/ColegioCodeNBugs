@@ -4,11 +4,12 @@ import { Observable } from 'rxjs';
 
 import { Pagina } from '../models/pagina';
 import { DatosUsuarioAdmin, UsuarioAdmin } from '../models/usuario-admin';
+import { API_URL } from './rest-constants';
 
 @Injectable({ providedIn: 'root' })
 export class UsuarioAdminService {
 
-  private url = '/api/admin/usuarios';
+private url = `${API_URL}/admin/usuarios`;
 
   constructor(private http: HttpClient) {}
 

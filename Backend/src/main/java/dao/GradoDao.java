@@ -134,6 +134,15 @@ public class GradoDao {
         }
     }
 
+    public void cambiarCupoDefault(int id, int cupo) throws SQLException {
+        try (Connection con = DBConnectionSingleton.getInstance().getConnection();
+             PreparedStatement ps = con.prepareStatement("UPDATE grado SET cupo_default = ? WHERE id_grado = ?")) {
+            ps.setInt(1, cupo);
+            ps.setInt(2, id);
+            ps.executeUpdate();
+        }
+    }
+
     private Grado leer(ResultSet rs) throws SQLException {
         int idCarrera = rs.getInt("id_carrera");
         Integer carreraId = rs.wasNull() ? null : idCarrera;

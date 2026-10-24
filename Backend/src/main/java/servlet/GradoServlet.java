@@ -1,5 +1,6 @@
 package servlet;
 
+import dto.PeticionCupo;
 import dto.PeticionGrado;
 import exception.DatosInvalidosException;
 import jakarta.servlet.annotation.WebServlet;
@@ -27,8 +28,8 @@ public class GradoServlet extends HttpServlet {
         }
         String buscar = req.getParameter("buscar") == null ? "" : req.getParameter("buscar").trim();
         int idNivel = numero(req.getParameter("idNivel"), 0);
-        int pagina = numero(req.getParameter("pagina"), 1);
-        int tamano = Math.min(numero(req.getParameter("tamano"), 10), 50);
+        int pagina = Math.max(1, numero(req.getParameter("pagina"), 1));
+        int tamano = Math.min(Math.max(1, numero(req.getParameter("tamano"), 10)), 50);
 
         try {
             Json.escribir(resp, 200, Map.of(
@@ -43,7 +44,7 @@ public class GradoServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        if (!Auth.exigirRol(req, resp, Roles.SUPER_ADMIN, Roles.ADMIN)) {
+        if (!Auth.exigirRol(req, resp, Roles.ADMIN)) {
             return;
         }
         try {
@@ -56,15 +57,25 @@ public class GradoServlet extends HttpServlet {
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        if (!Auth.exigirRol(req, resp, Roles.SUPER_ADMIN, Roles.ADMIN)) {
-            return;
-        }
         try {
             String[] partes = req.getPathInfo() == null ? new String[0] : req.getPathInfo().split("/");
             if (partes.length < 2) {
                 throw new DatosInvalidosException("Falta el id del grado");
             }
             int id = leerId(partes[1]);
+
+            if (partes.length == 3 && partes[2].equals("cupo")) {
+                if (!Auth.exigirRol(req, resp, Roles.SUPER_ADMIN)) {
+                    return;
+                }
+                PeticionCupo cupo = Json.leer(req, PeticionCupo.class);
+                Json.escribir(resp, 200, servicio.cambiarCupo(id, cupo));
+                return;
+            }
+
+            if (!Auth.exigirRol(req, resp, Roles.ADMIN)) {
+                return;
+            }
 
             if (partes.length == 2) {
                 PeticionGrado datos = Json.leer(req, PeticionGrado.class);
@@ -91,8 +102,7 @@ public class GradoServlet extends HttpServlet {
 
     private int numero(String texto, int porDefecto) {
         try {
-            int valor = Integer.parseInt(texto);
-            return valor < 0 ? porDefecto : valor;
+            return Integer.parseInt(texto);
         } catch (NumberFormatException e) {
             return porDefecto;
         }

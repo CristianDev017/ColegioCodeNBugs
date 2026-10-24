@@ -9,6 +9,7 @@ import exception.NoEncontradoException;
 import exception.ServicioException;
 import model.Grado;
 import model.Nivel;
+import dto.PeticionCupo;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -86,5 +87,14 @@ public class GradoService {
         if (gradoDao.existeDuplicado(datos.getIdNivel(), datos.getIdCarrera(), datos.getNombre(), excluirId)) {
             throw new ConflictoException("Ya existe un grado con ese nombre en el nivel");
         }
+    }
+
+    public Grado cambiarCupo(int id, PeticionCupo datos) throws SQLException, ServicioException {
+        obtener(id);
+        if (datos == null || datos.getCupoDefault() == null || datos.getCupoDefault() < 1) {
+            throw new DatosInvalidosException("El cupo debe ser mayor a cero");
+        }
+        gradoDao.cambiarCupoDefault(id, datos.getCupoDefault());
+        return obtener(id);
     }
 }

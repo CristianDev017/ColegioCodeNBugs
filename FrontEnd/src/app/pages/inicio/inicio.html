@@ -42,7 +42,7 @@
         </div>
       }
 
-      @if (auth.tieneRol(['SUPER_ADMIN', 'ADMIN'])) {
+      @if (auth.tieneRol(['SUPER_ADMIN'])) {
         <div class="col-12 col-md-6 col-lg-4">
           <article class="h-100 border rounded p-4">
             <h3 class="h5 mb-2">Carreras</h3>
@@ -74,6 +74,15 @@
             <h3 class="h5 mb-2">Cursos</h3>
             <p class="text-secondary mb-4">Administra el catálogo de cursos de la institución.</p>
             <a routerLink="/cursos" class="btn btn-primary">Ver cursos</a>
+          </article>
+        </div>
+
+        
+        <div class="col-12 col-md-6 col-lg-4">
+          <article class="h-100 border rounded p-4">
+            <h3 class="h5 mb-2">Currículo</h3>
+            <p class="text-secondary mb-4">Define los cursos de cada grado en un año lectivo.</p>
+            <a routerLink="/curriculo" class="btn btn-primary">Ver currículo</a>
           </article>
         </div>
       }

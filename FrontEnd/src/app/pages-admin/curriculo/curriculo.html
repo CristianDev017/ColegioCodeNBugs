@@ -1,0 +1,105 @@
+<div class="container py-4">
+  <h3 class="mb-3">Currículo</h3>
+
+  @if (mensaje) {
+    <div class="alert alert-success">{{ mensaje }}</div>
+  }
+  @if (error) {
+    <div class="alert alert-danger">{{ error }}</div>
+  }
+
+  <form [formGroup]="form">
+    <div class="row g-3 mb-4">
+      <div class="col-md-4">
+        <label class="form-label">Año lectivo</label>
+        <select class="form-select" formControlName="ciclo" (change)="consultar()">
+          <option [ngValue]="null">Selecciona un año</option>
+          @for (c of ciclos; track c.id) {
+            <option [ngValue]="c.id">{{ c.anio }} ({{ c.estado }})</option>
+          }
+        </select>
+      </div>
+      <div class="col-md-8">
+        <label class="form-label">Grado</label>
+        <select class="form-select" formControlName="grado" (change)="consultar()">
+          <option [ngValue]="null">Selecciona un grado</option>
+          @for (g of grados; track g.id) {
+            <option [ngValue]="g.id">{{ nombreGrado(g) }}</option>
+          }
+        </select>
+      </div>
+    </div>
+
+    @if (curriculo) {
+      @if (cerrado) {
+        <div class="alert alert-secondary">Este año lectivo está cerrado, el currículo solo se puede consultar.</div>
+      }
+
+      @if (!cerrado) {
+        <div class="row g-2 mb-3">
+          <div class="col-md-8">
+            <select class="form-select" formControlName="curso">
+              <option [ngValue]="null">Selecciona un curso para agregar</option>
+              @for (c of cursosDisponibles; track c.id) {
+                <option [ngValue]="c.id">{{ c.nombre }}</option>
+              }
+            </select>
+          </div>
+          <div class="col-md-4">
+            <button type="button" class="btn btn-primary" (click)="agregar()">Agregar curso</button>
+          </div>
+        </div>
+      }
+
+      <table class="table table-striped align-middle">
+        <thead>
+          <tr>
+            <th>Curso</th>
+            <th>Descripción</th>
+            @if (!cerrado) {
+              <th class="text-end">Acciones</th>
+            }
+          </tr>
+        </thead>
+        <tbody>
+          @for (c of curriculo.cursos; track c.id) {
+            <tr>
+              <td>{{ c.nombre }}</td>
+              <td>{{ c.descripcion }}</td>
+              @if (!cerrado) {
+                <td class="text-end">
+                  <button type="button" class="btn btn-sm btn-outline-danger" (click)="pedirQuitar(c)">Quitar</button>
+                </td>
+              }
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="3" class="text-center text-muted">Este grado todavía no tiene cursos en este año</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  </form>
+</div>
+
+@if (confirmando) {
+  <div class="modal-backdrop fade show"></div>
+  <div class="modal fade show d-block" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Quitar curso</h5>
+          <button type="button" class="btn-close" (click)="cancelarQuitar()"></button>
+        </div>
+        <div class="modal-body">
+          ¿Seguro que quieres quitar <strong>{{ confirmando.nombre }}</strong> de este currículo?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="cancelarQuitar()">Cancelar</button>
+          <button type="button" class="btn btn-danger" (click)="confirmarQuitar()">Quitar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+}

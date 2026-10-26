@@ -1,5 +1,8 @@
 <div class="container py-4">
-  <h3 class="mb-3">Currículo</h3>
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h3 class="mb-0">Currículo</h3>
+    <a routerLink="/inicio" class="btn btn-outline-secondary">Volver</a>
+  </div>
 
   @if (mensaje) {
     <div class="alert alert-success">{{ mensaje }}</div>

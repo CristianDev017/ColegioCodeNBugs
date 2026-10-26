@@ -1,0 +1,75 @@
+<form [formGroup]="form" (ngSubmit)="enviar()">
+  <h5>Grado y año lectivo</h5>
+  @if (esEdicion && registro) {
+    <p class="mb-1"><strong>Año lectivo:</strong> {{ registro.anio }}</p>
+    <p class="mb-4"><strong>Grado:</strong> {{ registro.grado }}</p>
+  } @else {
+    <div class="row g-3 mb-4">
+      <div class="col-md-4">
+        <label class="form-label">Año lectivo</label>
+        <select class="form-select" formControlName="idCiclo">
+          <option [ngValue]="null">Selecciona un año</option>
+          @for (c of ciclosDisponibles; track c.id) {
+            <option [ngValue]="c.id">{{ c.anio }} ({{ c.estado }})</option>
+          }
+        </select>
+        @if (mensajeError('idCiclo')) {
+          <div class="text-danger small">{{ mensajeError('idCiclo') }}</div>
+        }
+      </div>
+      <div class="col-md-8">
+        <label class="form-label">Grado</label>
+        <select class="form-select" formControlName="idGrado">
+          <option [ngValue]="null">Selecciona un grado</option>
+          @for (g of grados; track g.id) {
+            <option [ngValue]="g.id">{{ nombreGrado(g) }}</option>
+          }
+        </select>
+        @if (mensajeError('idGrado')) {
+          <div class="text-danger small">{{ mensajeError('idGrado') }}</div>
+        }
+      </div>
+    </div>
+  }
+
+  <h5>Montos y vencimiento</h5>
+  <div class="row g-3 mb-4">
+    <div class="col-md-4">
+      <label class="form-label">Monto de inscripción (Q)</label>
+      <input type="number" class="form-control" formControlName="montoInscripcion" step="0.01" min="0">
+      @if (mensajeError('montoInscripcion')) {
+        <div class="text-danger small">{{ mensajeError('montoInscripcion') }}</div>
+      }
+    </div>
+    <div class="col-md-4">
+      <label class="form-label">Monto de mensualidad (Q)</label>
+      <input type="number" class="form-control" formControlName="montoMensualidad" step="0.01" min="0">
+      @if (mensajeError('montoMensualidad')) {
+        <div class="text-danger small">{{ mensajeError('montoMensualidad') }}</div>
+      }
+    </div>
+    <div class="col-md-4">
+      <label class="form-label">Día de vencimiento</label>
+      <input type="number" class="form-control" formControlName="diaVencimiento" min="1" max="31">
+      <div class="form-text">Entre 1 y 31</div>
+      @if (mensajeError('diaVencimiento')) {
+        <div class="text-danger small">{{ mensajeError('diaVencimiento') }}</div>
+      }
+    </div>
+  </div>
+
+  <hr class="my-4">
+
+  @if (guardado) {
+    <div class="alert alert-success">{{ mensajeExito }}</div>
+  }
+  @if (error) {
+    <div class="alert alert-danger">{{ error }}</div>
+  }
+
+  <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+    <a routerLink="/tarifas" class="btn btn-outline-primary me-md-2">Volver al listado</a>
+    <button class="btn btn-secondary me-md-2" type="button" (click)="limpiar()">Limpiar</button>
+    <button class="btn btn-primary" type="submit" [disabled]="form.invalid">Guardar</button>
+  </div>
+</form>

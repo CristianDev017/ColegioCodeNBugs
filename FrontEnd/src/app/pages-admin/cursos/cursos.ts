@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { CursoService } from '../../core/curso.service';
 import { Curso } from '../../models/curso';
 
 @Component({
   selector: 'app-cursos',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, RouterLink],
   templateUrl: './cursos.html'
 })
 export class Cursos implements OnInit {

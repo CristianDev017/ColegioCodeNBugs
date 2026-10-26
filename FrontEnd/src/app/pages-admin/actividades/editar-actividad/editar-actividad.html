@@ -1,0 +1,10 @@
+<div class="container py-4">
+  <h3 class="mb-3">Modificar actividad</h3>
+
+  @if (existe && registro) {
+    <app-actividad-form [esEdicion]="true" [registro]="registro"></app-actividad-form>
+  } @else if (cargado) {
+    <div class="alert alert-danger">No se encontró la actividad con id {{ id }}</div>
+    <a routerLink="/actividades" class="btn btn-primary">Volver al listado</a>
+  }
+</div>

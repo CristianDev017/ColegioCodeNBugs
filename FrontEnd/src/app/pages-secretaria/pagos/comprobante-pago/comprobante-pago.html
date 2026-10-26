@@ -1,0 +1,51 @@
+<div class="container py-4">
+  @if (pago) {
+    <div class="card mx-auto" style="max-width: 640px;">
+      <div class="card-body p-4">
+        <div class="d-flex justify-content-between align-items-start mb-3">
+          <div>
+            <h4 class="mb-0">Comprobante de pago</h4>
+            <span class="text-muted">Colegio</span>
+          </div>
+          <h5 class="mb-0">{{ pago.numeroComprobante }}</h5>
+        </div>
+
+        <hr>
+
+        <dl class="row mb-0">
+          <dt class="col-sm-4">Estudiante</dt>
+          <dd class="col-sm-8">{{ pago.estudiante }}</dd>
+
+          <dt class="col-sm-4">Carné</dt>
+          <dd class="col-sm-8">{{ pago.carnet }}</dd>
+
+          <dt class="col-sm-4">Año lectivo</dt>
+          <dd class="col-sm-8">{{ pago.anio }}</dd>
+
+          <dt class="col-sm-4">Concepto</dt>
+          <dd class="col-sm-8">{{ detalle(pago) }}</dd>
+
+          <dt class="col-sm-4">Monto</dt>
+          <dd class="col-sm-8"><strong>{{ pago.monto | currency:'Q' }}</strong></dd>
+
+          <dt class="col-sm-4">Fecha de pago</dt>
+          <dd class="col-sm-8">{{ pago.fechaPago }}</dd>
+
+          <dt class="col-sm-4">Fecha de emisión</dt>
+          <dd class="col-sm-8">{{ pago.fechaEmision }}</dd>
+
+          <dt class="col-sm-4">Atendió</dt>
+          <dd class="col-sm-8">{{ pago.usuario }}</dd>
+        </dl>
+      </div>
+    </div>
+
+    <div class="d-grid gap-2 d-md-flex justify-content-md-center mt-4 d-print-none">
+      <a routerLink="/pagos" class="btn btn-outline-primary me-md-2">Volver al listado</a>
+      <button type="button" class="btn btn-primary" (click)="imprimir()">Imprimir</button>
+    </div>
+  } @else if (cargado) {
+    <div class="alert alert-danger">{{ error }}</div>
+    <a routerLink="/pagos" class="btn btn-primary">Volver al listado</a>
+  }
+</div>

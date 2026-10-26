@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { CicloEscolarService } from '../../core/ciclo-escolar.service';
 import { GradoService } from '../../core/grado.service';
 import { CursoService } from '../../core/curso.service';
@@ -11,7 +12,7 @@ import { Curriculo } from '../../models/curriculo';
 
 @Component({
   selector: 'app-curriculo',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, RouterLink],
   templateUrl: './curriculo.html'
 })
 export class GestionCurriculo implements OnInit {

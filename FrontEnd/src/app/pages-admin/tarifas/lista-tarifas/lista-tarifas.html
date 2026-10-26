@@ -1,0 +1,63 @@
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h3 class="mb-0">Tarifas</h3>
+    <div>
+      <a routerLink="/inicio" class="btn btn-outline-secondary me-2">Volver</a>
+      <a routerLink="/tarifas/nueva" class="btn btn-primary">Nueva tarifa</a>
+    </div>
+  </div>
+
+  @if (error) {
+    <div class="alert alert-danger">{{ error }}</div>
+  }
+
+  <form [formGroup]="filtro" class="row g-2 mb-3">
+    <div class="col-md-4">
+      <select class="form-select" formControlName="idCiclo" (change)="filtrar()">
+        <option [ngValue]="0">Todos los años lectivos</option>
+        @for (c of ciclos; track c.id) {
+          <option [ngValue]="c.id">{{ c.anio }} ({{ c.estado }})</option>
+        }
+      </select>
+    </div>
+  </form>
+
+  <table class="table table-striped align-middle">
+    <thead>
+      <tr>
+        <th>Año</th>
+        <th>Grado</th>
+        <th>Inscripción</th>
+        <th>Mensualidad</th>
+        <th>Vence el día</th>
+        <th class="text-end">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (t of tarifas; track t.id) {
+        <tr>
+          <td>{{ t.anio }}</td>
+          <td>{{ t.grado }}</td>
+          <td>{{ t.montoInscripcion | currency:'Q' }}</td>
+          <td>{{ t.montoMensualidad | currency:'Q' }}</td>
+          <td>{{ t.diaVencimiento }}</td>
+          <td class="text-end">
+            <a [routerLink]="['/tarifas/editar', t.id]" class="btn btn-sm btn-outline-primary">Editar</a>
+          </td>
+        </tr>
+      } @empty {
+        <tr>
+          <td colspan="6" class="text-center text-muted">No hay tarifas registradas</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  <nav class="d-flex justify-content-between align-items-center">
+    <span class="text-muted">Página {{ pagina }} de {{ totalPaginas }} ({{ total }} tarifas)</span>
+    <div>
+      <button class="btn btn-outline-secondary btn-sm me-1" [disabled]="pagina <= 1" (click)="irA(pagina - 1)">Anterior</button>
+      <button class="btn btn-outline-secondary btn-sm" [disabled]="pagina >= totalPaginas" (click)="irA(pagina + 1)">Siguiente</button>
+    </div>
+  </nav>
+</div>

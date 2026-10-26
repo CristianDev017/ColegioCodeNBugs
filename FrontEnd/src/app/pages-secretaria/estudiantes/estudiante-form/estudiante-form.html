@@ -1,0 +1,159 @@
+<form [formGroup]="form" (ngSubmit)="enviar()">
+  @if (esEdicion && registro) {
+    <p class="mb-3"><strong>Carné:</strong> {{ registro.carnet }}</p>
+  }
+
+  <h5>Datos personales</h5>
+  <div class="row g-3 mb-4">
+    <div class="col-md-6">
+      <label class="form-label">Nombres</label>
+      <input type="text" class="form-control" formControlName="nombres">
+      @if (mensajeError('nombres')) {
+        <div class="text-danger small">{{ mensajeError('nombres') }}</div>
+      }
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Apellidos</label>
+      <input type="text" class="form-control" formControlName="apellidos">
+      @if (mensajeError('apellidos')) {
+        <div class="text-danger small">{{ mensajeError('apellidos') }}</div>
+      }
+    </div>
+    <div class="col-md-4">
+      <label class="form-label">Fecha de nacimiento</label>
+      <input type="date" class="form-control" formControlName="fechaNacimiento">
+      @if (mensajeError('fechaNacimiento')) {
+        <div class="text-danger small">{{ mensajeError('fechaNacimiento') }}</div>
+      }
+    </div>
+    <div class="col-md-4">
+      <label class="form-label">Género</label>
+      <select class="form-select" formControlName="genero">
+        <option value="">Selecciona</option>
+        <option value="M">Masculino</option>
+        <option value="F">Femenino</option>
+      </select>
+      @if (mensajeError('genero')) {
+        <div class="text-danger small">{{ mensajeError('genero') }}</div>
+      }
+    </div>
+    <div class="col-md-4">
+      <label class="form-label">DPI (opcional)</label>
+      <input type="text" class="form-control" formControlName="dpi" maxlength="13">
+      <div class="form-text">13 números</div>
+      @if (mensajeError('dpi')) {
+        <div class="text-danger small">{{ mensajeError('dpi') }}</div>
+      }
+    </div>
+    <div class="col-12">
+      <label class="form-label">Dirección</label>
+      <input type="text" class="form-control" formControlName="direccion">
+      @if (mensajeError('direccion')) {
+        <div class="text-danger small">{{ mensajeError('direccion') }}</div>
+      }
+    </div>
+  </div>
+
+  <h5>Datos médicos</h5>
+  <div class="row g-3 mb-4">
+    <div class="col-md-6">
+      <label class="form-label">Alergias</label>
+      <textarea class="form-control" rows="2" formControlName="alergias"></textarea>
+      @if (mensajeError('alergias')) {
+        <div class="text-danger small">{{ mensajeError('alergias') }}</div>
+      }
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Condiciones médicas</label>
+      <textarea class="form-control" rows="2" formControlName="condiciones"></textarea>
+      @if (mensajeError('condiciones')) {
+        <div class="text-danger small">{{ mensajeError('condiciones') }}</div>
+      }
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Contacto de emergencia</label>
+      <input type="text" class="form-control" formControlName="contactoEmergencia">
+      @if (mensajeError('contactoEmergencia')) {
+        <div class="text-danger small">{{ mensajeError('contactoEmergencia') }}</div>
+      }
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Teléfono de emergencia</label>
+      <input type="text" class="form-control" formControlName="telefonoEmergencia" maxlength="15">
+      <div class="form-text">Entre 8 y 15 números</div>
+      @if (mensajeError('telefonoEmergencia')) {
+        <div class="text-danger small">{{ mensajeError('telefonoEmergencia') }}</div>
+      }
+    </div>
+  </div>
+
+  <h5>Encargado</h5>
+  <div class="row g-3 mb-4" formGroupName="encargado">
+    <div class="col-md-6">
+      <label class="form-label">Nombres</label>
+      <input type="text" class="form-control" formControlName="nombres">
+      @if (mensajeError('encargado.nombres')) {
+        <div class="text-danger small">{{ mensajeError('encargado.nombres') }}</div>
+      }
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Apellidos</label>
+      <input type="text" class="form-control" formControlName="apellidos">
+      @if (mensajeError('encargado.apellidos')) {
+        <div class="text-danger small">{{ mensajeError('encargado.apellidos') }}</div>
+      }
+    </div>
+    <div class="col-md-4">
+      <label class="form-label">DPI</label>
+      <input type="text" class="form-control" formControlName="dpi" maxlength="13">
+      <div class="form-text">13 números</div>
+      @if (mensajeError('encargado.dpi')) {
+        <div class="text-danger small">{{ mensajeError('encargado.dpi') }}</div>
+      }
+    </div>
+    <div class="col-md-4">
+      <label class="form-label">Teléfono</label>
+      <input type="text" class="form-control" formControlName="telefono" maxlength="15">
+      <div class="form-text">Entre 8 y 15 números</div>
+      @if (mensajeError('encargado.telefono')) {
+        <div class="text-danger small">{{ mensajeError('encargado.telefono') }}</div>
+      }
+    </div>
+    <div class="col-md-4">
+      <label class="form-label">Parentesco</label>
+      <input type="text" class="form-control" formControlName="parentesco">
+      @if (mensajeError('encargado.parentesco')) {
+        <div class="text-danger small">{{ mensajeError('encargado.parentesco') }}</div>
+      }
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Correo (opcional)</label>
+      <input type="email" class="form-control" formControlName="correo">
+      @if (mensajeError('encargado.correo')) {
+        <div class="text-danger small">{{ mensajeError('encargado.correo') }}</div>
+      }
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Dirección (opcional)</label>
+      <input type="text" class="form-control" formControlName="direccion">
+      @if (mensajeError('encargado.direccion')) {
+        <div class="text-danger small">{{ mensajeError('encargado.direccion') }}</div>
+      }
+    </div>
+  </div>
+
+  <hr class="my-4">
+
+  @if (guardado()) {
+    <div class="alert alert-success">{{ mensajeExito }}</div>
+  }
+  @if (error) {
+    <div class="alert alert-danger">{{ error }}</div>
+  }
+
+  <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+    <a routerLink="/estudiantes" class="btn btn-outline-primary me-md-2">Volver al listado</a>
+    <button class="btn btn-secondary me-md-2" type="button" (click)="limpiar()">Limpiar</button>
+    <button class="btn btn-primary" type="submit" [disabled]="form.invalid">Guardar</button>
+  </div>
+</form>

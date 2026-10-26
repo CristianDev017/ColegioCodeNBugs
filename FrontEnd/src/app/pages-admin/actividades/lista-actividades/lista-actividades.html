@@ -1,0 +1,73 @@
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h3 class="mb-0">Actividades extracurriculares</h3>
+    <div>
+      <a routerLink="/inicio" class="btn btn-outline-secondary me-2">Volver</a>
+      <a routerLink="/actividades/nueva" class="btn btn-primary">Nueva actividad</a>
+    </div>
+  </div>
+
+  @if (error) {
+    <div class="alert alert-danger">{{ error }}</div>
+  }
+
+  <form [formGroup]="filtro" class="row g-2 mb-3" (ngSubmit)="filtrar()">
+    <div class="col-md-4">
+      <input type="text" class="form-control" formControlName="buscar" placeholder="Buscar por nombre">
+    </div>
+    <div class="col-auto">
+      <button class="btn btn-outline-primary" type="submit">Buscar</button>
+    </div>
+  </form>
+
+  <table class="table table-striped align-middle">
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Costo</th>
+        <th>Cupo</th>
+        <th>Inscritos</th>
+        <th>Disponibles</th>
+        <th>Estado</th>
+        <th class="text-end">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (a of actividades; track a.id) {
+        <tr>
+          <td>{{ a.nombre }}</td>
+          <td>{{ a.costo | currency:'Q' }}</td>
+          <td>{{ a.cupoTotal }}</td>
+          <td>{{ a.inscritos }}</td>
+          <td>{{ a.disponibles }}</td>
+          <td>
+            @if (a.activo) {
+              <span class="badge text-bg-success">Activa</span>
+            } @else {
+              <span class="badge text-bg-secondary">Inactiva</span>
+            }
+          </td>
+          <td class="text-end">
+            <a [routerLink]="['/actividades/editar', a.id]" class="btn btn-sm btn-outline-primary me-1">Editar</a>
+            <button class="btn btn-sm" [class.btn-outline-danger]="a.activo" [class.btn-outline-success]="!a.activo"
+              type="button" (click)="cambiarEstado(a)">
+              {{ a.activo ? 'Desactivar' : 'Activar' }}
+            </button>
+          </td>
+        </tr>
+      } @empty {
+        <tr>
+          <td colspan="7" class="text-center text-muted">No hay actividades registradas</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  <nav class="d-flex justify-content-between align-items-center">
+    <span class="text-muted">Página {{ pagina }} de {{ totalPaginas }} ({{ total }} actividades)</span>
+    <div>
+      <button class="btn btn-outline-secondary btn-sm me-1" [disabled]="pagina <= 1" (click)="irA(pagina - 1)">Anterior</button>
+      <button class="btn btn-outline-secondary btn-sm" [disabled]="pagina >= totalPaginas" (click)="irA(pagina + 1)">Siguiente</button>
+    </div>
+  </nav>
+</div>

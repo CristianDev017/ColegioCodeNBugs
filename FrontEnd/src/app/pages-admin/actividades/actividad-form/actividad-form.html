@@ -1,0 +1,44 @@
+<form [formGroup]="form" (ngSubmit)="enviar()">
+  <h5>Datos de la actividad</h5>
+  <div class="row g-3 mb-4">
+    <div class="col-md-6">
+      <label class="form-label">Nombre</label>
+      <input type="text" class="form-control" formControlName="nombre" maxlength="100">
+      @if (mensajeError('nombre')) {
+        <div class="text-danger small">{{ mensajeError('nombre') }}</div>
+      }
+    </div>
+    <div class="col-md-3">
+      <label class="form-label">Costo (Q)</label>
+      <input type="number" class="form-control" formControlName="costo" step="0.01" min="0.01">
+      @if (mensajeError('costo')) {
+        <div class="text-danger small">{{ mensajeError('costo') }}</div>
+      }
+    </div>
+    <div class="col-md-3">
+      <label class="form-label">Cupo total</label>
+      <input type="number" class="form-control" formControlName="cupoTotal" min="1" step="1">
+      @if (esEdicion && registro) {
+        <div class="form-text">Ya hay {{ registro.inscritos }} inscritos</div>
+      }
+      @if (mensajeError('cupoTotal')) {
+        <div class="text-danger small">{{ mensajeError('cupoTotal') }}</div>
+      }
+    </div>
+  </div>
+
+  <hr class="my-4">
+
+  @if (guardado) {
+    <div class="alert alert-success">{{ mensajeExito }}</div>
+  }
+  @if (error) {
+    <div class="alert alert-danger">{{ error }}</div>
+  }
+
+  <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+    <a routerLink="/actividades" class="btn btn-outline-primary me-md-2">Volver al listado</a>
+    <button class="btn btn-secondary me-md-2" type="button" (click)="limpiar()">Limpiar</button>
+    <button class="btn btn-primary" type="submit" [disabled]="form.invalid">Guardar</button>
+  </div>
+</form>

@@ -1,0 +1,96 @@
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h3 class="mb-0">Estudiantes</h3>
+    <div>
+      <a routerLink="/inicio" class="btn btn-outline-secondary me-2">Volver</a>
+      <a routerLink="/estudiantes/nuevo" class="btn btn-primary">Nuevo estudiante</a>
+    </div>
+  </div>
+
+  @if (mensaje) {
+    <div class="alert alert-success">{{ mensaje }}</div>
+  }
+  @if (error) {
+    <div class="alert alert-danger">{{ error }}</div>
+  }
+
+  <form [formGroup]="filtro" (ngSubmit)="filtrar()" class="row g-2 mb-3">
+    <div class="col-md-6">
+      <input type="text" class="form-control" formControlName="buscar" placeholder="Buscar por carné, nombres o apellidos">
+    </div>
+    <div class="col-md-3">
+      <select class="form-select" formControlName="estado" (change)="filtrar()">
+        <option value="">Todos los estados</option>
+        <option value="ACTIVO">Activo</option>
+        <option value="INACTIVO">Inactivo</option>
+        <option value="GRADUADO">Graduado</option>
+      </select>
+    </div>
+    <div class="col-md-3">
+      <button type="submit" class="btn btn-outline-primary">Buscar</button>
+    </div>
+  </form>
+
+  <table class="table table-striped align-middle">
+    <thead>
+      <tr>
+        <th>Carné</th>
+        <th>Nombre</th>
+        <th>Estado</th>
+        <th class="text-end">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (e of estudiantes; track e.id) {
+        <tr>
+          <td>{{ e.carnet }}</td>
+          <td>{{ e.apellidos }}, {{ e.nombres }}</td>
+          <td><span class="badge" [class]="'badge ' + claseEstado(e.estado)">{{ e.estado }}</span></td>
+          <td class="text-end">
+            <a [routerLink]="['/estudiantes/editar', e.id]" class="btn btn-sm btn-outline-primary me-1">Editar</a>
+            <button type="button" class="btn btn-sm btn-outline-secondary" (click)="pedirCambio(e)">Cambiar estado</button>
+          </td>
+        </tr>
+      } @empty {
+        <tr>
+          <td colspan="4" class="text-center text-muted">No hay estudiantes que coincidan</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  <nav class="d-flex justify-content-between align-items-center">
+    <span class="text-muted">Página {{ pagina }} de {{ totalPaginas }} ({{ total }} estudiantes)</span>
+    <div>
+      <button class="btn btn-outline-secondary btn-sm me-1" [disabled]="pagina <= 1" (click)="irA(pagina - 1)">Anterior</button>
+      <button class="btn btn-outline-secondary btn-sm" [disabled]="pagina >= totalPaginas" (click)="irA(pagina + 1)">Siguiente</button>
+    </div>
+  </nav>
+</div>
+
+@if (cambiando) {
+  <div class="modal-backdrop fade show"></div>
+  <div class="modal fade show d-block" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Cambiar estado</h5>
+          <button type="button" class="btn-close" (click)="cancelarCambio()"></button>
+        </div>
+        <div class="modal-body">
+          <p>Estudiante: <strong>{{ cambiando.apellidos }}, {{ cambiando.nombres }}</strong> ({{ cambiando.carnet }})</p>
+          <select class="form-select" (change)="elegirEstado($any($event.target).value)">
+            <option value="ACTIVO" [selected]="nuevoEstado === 'ACTIVO'">Activo</option>
+            <option value="INACTIVO" [selected]="nuevoEstado === 'INACTIVO'">Inactivo</option>
+            <option value="GRADUADO" [selected]="nuevoEstado === 'GRADUADO'">Graduado</option>
+          </select>
+          <p class="text-muted small mt-2">Un estudiante inactivo no podrá iniciar sesión. El historial no se borra.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="cancelarCambio()">Cancelar</button>
+          <button type="button" class="btn btn-primary" (click)="confirmarCambio()">Confirmar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+}

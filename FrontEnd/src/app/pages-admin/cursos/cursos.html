@@ -1,7 +1,10 @@
 <div class="container py-4">
   <div class="d-flex justify-content-between align-items-center mb-3">
     <h3 class="mb-0">Cursos</h3>
-    <button class="btn btn-primary" (click)="nuevo()">Nuevo curso</button>
+    <div>
+      <a routerLink="/inicio" class="btn btn-outline-secondary me-2">Volver</a>
+      <button class="btn btn-primary" (click)="nuevo()">Nuevo curso</button>
+    </div>
   </div>
 
   @if (mensaje) {

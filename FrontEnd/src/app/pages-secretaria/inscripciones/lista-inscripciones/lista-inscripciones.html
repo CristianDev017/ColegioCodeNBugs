@@ -1,0 +1,69 @@
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h3 class="mb-0">Inscripciones del año lectivo activo</h3>
+    <div>
+      <a routerLink="/inicio" class="btn btn-outline-secondary me-2">Volver</a>
+      @if (auth.tieneRol(['SECRETARIA'])) {
+        <a routerLink="/inscripciones/nueva" class="btn btn-primary">Nueva inscripción</a>
+      }
+    </div>
+  </div>
+
+  @if (error) {
+    <div class="alert alert-danger">{{ error }}</div>
+  }
+
+  <form [formGroup]="filtro" (ngSubmit)="filtrar()" class="row g-2 mb-3">
+    <div class="col-md-5">
+      <input type="text" class="form-control" formControlName="buscar" placeholder="Buscar por carné o nombre">
+    </div>
+    <div class="col-md-5">
+      <select class="form-select" formControlName="idSeccion" (change)="filtrar()">
+        <option [ngValue]="0">Todas las secciones</option>
+        @for (s of secciones; track s.idSeccion) {
+          <option [ngValue]="s.idSeccion">{{ s.grado }} - Sección {{ s.seccion }}</option>
+        }
+      </select>
+    </div>
+    <div class="col-md-2">
+      <button type="submit" class="btn btn-outline-primary">Buscar</button>
+    </div>
+  </form>
+
+  <table class="table table-striped align-middle">
+    <thead>
+      <tr>
+        <th>Carné</th>
+        <th>Estudiante</th>
+        <th>Grado</th>
+        <th>Sección</th>
+        <th>Fecha</th>
+        <th>Estado</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (i of inscripciones; track i.id) {
+        <tr>
+          <td>{{ i.carnet }}</td>
+          <td>{{ i.estudiante }}</td>
+          <td>{{ i.grado }}</td>
+          <td>{{ i.seccion }}</td>
+          <td>{{ i.fechaInscripcion }}</td>
+          <td><span class="badge bg-success">{{ i.estado }}</span></td>
+        </tr>
+      } @empty {
+        <tr>
+          <td colspan="6" class="text-center text-muted">No hay inscripciones que coincidan</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  <nav class="d-flex justify-content-between align-items-center">
+    <span class="text-muted">Página {{ pagina }} de {{ totalPaginas }} ({{ total }} inscripciones)</span>
+    <div>
+      <button class="btn btn-outline-secondary btn-sm me-1" [disabled]="pagina <= 1" (click)="irA(pagina - 1)">Anterior</button>
+      <button class="btn btn-outline-secondary btn-sm" [disabled]="pagina >= totalPaginas" (click)="irA(pagina + 1)">Siguiente</button>
+    </div>
+  </nav>
+</div>

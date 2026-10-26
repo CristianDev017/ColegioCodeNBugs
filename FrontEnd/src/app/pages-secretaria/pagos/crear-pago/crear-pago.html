@@ -1,0 +1,144 @@
+<div class="container py-4">
+  <h3 class="mb-3">Registrar pago</h3>
+
+  <form [formGroup]="form">
+    <h5>1. Estudiante y año lectivo</h5>
+
+    @if (seleccionado) {
+      <div class="alert alert-secondary d-flex justify-content-between align-items-center">
+        <span><strong>{{ seleccionado.carnet }}</strong> - {{ seleccionado.apellidos }}, {{ seleccionado.nombres }}</span>
+        <button type="button" class="btn btn-sm btn-outline-secondary" (click)="quitarSeleccion()">Cambiar</button>
+      </div>
+    } @else {
+      <input type="text" class="form-control mb-2" formControlName="buscar" placeholder="Filtrar por carné o nombre (opcional)">
+
+      <div class="list-group mb-2">
+        @for (e of resultados; track e.id) {
+          <button type="button" class="list-group-item list-group-item-action" (click)="elegir(e)">
+            <strong>{{ e.carnet }}</strong> - {{ e.apellidos }}, {{ e.nombres }}
+          </button>
+        } @empty {
+          <div class="list-group-item text-muted">No hay estudiantes activos con ese dato</div>
+        }
+      </div>
+
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <span class="text-muted small">Página {{ pagina }} de {{ totalPaginas }} ({{ total }} estudiantes)</span>
+        <div>
+          <button type="button" class="btn btn-outline-secondary btn-sm me-1" [disabled]="pagina <= 1" (click)="irA(pagina - 1)">Anterior</button>
+          <button type="button" class="btn btn-outline-secondary btn-sm" [disabled]="pagina >= totalPaginas" (click)="irA(pagina + 1)">Siguiente</button>
+        </div>
+      </div>
+    }
+
+    <div class="row g-3 mb-3">
+      <div class="col-md-4">
+        <label class="form-label">Año lectivo</label>
+        <select class="form-select" formControlName="idCiclo">
+          <option [ngValue]="null">Selecciona un año</option>
+          @for (c of ciclos; track c.id) {
+            <option [ngValue]="c.id">{{ c.anio }} ({{ c.estado }})</option>
+          }
+        </select>
+      </div>
+    </div>
+
+    @if (errorEstado) {
+      <div class="alert alert-warning">{{ errorEstado }}</div>
+    }
+
+    @if (estado) {
+      <div class="alert alert-info mb-4">
+        <div><strong>Grado:</strong> {{ estado.grado }}</div>
+        @if (estado.montoInscripcion !== undefined) {
+          <div>
+            <strong>Inscripción:</strong> {{ estado.montoInscripcion | currency:'Q' }}
+            ({{ estado.inscripcionPagada ? 'pagada' : 'pendiente' }})
+          </div>
+          <div>
+            <strong>Mensualidad:</strong> {{ estado.montoMensualidad | currency:'Q' }},
+            vence el día {{ estado.diaVencimiento }}
+          </div>
+        } @else {
+          <div>Este grado no tiene tarifa definida en ese año. Solo podrás cobrar actividades.</div>
+        }
+        <div><strong>Meses pagados:</strong> {{ textoMesesPagados() }}</div>
+      </div>
+
+      <h5>2. Concepto</h5>
+      <div class="row g-3 mb-4">
+        <div class="col-md-4">
+          <label class="form-label">Concepto</label>
+          <select class="form-select" formControlName="concepto">
+            <option value="INSCRIPCION" [disabled]="estado.inscripcionPagada">Inscripción</option>
+            <option value="MENSUALIDAD">Mensualidad</option>
+            <option value="ACTIVIDAD">Actividad extracurricular</option>
+          </select>
+        </div>
+
+        @if (form.value.concepto === 'MENSUALIDAD') {
+          <div class="col-md-4">
+            <label class="form-label">Mes</label>
+            <select class="form-select" formControlName="mes">
+              <option [ngValue]="null">Selecciona un mes</option>
+              @for (m of meses; track m.numero) {
+                <option [ngValue]="m.numero" [disabled]="mesPagado(m.numero)">
+                  {{ m.nombre }}{{ mesPagado(m.numero) ? ' (pagado)' : '' }}
+                </option>
+              }
+            </select>
+          </div>
+        }
+
+        @if (form.value.concepto === 'ACTIVIDAD') {
+          <div class="col-md-6">
+            <label class="form-label">Actividad</label>
+            <select class="form-select" formControlName="idActividad">
+              <option [ngValue]="null">Selecciona una actividad</option>
+              @for (a of actividades; track a.id) {
+                <option [ngValue]="a.id" [disabled]="a.disponibles === 0">
+                  {{ a.nombre }} - Q{{ a.costo }} ({{ a.disponibles }} cupos libres)
+                </option>
+              }
+            </select>
+          </div>
+        }
+      </div>
+
+      <h5>3. Monto y fecha</h5>
+      <div class="row g-3 mb-4">
+        <div class="col-md-4">
+          <label class="form-label">Monto (Q)</label>
+          <input type="number" class="form-control" formControlName="monto" step="0.01" min="0.01">
+          @if (montoEsperado() !== null) {
+            <div class="form-text">Monto esperado: {{ montoEsperado() | currency:'Q' }}</div>
+          }
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Fecha de pago</label>
+          <input type="date" class="form-control" formControlName="fechaPago" [max]="fechaMaxima">
+        </div>
+      </div>
+    }
+
+    <hr class="my-4">
+
+    @if (mensajeExito) {
+      <div class="alert alert-success d-flex justify-content-between align-items-center">
+        <span>{{ mensajeExito }}</span>
+        @if (ultimoPago) {
+          <a [routerLink]="['/pagos/comprobante', ultimoPago.id]" class="btn btn-sm btn-success">Ver comprobante</a>
+        }
+      </div>
+    }
+    @if (error) {
+      <div class="alert alert-danger">{{ error }}</div>
+    }
+
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+      <a routerLink="/pagos" class="btn btn-outline-primary me-md-2">Volver al listado</a>
+      <button type="button" class="btn btn-secondary me-md-2" (click)="limpiar()">Limpiar</button>
+      <button type="button" class="btn btn-primary" [disabled]="!puedeGuardar" (click)="registrar()">Registrar pago</button>
+    </div>
+  </form>
+</div>

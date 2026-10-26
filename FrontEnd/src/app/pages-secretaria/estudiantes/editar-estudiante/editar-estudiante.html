@@ -1,0 +1,10 @@
+<div class="container py-4">
+  <h3 class="mb-3">Modificar estudiante</h3>
+
+  @if (existe()) {
+    <app-estudiante-form [esEdicion]="true" [registro]="registro()!"></app-estudiante-form>
+  } @else if (cargado()) {
+    <div class="alert alert-danger">No se encontró el estudiante con id {{ id }}</div>
+    <a routerLink="/estudiantes" class="btn btn-primary">Volver al listado</a>
+  }
+</div>

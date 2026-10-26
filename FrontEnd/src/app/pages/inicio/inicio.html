@@ -1,15 +1,25 @@
 <main class="container py-5">
-  <header class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 mb-5">
+  <header
+    class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 mb-5"
+  >
     <div>
-      <h1 class="h3 mb-2">Panel de administración</h1>
+      <h1 class="h3 mb-2">Panel principal</h1>
       @if (auth.usuario$ | async; as usuario) {
         <div class="d-flex flex-wrap align-items-center gap-2">
           <p class="text-secondary mb-0">¡Hola, {{ usuario.username }}!</p>
-          <span class="badge rounded-pill text-bg-light border text-secondary">{{ usuario.rol }}</span>
+          <span class="badge rounded-pill text-bg-light border text-secondary">{{
+            usuario.rol
+          }}</span>
         </div>
       }
     </div>
-    <button type="button" class="btn btn-outline-secondary align-self-sm-center" (click)="cerrarSesion()">Cerrar sesión</button>
+    <button
+      type="button"
+      class="btn btn-outline-secondary align-self-sm-center"
+      (click)="cerrarSesion()"
+    >
+      Cerrar sesión
+    </button>
   </header>
 
   <section aria-labelledby="accesos-title">
@@ -21,7 +31,7 @@
           <article class="h-100 border rounded p-4">
             <h3 class="h5 mb-2">Usuarios administrativos</h3>
             <p class="text-secondary mb-4">Administra las cuentas y los accesos del personal.</p>
-            <a class="btn btn-primary" routerLink="/usuarios-admin">Ver usuarios</a>
+            <a routerLink="/usuarios-admin" class="btn btn-primary">Ver usuarios</a>
           </article>
         </div>
 
@@ -40,9 +50,7 @@
             <a routerLink="/grados-defecto" class="btn btn-primary">Ver grados por defecto</a>
           </article>
         </div>
-      }
 
-      @if (auth.tieneRol(['SUPER_ADMIN'])) {
         <div class="col-12 col-md-6 col-lg-4">
           <article class="h-100 border rounded p-4">
             <h3 class="h5 mb-2">Carreras</h3>
@@ -77,12 +85,61 @@
           </article>
         </div>
 
-        
         <div class="col-12 col-md-6 col-lg-4">
           <article class="h-100 border rounded p-4">
             <h3 class="h5 mb-2">Currículo</h3>
             <p class="text-secondary mb-4">Define los cursos de cada grado en un año lectivo.</p>
             <a routerLink="/curriculo" class="btn btn-primary">Ver currículo</a>
+          </article>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-4">
+          <article class="h-100 border rounded p-4">
+            <h3 class="h5 mb-2">Tarifas</h3>
+            <p class="text-secondary mb-4">
+              Define los montos de inscripción y mensualidad por grado.
+            </p>
+            <a routerLink="/tarifas" class="btn btn-primary">Ver tarifas</a>
+          </article>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-4">
+          <article class="h-100 border rounded p-4">
+            <h3 class="h5 mb-2">Actividades</h3>
+            <p class="text-secondary mb-4">
+              Administra las actividades extracurriculares con su costo y cupo.
+            </p>
+            <a routerLink="/actividades" class="btn btn-primary">Ver actividades</a>
+          </article>
+        </div>
+      }
+
+      @if (auth.tieneRol(['SECRETARIA', 'ADMIN'])) {
+        <div class="col-12 col-md-6 col-lg-4">
+          <article class="h-100 border rounded p-4">
+            <h3 class="h5 mb-2">Estudiantes</h3>
+            <p class="text-secondary mb-4">Registra y administra a los estudiantes del colegio.</p>
+            <a routerLink="/estudiantes" class="btn btn-primary">Ver estudiantes</a>
+          </article>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-4">
+          <article class="h-100 border rounded p-4">
+            <h3 class="h5 mb-2">Inscripciones</h3>
+            <p class="text-secondary mb-4">
+              Inscribe estudiantes en un grado y sección del año activo.
+            </p>
+            <a routerLink="/inscripciones" class="btn btn-primary">Ver inscripciones</a>
+          </article>
+        </div>
+        
+        <div class="col-12 col-md-6 col-lg-4">
+          <article class="h-100 border rounded p-4">
+            <h3 class="h5 mb-2">Pagos</h3>
+            <p class="text-secondary mb-4">
+              Registra inscripciones, mensualidades y actividades, y emite comprobantes.
+            </p>
+            <a routerLink="/pagos" class="btn btn-primary">Ver pagos</a>
           </article>
         </div>
       }

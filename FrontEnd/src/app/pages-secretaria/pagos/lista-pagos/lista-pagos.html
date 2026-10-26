@@ -1,0 +1,77 @@
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h3 class="mb-0">Pagos</h3>
+    <div>
+      <a routerLink="/inicio" class="btn btn-outline-secondary me-2">Volver</a>
+      @if (auth.tieneRol(['SECRETARIA'])) {
+        <a routerLink="/pagos/nuevo" class="btn btn-primary">Registrar pago</a>
+      }
+    </div>
+  </div>
+
+  @if (error) {
+    <div class="alert alert-danger">{{ error }}</div>
+  }
+
+  <form [formGroup]="filtro" class="row g-2 mb-3" (ngSubmit)="filtrar()">
+    <div class="col-md-3">
+      <select class="form-select" formControlName="idCiclo" (change)="filtrar()">
+        <option [ngValue]="0">Todos los años lectivos</option>
+        @for (c of ciclos; track c.id) {
+          <option [ngValue]="c.id">{{ c.anio }}</option>
+        }
+      </select>
+    </div>
+    <div class="col-md-5">
+      <input type="text" class="form-control" formControlName="buscar" placeholder="Buscar por carné o nombre">
+    </div>
+    <div class="col-auto">
+      <button class="btn btn-outline-primary" type="submit">Buscar</button>
+    </div>
+  </form>
+
+  <table class="table table-striped align-middle">
+    <thead>
+      <tr>
+        <th>Comprobante</th>
+        <th>Fecha</th>
+        <th>Carné</th>
+        <th>Estudiante</th>
+        <th>Año</th>
+        <th>Concepto</th>
+        <th>Monto</th>
+        <th>Atendió</th>
+        <th class="text-end">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (p of pagos; track p.id) {
+        <tr>
+          <td>{{ p.numeroComprobante }}</td>
+          <td>{{ p.fechaPago }}</td>
+          <td>{{ p.carnet }}</td>
+          <td>{{ p.estudiante }}</td>
+          <td>{{ p.anio }}</td>
+          <td>{{ detalle(p) }}</td>
+          <td>{{ p.monto | currency:'Q' }}</td>
+          <td>{{ p.usuario }}</td>
+          <td class="text-end">
+            <a [routerLink]="['/pagos/comprobante', p.id]" class="btn btn-sm btn-outline-primary">Comprobante</a>
+          </td>
+        </tr>
+      } @empty {
+        <tr>
+          <td colspan="9" class="text-center text-muted">No hay pagos registrados</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  <nav class="d-flex justify-content-between align-items-center">
+    <span class="text-muted">Página {{ pagina }} de {{ totalPaginas }} ({{ total }} pagos)</span>
+    <div>
+      <button class="btn btn-outline-secondary btn-sm me-1" [disabled]="pagina <= 1" (click)="irA(pagina - 1)">Anterior</button>
+      <button class="btn btn-outline-secondary btn-sm" [disabled]="pagina >= totalPaginas" (click)="irA(pagina + 1)">Siguiente</button>
+    </div>
+  </nav>
+</div>

@@ -1,0 +1,91 @@
+<div class="container py-4">
+  <div class="d-flex align-items-center gap-3 mb-3">
+    <a routerLink="/mis-cursos" class="btn btn-outline-secondary">Volver</a>
+    <h3 class="mb-0">Nómina y asistencia</h3>
+  </div>
+
+  @if (noEncontrado) {
+    <div class="alert alert-danger">No se encontró el curso o no está asignado a ti.</div>
+  } @else if (curso) {
+    <p class="mb-1"><strong>Curso:</strong> {{ curso.curso }}</p>
+    <p class="mb-1"><strong>Sección:</strong> {{ curso.seccion }}</p>
+    <p class="mb-3"><strong>Año lectivo:</strong> {{ curso.anio }}</p>
+
+    <div class="row g-3 align-items-end mb-3">
+      <div class="col-md-3">
+        <label class="form-label" for="fecha">Fecha de asistencia</label>
+        <input id="fecha" type="date" class="form-control" [value]="fecha" [max]="hoy"
+               (change)="cambiarFecha($any($event.target).value)">
+      </div>
+      <div class="col-md-9 d-flex flex-wrap gap-2 justify-content-md-end">
+        <button type="button" class="btn btn-outline-secondary" (click)="todosPresentes()">
+          Marcar todos presentes en esta página
+        </button>
+        <button type="button" class="btn btn-primary" [disabled]="cantidadMarcados === 0" (click)="guardar()">
+          Guardar asistencia ({{ cantidadMarcados }})
+        </button>
+      </div>
+    </div>
+
+    @if (mensajeExito) {
+      <div class="alert alert-success">{{ mensajeExito }}</div>
+    }
+    @if (mensajeError) {
+      <div class="alert alert-danger">{{ mensajeError }}</div>
+    }
+
+    <div class="table-responsive">
+      <table class="table table-striped align-middle">
+        <thead>
+          <tr>
+            <th>Carné</th>
+            <th>Estudiante</th>
+            <th>Asistencia</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (a of alumnos; track a.idInscripcion) {
+            <tr>
+              <td>{{ a.carnet }}</td>
+              <td>{{ a.estudiante }}</td>
+              <td>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" [name]="'asistencia' + a.idInscripcion"
+                         [id]="'p' + a.idInscripcion" [checked]="marcas[a.idInscripcion] === 'PRESENTE'"
+                         (change)="marcar(a.idInscripcion, 'PRESENTE')">
+                  <label class="form-check-label" [for]="'p' + a.idInscripcion">Presente</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" [name]="'asistencia' + a.idInscripcion"
+                         [id]="'a' + a.idInscripcion" [checked]="marcas[a.idInscripcion] === 'AUSENTE'"
+                         (change)="marcar(a.idInscripcion, 'AUSENTE')">
+                  <label class="form-check-label" [for]="'a' + a.idInscripcion">Ausente</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" [name]="'asistencia' + a.idInscripcion"
+                         [id]="'t' + a.idInscripcion" [checked]="marcas[a.idInscripcion] === 'TARDANZA'"
+                         (change)="marcar(a.idInscripcion, 'TARDANZA')">
+                  <label class="form-check-label" [for]="'t' + a.idInscripcion">Tardanza</label>
+                </div>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="3" class="text-center text-muted">
+                {{ cargando ? 'Cargando...' : 'No hay estudiantes inscritos en esta sección' }}
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center">
+      <span class="text-muted">Página {{ pagina }} de {{ totalPaginas }} ({{ total }} elementos)</span>
+      <div>
+        <button type="button" class="btn btn-outline-secondary me-2" [disabled]="pagina <= 1" (click)="anterior()">Anterior</button>
+        <button type="button" class="btn btn-outline-secondary" [disabled]="pagina >= totalPaginas" (click)="siguiente()">Siguiente</button>
+      </div>
+    </div>
+  }
+</div>

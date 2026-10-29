@@ -1,0 +1,103 @@
+<div class="container py-4">
+  <h3 class="mb-3">Emitir solvencia</h3>
+
+  <form [formGroup]="form">
+    <h5>1. Estudiante y año lectivo</h5>
+
+    @if (seleccionado) {
+      <div class="alert alert-secondary d-flex justify-content-between align-items-center">
+        <span><strong>{{ seleccionado.carnet }}</strong> - {{ seleccionado.apellidos }}, {{ seleccionado.nombres }}</span>
+        <button type="button" class="btn btn-sm btn-outline-secondary" (click)="quitarSeleccion()">Cambiar</button>
+      </div>
+    } @else {
+      <input type="text" class="form-control mb-2" formControlName="buscar" placeholder="Filtrar por carné o nombre (opcional)">
+
+      <div class="list-group mb-2">
+        @for (e of resultados; track e.id) {
+          <button type="button" class="list-group-item list-group-item-action" (click)="elegir(e)">
+            <strong>{{ e.carnet }}</strong> - {{ e.apellidos }}, {{ e.nombres }}
+          </button>
+        } @empty {
+          <div class="list-group-item text-muted">No hay estudiantes activos con ese dato</div>
+        }
+      </div>
+
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <span class="text-muted small">Página {{ pagina }} de {{ totalPaginas }} ({{ total }} estudiantes)</span>
+        <div>
+          <button type="button" class="btn btn-outline-secondary btn-sm me-1" [disabled]="pagina <= 1" (click)="irA(pagina - 1)">Anterior</button>
+          <button type="button" class="btn btn-outline-secondary btn-sm" [disabled]="pagina >= totalPaginas" (click)="irA(pagina + 1)">Siguiente</button>
+        </div>
+      </div>
+    }
+
+    <div class="row g-3 mb-3">
+      <div class="col-md-4">
+        <label class="form-label">Año lectivo</label>
+        <select class="form-select" formControlName="idCiclo">
+          <option [ngValue]="null">Selecciona un año</option>
+          @for (c of ciclos; track c.id) {
+            <option [ngValue]="c.id">{{ c.anio }} ({{ c.estado }})</option>
+          }
+        </select>
+      </div>
+    </div>
+
+    @if (errorVerificacion) {
+      <div class="alert alert-warning">{{ errorVerificacion }}</div>
+    }
+
+    @if (verificacion) {
+      <h5>2. Estado de cuenta</h5>
+      @if (verificacion.solvente) {
+        <div class="alert alert-success">El estudiante no tiene saldos pendientes. Se puede emitir la solvencia.</div>
+      } @else {
+        <div class="alert alert-danger">El estudiante tiene saldos pendientes y no se puede emitir la solvencia.</div>
+        <table class="table table-sm align-middle mb-4">
+          <thead>
+            <tr>
+              <th>Concepto</th>
+              <th>Vencimiento</th>
+              <th class="text-end">Monto</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (p of verificacion.pendientes; track p.detalle) {
+              <tr>
+                <td>{{ p.detalle }}</td>
+                <td>{{ p.fechaVencimiento ?? '-' }}</td>
+                <td class="text-end">{{ p.monto | currency:'Q' }}</td>
+              </tr>
+            }
+          </tbody>
+          <tfoot>
+            <tr>
+              <th colspan="2">Total pendiente</th>
+              <th class="text-end">{{ totalPendiente | currency:'Q' }}</th>
+            </tr>
+          </tfoot>
+        </table>
+      }
+    }
+
+    <hr class="my-4">
+
+    @if (mensajeExito) {
+      <div class="alert alert-success d-flex justify-content-between align-items-center">
+        <span>{{ mensajeExito }}</span>
+        @if (ultima) {
+          <a [routerLink]="['/solvencias/constancia', ultima.id]" class="btn btn-sm btn-success">Ver constancia</a>
+        }
+      </div>
+    }
+    @if (error) {
+      <div class="alert alert-danger">{{ error }}</div>
+    }
+
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+      <a routerLink="/solvencias" class="btn btn-outline-primary me-md-2">Volver al listado</a>
+      <button type="button" class="btn btn-secondary me-md-2" (click)="limpiar()">Limpiar</button>
+      <button type="button" class="btn btn-primary" [disabled]="!puedeEmitir" (click)="emitir()">Emitir solvencia</button>
+    </div>
+  </form>
+</div>

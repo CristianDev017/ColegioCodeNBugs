@@ -1,0 +1,38 @@
+<div class="container py-4">
+  @if (solvencia) {
+    <div class="card mx-auto" style="max-width: 720px;">
+      <div class="card-body p-5">
+        <h4 class="text-center mb-4">Constancia de solvencia</h4>
+
+        <p class="mb-4">
+          Se hace constar que el estudiante <strong>{{ solvencia.estudiante }}</strong>,
+          con carné <strong>{{ solvencia.carnet }}</strong>
+          @if (solvencia.grado) {
+            , inscrito en <strong>{{ solvencia.grado }}</strong>,
+          }
+          durante el año lectivo <strong>{{ solvencia.anio }}</strong>,
+          se encuentra <strong>SOLVENTE</strong>, sin saldos pendientes de inscripción ni de mensualidades a la fecha de emisión.
+        </p>
+
+        <dl class="row mb-0">
+          <dt class="col-sm-4">No. de solvencia</dt>
+          <dd class="col-sm-8">{{ solvencia.id }}</dd>
+
+          <dt class="col-sm-4">Fecha de emisión</dt>
+          <dd class="col-sm-8">{{ solvencia.fechaEmision }}</dd>
+
+          <dt class="col-sm-4">Emitida por</dt>
+          <dd class="col-sm-8">{{ solvencia.usuario }}</dd>
+        </dl>
+      </div>
+    </div>
+
+    <div class="d-grid gap-2 d-md-flex justify-content-md-center mt-4 d-print-none">
+      <a routerLink="/solvencias" class="btn btn-outline-primary me-md-2">Volver al listado</a>
+      <button type="button" class="btn btn-primary" (click)="imprimir()">Imprimir</button>
+    </div>
+  } @else if (cargado) {
+    <div class="alert alert-danger">{{ error }}</div>
+    <a routerLink="/solvencias" class="btn btn-primary">Volver al listado</a>
+  }
+</div>

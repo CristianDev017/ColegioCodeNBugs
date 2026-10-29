@@ -1,0 +1,116 @@
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <div class="d-flex align-items-center gap-3">
+      <a routerLink="/inicio" class="btn btn-outline-secondary">Volver</a>
+      <h3 class="mb-0">Empleados</h3>
+    </div>
+    <a routerLink="/empleados/nuevo" class="btn btn-primary">Nuevo empleado</a>
+  </div>
+
+  @if (mensajeExito) {
+    <div class="alert alert-success">{{ mensajeExito }}</div>
+  }
+  @if (mensajeError) {
+    <div class="alert alert-danger">{{ mensajeError }}</div>
+  }
+
+  <form [formGroup]="filtros" class="row g-2 mb-3">
+    <div class="col-md-5">
+      <input type="text" class="form-control" formControlName="buscar" placeholder="Buscar por nombre o DPI">
+    </div>
+    <div class="col-md-3">
+      <select class="form-select" formControlName="puesto">
+        <option value="">Todos los puestos</option>
+        @for (p of puestos; track p) {
+          <option [value]="p">{{ p }}</option>
+        }
+      </select>
+    </div>
+    <div class="col-md-2">
+      <select class="form-select" formControlName="estado">
+        <option value="">Todos</option>
+        <option value="ACTIVO">Activos</option>
+        <option value="INACTIVO">Inactivos</option>
+      </select>
+    </div>
+    <div class="col-md-2 d-grid">
+      <button type="button" class="btn btn-outline-secondary" (click)="limpiarFiltros()">Limpiar</button>
+    </div>
+  </form>
+
+  <div class="table-responsive">
+    <table class="table table-striped align-middle">
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>DPI</th>
+          <th>Puesto</th>
+          <th>Contratación</th>
+          <th class="text-end">Salario</th>
+          <th>Estado</th>
+          <th class="text-end">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (e of empleados; track e.id) {
+          <tr>
+            <td>{{ e.apellidos }}, {{ e.nombres }}</td>
+            <td>{{ e.dpi }}</td>
+            <td>{{ e.puesto }}</td>
+            <td>{{ e.fechaContratacion }}</td>
+            <td class="text-end">Q{{ e.salario | number:'1.2-2' }}</td>
+            <td>
+              <span class="badge" [class.bg-success]="e.estado === 'ACTIVO'" [class.bg-secondary]="e.estado === 'INACTIVO'">
+                {{ e.estado === 'ACTIVO' ? 'Activo' : 'Inactivo' }}
+              </span>
+            </td>
+            <td class="text-end">
+              <a [routerLink]="['/empleados/editar', e.id]" class="btn btn-sm btn-outline-primary me-2">Editar</a>
+              <button type="button" class="btn btn-sm"
+                      [class.btn-outline-danger]="e.estado === 'ACTIVO'"
+                      [class.btn-outline-success]="e.estado === 'INACTIVO'"
+                      (click)="pedirConfirmacion(e)">
+                {{ e.estado === 'ACTIVO' ? 'Desactivar' : 'Activar' }}
+              </button>
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="7" class="text-center text-muted">
+              {{ cargando ? 'Cargando...' : 'No hay empleados para mostrar' }}
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <div class="d-flex justify-content-between align-items-center">
+    <span class="text-muted">Página {{ pagina }} de {{ totalPaginas }} ({{ total }} elementos)</span>
+    <div>
+      <button type="button" class="btn btn-outline-secondary me-2" [disabled]="pagina <= 1" (click)="anterior()">Anterior</button>
+      <button type="button" class="btn btn-outline-secondary" [disabled]="pagina >= totalPaginas" (click)="siguiente()">Siguiente</button>
+    </div>
+  </div>
+</div>
+
+@if (empleadoAConfirmar) {
+  <div class="modal fade show d-block" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Confirmar</h5>
+        </div>
+        <div class="modal-body">
+          ¿Seguro que quieres {{ empleadoAConfirmar.estado === 'ACTIVO' ? 'desactivar' : 'activar' }} a
+          {{ empleadoAConfirmar.nombres }} {{ empleadoAConfirmar.apellidos }}?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="cancelar()">Cancelar</button>
+          <button type="button" class="btn btn-primary" (click)="confirmar()">Confirmar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-backdrop fade show"></div>
+}

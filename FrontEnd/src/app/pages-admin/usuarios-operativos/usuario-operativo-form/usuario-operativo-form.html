@@ -1,0 +1,88 @@
+<form [formGroup]="form" (ngSubmit)="enviar()" novalidate>
+  <h5 class="mb-3">Datos de la cuenta</h5>
+  <div class="row g-3 mb-4">
+    @if (esEdicion) {
+      <div class="col-md-4">
+        <label class="form-label">Rol</label>
+        <p class="form-control-plaintext mb-0">{{ registro?.rol }}</p>
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">Usuario</label>
+        <p class="form-control-plaintext mb-0">{{ registro?.username }}</p>
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">Empleado</label>
+        <p class="form-control-plaintext mb-0">{{ registro?.empleado ?? 'Sin empleado vinculado' }}</p>
+      </div>
+    } @else {
+      <div class="col-md-6">
+        <label class="form-label" for="rol">Rol</label>
+        <select id="rol" class="form-select" formControlName="rol" (change)="cargarEmpleados()"
+                [class.is-invalid]="mensajeError('rol')">
+          <option [ngValue]="null">Selecciona un rol</option>
+          @for (r of roles; track r.valor) {
+            <option [ngValue]="r.valor">{{ r.nombre }}</option>
+          }
+        </select>
+        <div class="invalid-feedback">{{ mensajeError('rol') }}</div>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label" for="idEmpleado">Empleado</label>
+        <select id="idEmpleado" class="form-select" formControlName="idEmpleado"
+                [class.is-invalid]="mensajeError('idEmpleado')">
+          <option [ngValue]="null">Selecciona un empleado</option>
+          @for (e of empleados; track e.id) {
+            <option [ngValue]="e.id">{{ e.nombre }}</option>
+          }
+        </select>
+        @if (empleadosCargados && empleados.length === 0) {
+          <div class="form-text text-warning">
+            No hay empleados disponibles para este rol. Primero regístralo en
+            <a routerLink="/empleados/nuevo">Empleados</a>.
+          </div>
+        } @else {
+          <div class="form-text">Solo empleados activos, sin cuenta y con el puesto del rol</div>
+        }
+        <div class="invalid-feedback">{{ mensajeError('idEmpleado') }}</div>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label" for="username">Usuario</label>
+        <input id="username" type="text" class="form-control" formControlName="username" maxlength="50"
+               [class.is-invalid]="mensajeError('username')">
+        <div class="form-text">De 4 a 50 caracteres: letras, números, punto, guion o guion bajo</div>
+        <div class="invalid-feedback">{{ mensajeError('username') }}</div>
+      </div>
+    }
+
+    <div class="col-md-6">
+      <label class="form-label" for="correo">Correo</label>
+      <input id="correo" type="email" class="form-control" formControlName="correo" maxlength="100"
+             [class.is-invalid]="mensajeError('correo')">
+      <div class="invalid-feedback">{{ mensajeError('correo') }}</div>
+    </div>
+    <div class="col-md-6">
+      <label class="form-label" for="password">
+        {{ esEdicion ? 'Nueva contraseña (opcional)' : 'Contraseña inicial' }}
+      </label>
+      <input id="password" type="password" class="form-control" formControlName="password" maxlength="50"
+             autocomplete="new-password" [class.is-invalid]="mensajeError('password')">
+      <div class="form-text">
+        {{ esEdicion ? 'Déjala vacía para conservar la actual' : 'De 6 a 50 caracteres' }}
+      </div>
+      <div class="invalid-feedback">{{ mensajeError('password') }}</div>
+    </div>
+  </div>
+
+  @if (mensajeExito) {
+    <div class="alert alert-success">{{ mensajeExito }}</div>
+  }
+  @if (mensajeErrorServidor) {
+    <div class="alert alert-danger">{{ mensajeErrorServidor }}</div>
+  }
+
+  <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+    <a routerLink="/usuarios-operativos" class="btn btn-outline-primary me-md-2">Volver al listado</a>
+    <button type="button" class="btn btn-secondary me-md-2" (click)="limpiar()">Limpiar</button>
+    <button type="submit" class="btn btn-primary" [disabled]="form.invalid">Guardar</button>
+  </div>
+</form>

@@ -1,0 +1,122 @@
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <div class="d-flex align-items-center gap-3">
+      <a routerLink="/inicio" class="btn btn-outline-secondary">Volver</a>
+      <h3 class="mb-0">Usuarios operativos</h3>
+    </div>
+    <a routerLink="/usuarios-operativos/nuevo" class="btn btn-primary">Nuevo usuario</a>
+  </div>
+
+  @if (mensajeExito) {
+    <div class="alert alert-success">{{ mensajeExito }}</div>
+  }
+  @if (mensajeError) {
+    <div class="alert alert-danger">{{ mensajeError }}</div>
+  }
+
+  <form [formGroup]="filtros" class="row g-2 mb-3">
+    <div class="col-md-5">
+      <input type="text" class="form-control" formControlName="buscar" placeholder="Buscar por usuario, correo o empleado">
+    </div>
+    <div class="col-md-3">
+      <select class="form-select" formControlName="rol">
+        <option value="">Todos los roles</option>
+        @for (r of roles; track r.valor) {
+          <option [value]="r.valor">{{ r.nombre }}</option>
+        }
+      </select>
+    </div>
+    <div class="col-md-2">
+      <select class="form-select" formControlName="estado">
+        <option value="">Todos</option>
+        <option value="ACTIVO">Activos</option>
+        <option value="INACTIVO">Inactivos</option>
+      </select>
+    </div>
+    <div class="col-md-2 d-grid">
+      <button type="button" class="btn btn-outline-secondary" (click)="limpiarFiltros()">Limpiar</button>
+    </div>
+  </form>
+
+  <div class="table-responsive">
+    <table class="table table-striped align-middle">
+      <thead>
+        <tr>
+          <th>Usuario</th>
+          <th>Correo</th>
+          <th>Rol</th>
+          <th>Empleado</th>
+          <th>Último acceso</th>
+          <th>Estado</th>
+          <th class="text-end">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (u of usuarios; track u.id) {
+          <tr>
+            <td>{{ u.username }}</td>
+            <td>{{ u.correo }}</td>
+            <td>{{ nombreRol(u.rol) }}</td>
+            <td>{{ u.empleado ?? '-' }}</td>
+            <td>
+              @if (u.ultimoAcceso) {
+                {{ u.ultimoAcceso.substring(0, 16) }}
+              } @else {
+                Nunca
+              }
+            </td>
+            <td>
+              <span class="badge" [class.bg-success]="u.estado === 'ACTIVO'" [class.bg-secondary]="u.estado === 'INACTIVO'">
+                {{ u.estado === 'ACTIVO' ? 'Activo' : 'Inactivo' }}
+              </span>
+            </td>
+            <td class="text-end">
+              <a [routerLink]="['/usuarios-operativos/editar', u.id]" class="btn btn-sm btn-outline-primary me-2">Editar</a>
+              <button type="button" class="btn btn-sm"
+                      [class.btn-outline-danger]="u.estado === 'ACTIVO'"
+                      [class.btn-outline-success]="u.estado === 'INACTIVO'"
+                      (click)="pedirConfirmacion(u)">
+                {{ u.estado === 'ACTIVO' ? 'Desactivar' : 'Activar' }}
+              </button>
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="7" class="text-center text-muted">
+              {{ cargando ? 'Cargando...' : 'No hay usuarios operativos para mostrar' }}
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <div class="d-flex justify-content-between align-items-center">
+    <span class="text-muted">Página {{ pagina }} de {{ totalPaginas }} ({{ total }} elementos)</span>
+    <div>
+      <button type="button" class="btn btn-outline-secondary me-2" [disabled]="pagina <= 1" (click)="anterior()">Anterior</button>
+      <button type="button" class="btn btn-outline-secondary" [disabled]="pagina >= totalPaginas" (click)="siguiente()">Siguiente</button>
+    </div>
+  </div>
+</div>
+
+@if (usuarioAConfirmar) {
+  <div class="modal fade show d-block" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Confirmar</h5>
+        </div>
+        <div class="modal-body">
+          ¿Seguro que quieres {{ usuarioAConfirmar.estado === 'ACTIVO' ? 'desactivar' : 'activar' }}
+          la cuenta de {{ usuarioAConfirmar.username }}?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="cancelar()">Cancelar</button>
+          <button type="button" class="btn btn-primary" (click)="confirmar()">Confirmar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-backdrop fade show"></div>
+}

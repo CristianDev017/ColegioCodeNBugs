@@ -1,0 +1,11 @@
+<div class="container py-4">
+  <h3 class="mb-4">Editar actividad evaluativa</h3>
+  @if (cargando) {
+    <p>Cargando...</p>
+  } @else if (noEncontrado) {
+    <div class="alert alert-danger">No se encontró la actividad.</div>
+    <a [routerLink]="['/mis-cursos', idAsignacion, 'ponderaciones']" class="btn btn-outline-primary">Volver al listado</a>
+  } @else {
+    <app-ponderacion-form [esEdicion]="true" [idAsignacion]="idAsignacion" [registro]="registro"></app-ponderacion-form>
+  }
+</div>

@@ -1,0 +1,85 @@
+<form [formGroup]="form" (ngSubmit)="enviar()" novalidate>
+  <h5 class="mb-3">Datos personales</h5>
+  <div class="row g-3 mb-4">
+    <div class="col-md-6">
+      <label class="form-label" for="nombres">Nombres</label>
+      <input id="nombres" type="text" class="form-control" formControlName="nombres"
+             [class.is-invalid]="mensajeError('nombres')">
+      <div class="invalid-feedback">{{ mensajeError('nombres') }}</div>
+    </div>
+    <div class="col-md-6">
+      <label class="form-label" for="apellidos">Apellidos</label>
+      <input id="apellidos" type="text" class="form-control" formControlName="apellidos"
+             [class.is-invalid]="mensajeError('apellidos')">
+      <div class="invalid-feedback">{{ mensajeError('apellidos') }}</div>
+    </div>
+    <div class="col-md-4">
+      <label class="form-label" for="dpi">DPI</label>
+      <input id="dpi" type="text" class="form-control" formControlName="dpi" maxlength="13"
+             [class.is-invalid]="mensajeError('dpi')">
+      <div class="form-text">13 números</div>
+      <div class="invalid-feedback">{{ mensajeError('dpi') }}</div>
+    </div>
+    <div class="col-md-4">
+      <label class="form-label" for="fechaNacimiento">Fecha de nacimiento</label>
+      <input id="fechaNacimiento" type="date" class="form-control" formControlName="fechaNacimiento"
+             [max]="hace18Anios" [class.is-invalid]="mensajeError('fechaNacimiento')">
+      <div class="form-text">Debe ser mayor de 18 años</div>
+      <div class="invalid-feedback">{{ mensajeError('fechaNacimiento') }}</div>
+    </div>
+    <div class="col-md-4">
+      <label class="form-label" for="telefono">Teléfono (opcional)</label>
+      <input id="telefono" type="text" class="form-control" formControlName="telefono" maxlength="15"
+             [class.is-invalid]="mensajeError('telefono')">
+      <div class="form-text">De 8 a 15 números</div>
+      <div class="invalid-feedback">{{ mensajeError('telefono') }}</div>
+    </div>
+    <div class="col-12">
+      <label class="form-label" for="direccion">Dirección (opcional)</label>
+      <input id="direccion" type="text" class="form-control" formControlName="direccion"
+             [class.is-invalid]="mensajeError('direccion')">
+      <div class="invalid-feedback">{{ mensajeError('direccion') }}</div>
+    </div>
+  </div>
+
+  <h5 class="mb-3">Datos laborales</h5>
+  <div class="row g-3 mb-4">
+    <div class="col-md-4">
+      <label class="form-label" for="puesto">Puesto</label>
+      <select id="puesto" class="form-select" formControlName="puesto"
+              [class.is-invalid]="mensajeError('puesto')">
+        <option [ngValue]="null">Selecciona un puesto</option>
+        @for (p of puestos; track p) {
+          <option [ngValue]="p">{{ p }}</option>
+        }
+      </select>
+      <div class="invalid-feedback">{{ mensajeError('puesto') }}</div>
+    </div>
+    <div class="col-md-4">
+      <label class="form-label" for="fechaContratacion">Fecha de contratación</label>
+      <input id="fechaContratacion" type="date" class="form-control" formControlName="fechaContratacion"
+             [max]="hoy" [class.is-invalid]="mensajeError('fechaContratacion')">
+      <div class="invalid-feedback">{{ mensajeError('fechaContratacion') }}</div>
+    </div>
+    <div class="col-md-4">
+      <label class="form-label" for="salario">Salario (Q)</label>
+      <input id="salario" type="number" step="0.01" min="0" class="form-control" formControlName="salario"
+             [class.is-invalid]="mensajeError('salario')">
+      <div class="form-text">Hasta 2 decimales</div>
+      <div class="invalid-feedback">{{ mensajeError('salario') }}</div>
+    </div>
+  </div>
+
+  @if (mensajeExito) {
+    <div class="alert alert-success">{{ mensajeExito }}</div>
+  }
+  @if (mensajeErrorServidor) {
+    <div class="alert alert-danger">{{ mensajeErrorServidor }}</div>
+  }
+
+  <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+    <a routerLink="/empleados" class="btn btn-outline-primary me-md-2">Volver al listado</a>
+    <button type="button" class="btn btn-secondary me-md-2" (click)="limpiar()">Limpiar</button>
+    <button type="submit" class="btn btn-primary" [disabled]="form.invalid">Guardar</button>
+  </div>
+</form>

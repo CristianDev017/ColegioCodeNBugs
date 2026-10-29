@@ -8,4 +8,5 @@ public class Roles {
     public static final String MAESTRO = "MAESTRO";
     public static final String BIBLIOTECARIO = "BIBLIOTECARIO";
     public static final String ESTUDIANTE = "ESTUDIANTE";
+    public static final String MANTENIMIENTO = "MANTENIMIENTO";
 }

@@ -1,0 +1,11 @@
+<div class="container py-4">
+  <h3 class="mb-4">Cambiar maestro</h3>
+  @if (cargando) {
+    <p>Cargando...</p>
+  } @else if (noEncontrado) {
+    <div class="alert alert-danger">No se encontró la asignación.</div>
+    <a routerLink="/asignaciones" class="btn btn-outline-primary">Volver al listado</a>
+  } @else {
+    <app-asignacion-form [esEdicion]="true" [registro]="registro"></app-asignacion-form>
+  }
+</div>

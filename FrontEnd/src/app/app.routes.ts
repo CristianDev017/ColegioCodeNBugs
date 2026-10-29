@@ -21,6 +21,16 @@ import { EditarTarifa } from './pages-admin/tarifas/editar-tarifa/editar-tarifa'
 import { ListaActividades } from './pages-admin/actividades/lista-actividades/lista-actividades';
 import { CrearActividad } from './pages-admin/actividades/crear-actividad/crear-actividad';
 import { EditarActividad } from './pages-admin/actividades/editar-actividad/editar-actividad';
+import { ListaEmpleados } from './pages-admin/empleados/lista-empleados/lista-empleados';
+import { CrearEmpleado } from './pages-admin/empleados/crear-empleado/crear-empleado';
+import { EditarEmpleado } from './pages-admin/empleados/editar-empleado/editar-empleado';
+import { ListaAsignaciones } from './pages-admin/asignaciones/lista-asignaciones/lista-asignaciones';
+import { CrearAsignacion } from './pages-admin/asignaciones/crear-asignacion/crear-asignacion';
+import { EditarAsignacion } from './pages-admin/asignaciones/editar-asignacion/editar-asignacion';
+import { ListaUsuariosOperativos } from './pages-admin/usuarios-operativos/lista-usuarios-operativos/lista-usuarios-operativos';
+import { CrearUsuarioOperativo } from './pages-admin/usuarios-operativos/crear-usuario-operativo/crear-usuario-operativo';
+import { EditarUsuarioOperativo } from './pages-admin/usuarios-operativos/editar-usuario-operativo/editar-usuario-operativo';
+
 
 import { ListaEstudiantes } from './pages-secretaria/estudiantes/lista-estudiantes/lista-estudiantes';
 import { CrearEstudiante } from './pages-secretaria/estudiantes/crear-estudiante/crear-estudiante';
@@ -30,6 +40,16 @@ import { CrearInscripcion } from './pages-secretaria/inscripciones/crear-inscrip
 import { ListaPagos } from './pages-secretaria/pagos/lista-pagos/lista-pagos';
 import { CrearPago } from './pages-secretaria/pagos/crear-pago/crear-pago';
 import { ComprobantePago } from './pages-secretaria/pagos/comprobante-pago/comprobante-pago';
+import { ListaSolvencias } from './pages-secretaria/solvencias/lista-solvencias/lista-solvencias';
+import { CrearSolvencia } from './pages-secretaria/solvencias/crear-solvencia/crear-solvencia';
+import { ConstanciaSolvencia } from './pages-secretaria/solvencias/constancia-solvencia/constancia-solvencia';
+
+
+import { MisCursos } from './pages-maestro/mis-cursos/mis-cursos';
+import { CursoAsistencia } from './pages-maestro/curso-asistencia/curso-asistencia';
+import { ListaPonderaciones } from './pages-maestro/ponderaciones/lista-ponderaciones/lista-ponderaciones';
+import { CrearPonderacion } from './pages-maestro/ponderaciones/crear-ponderacion/crear-ponderacion';
+import { EditarPonderacion } from './pages-maestro/ponderaciones/editar-ponderacion/editar-ponderacion';
 
 export const routes: Routes = [
   // publicas
@@ -61,6 +81,24 @@ export const routes: Routes = [
   { path: 'actividades/nueva', component: CrearActividad, canActivate: [authGuard], data: { roles: ['ADMIN'] } },
   { path: 'actividades/editar/:id', component: EditarActividad, canActivate: [authGuard], data: { roles: ['ADMIN'] } },
 
+
+  { path: 'empleados', component: ListaEmpleados, canActivate: [authGuard], data: { roles: ['ADMIN'] } },
+  { path: 'empleados/nuevo', component: CrearEmpleado, canActivate: [authGuard], data: { roles: ['ADMIN'] } },
+  { path: 'empleados/editar/:id', component: EditarEmpleado, canActivate: [authGuard], data: { roles: ['ADMIN'] } },
+
+  
+  { path: 'asignaciones', component: ListaAsignaciones, canActivate: [authGuard], data: { roles: ['ADMIN'] } },
+  { path: 'asignaciones/nueva', component: CrearAsignacion, canActivate: [authGuard], data: { roles: ['ADMIN'] } },
+  { path: 'asignaciones/editar/:id', component: EditarAsignacion, canActivate: [authGuard], data: { roles: ['ADMIN'] } },
+  
+  { path: 'usuarios-operativos', component: ListaUsuariosOperativos, canActivate: [authGuard], data: { roles: ['ADMIN'] } },
+  { path: 'usuarios-operativos/nuevo', component: CrearUsuarioOperativo, canActivate: [authGuard], data: { roles: ['ADMIN'] } },
+  { path: 'usuarios-operativos/editar/:id', component: EditarUsuarioOperativo, canActivate: [authGuard], data: { roles: ['ADMIN'] } },
+  
+  
+
+  
+  
   // secretaria: estudiantes
   { path: 'estudiantes', component: ListaEstudiantes, canActivate: [authGuard], data: { roles: ['SECRETARIA', 'ADMIN'] } },
   { path: 'estudiantes/nuevo', component: CrearEstudiante, canActivate: [authGuard], data: { roles: ['SECRETARIA', 'ADMIN'] } },
@@ -76,9 +114,21 @@ export const routes: Routes = [
   { path: 'pagos/nuevo', component: CrearPago, canActivate: [authGuard], data: { roles: ['SECRETARIA'] } },
   { path: 'pagos/comprobante/:id', component: ComprobantePago, canActivate: [authGuard], data: { roles: ['SECRETARIA', 'ADMIN'] } },
  
- 
+   // secretaria: solvencias
+  { path: 'solvencias', component: ListaSolvencias, canActivate: [authGuard], data: { roles: ['SECRETARIA', 'ADMIN'] } },
+  { path: 'solvencias/nueva', component: CrearSolvencia, canActivate: [authGuard], data: { roles: ['SECRETARIA'] } },
+  { path: 'solvencias/constancia/:id', component: ConstanciaSolvencia, canActivate: [authGuard], data: { roles: ['SECRETARIA', 'ADMIN'] } },
+  
+  
+
+  // maestro
+
+  { path: 'mis-cursos', component: MisCursos, canActivate: [authGuard], data: { roles: ['MAESTRO'] } },
+  { path: 'mis-cursos/:id/ponderaciones', component: ListaPonderaciones, canActivate: [authGuard], data: { roles: ['MAESTRO'] } },
+  { path: 'mis-cursos/:id/ponderaciones/nueva', component: CrearPonderacion, canActivate: [authGuard], data: { roles: ['MAESTRO'] } },
+  { path: 'mis-cursos/:id/ponderaciones/editar/:idPonderacion', component: EditarPonderacion, canActivate: [authGuard], data: { roles: ['MAESTRO'] } },
+  { path: 'mis-cursos/:id/asistencia', component: CursoAsistencia, canActivate: [authGuard], data: { roles: ['MAESTRO'] } },
   // redirecciones
   { path: '', pathMatch: 'full', redirectTo: 'inicio' },
   { path: '**', redirectTo: 'inicio' }
 ];
-

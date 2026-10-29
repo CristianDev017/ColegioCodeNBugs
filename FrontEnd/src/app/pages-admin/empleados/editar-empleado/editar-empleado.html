@@ -1,0 +1,11 @@
+<div class="container py-4">
+  <h3 class="mb-4">Editar empleado</h3>
+  @if (cargando) {
+    <p>Cargando...</p>
+  } @else if (noEncontrado) {
+    <div class="alert alert-danger">No se encontró el empleado.</div>
+    <a routerLink="/empleados" class="btn btn-outline-primary">Volver al listado</a>
+  } @else {
+    <app-empleado-form [esEdicion]="true" [registro]="registro"></app-empleado-form>
+  }
+</div>

@@ -1,0 +1,70 @@
+<form [formGroup]="form" (ngSubmit)="enviar()" novalidate>
+  <div class="row g-3 mb-4">
+    <div class="col-md-12">
+      <label class="form-label" for="idEmpleado">Maestro</label>
+      <select id="idEmpleado" class="form-select" formControlName="idEmpleado"
+              [class.is-invalid]="mensajeError('idEmpleado')">
+        <option [ngValue]="null">Selecciona un maestro</option>
+        @for (m of maestros; track m.id) {
+          <option [ngValue]="m.id">{{ m.nombre }}</option>
+        }
+      </select>
+      <div class="invalid-feedback">{{ mensajeError('idEmpleado') }}</div>
+    </div>
+
+    @if (esEdicion) {
+      <div class="col-md-6">
+        <label class="form-label">Sección</label>
+        <p class="form-control-plaintext mb-0">{{ registro?.seccion }}</p>
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Curso</label>
+        <p class="form-control-plaintext mb-0">{{ registro?.curso }}</p>
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Año lectivo</label>
+        <p class="form-control-plaintext mb-0">{{ registro?.anio }}</p>
+      </div>
+    } @else {
+      <div class="col-md-6">
+        <label class="form-label" for="idSeccion">Sección</label>
+        <select id="idSeccion" class="form-select" formControlName="idSeccion" (change)="cargarCursos()"
+                [class.is-invalid]="mensajeError('idSeccion')">
+          <option [ngValue]="null">Selecciona una sección</option>
+          @for (s of secciones; track s.id) {
+            <option [ngValue]="s.id">{{ s.nombre }}</option>
+          }
+        </select>
+        <div class="form-text">Solo aparecen secciones con currículo en el año lectivo activo</div>
+        <div class="invalid-feedback">{{ mensajeError('idSeccion') }}</div>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label" for="idCurriculoCurso">Curso</label>
+        <select id="idCurriculoCurso" class="form-select" formControlName="idCurriculoCurso"
+                [class.is-invalid]="mensajeError('idCurriculoCurso')">
+          <option [ngValue]="null">Selecciona un curso</option>
+          @for (c of cursosLibres; track c.idCurriculoCurso) {
+            <option [ngValue]="c.idCurriculoCurso">{{ c.curso }}</option>
+          }
+        </select>
+        @if (seccionConCursos && cursosLibres.length === 0) {
+          <div class="form-text text-warning">Todos los cursos de esta sección ya tienen maestro</div>
+        }
+        <div class="invalid-feedback">{{ mensajeError('idCurriculoCurso') }}</div>
+      </div>
+    }
+  </div>
+
+  @if (mensajeExito) {
+    <div class="alert alert-success">{{ mensajeExito }}</div>
+  }
+  @if (mensajeErrorServidor) {
+    <div class="alert alert-danger">{{ mensajeErrorServidor }}</div>
+  }
+
+  <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+    <a routerLink="/asignaciones" class="btn btn-outline-primary me-md-2">Volver al listado</a>
+    <button type="button" class="btn btn-secondary me-md-2" (click)="limpiar()">Limpiar</button>
+    <button type="submit" class="btn btn-primary" [disabled]="form.invalid">Guardar</button>
+  </div>
+</form>

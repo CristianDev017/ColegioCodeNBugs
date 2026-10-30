@@ -1,0 +1,46 @@
+<form [formGroup]="form" (ngSubmit)="enviar()" novalidate>
+  <div class="row g-3 mb-4">
+    <div class="col-md-12">
+      <label class="form-label" for="titulo">Título</label>
+      <input id="titulo" type="text" class="form-control" formControlName="titulo" maxlength="150"
+             [class.is-invalid]="mensajeError('titulo')">
+      <div class="invalid-feedback">{{ mensajeError('titulo') }}</div>
+    </div>
+    <div class="col-md-6">
+      <label class="form-label" for="autor">Autor</label>
+      <input id="autor" type="text" class="form-control" formControlName="autor" maxlength="100"
+             [class.is-invalid]="mensajeError('autor')">
+      <div class="invalid-feedback">{{ mensajeError('autor') }}</div>
+    </div>
+    <div class="col-md-6">
+      <label class="form-label" for="editorial">Editorial</label>
+      <input id="editorial" type="text" class="form-control" formControlName="editorial" maxlength="100"
+             [class.is-invalid]="mensajeError('editorial')">
+      <div class="invalid-feedback">{{ mensajeError('editorial') }}</div>
+    </div>
+    <div class="col-md-4">
+      <label class="form-label" for="cantidadTotal">Cantidad de ejemplares</label>
+      <input id="cantidadTotal" type="number" min="0" max="9999" class="form-control" formControlName="cantidadTotal"
+             [class.is-invalid]="mensajeError('cantidadTotal')">
+      @if (esEdicion) {
+        <div class="form-text">Ejemplares prestados ahora: {{ prestados }}. No puede ser menos que eso.</div>
+      } @else {
+        <div class="form-text">Todos quedan disponibles al registrar el libro</div>
+      }
+      <div class="invalid-feedback">{{ mensajeError('cantidadTotal') }}</div>
+    </div>
+  </div>
+
+  @if (mensajeExito) {
+    <div class="alert alert-success">{{ mensajeExito }}</div>
+  }
+  @if (mensajeErrorServidor) {
+    <div class="alert alert-danger">{{ mensajeErrorServidor }}</div>
+  }
+
+  <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+    <a routerLink="/libros" class="btn btn-outline-primary me-md-2">Volver al listado</a>
+    <button type="button" class="btn btn-secondary me-md-2" (click)="limpiar()">Limpiar</button>
+    <button type="submit" class="btn btn-primary" [disabled]="form.invalid">Guardar</button>
+  </div>
+</form>

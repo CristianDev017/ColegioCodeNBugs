@@ -139,7 +139,9 @@
           <div class="col-12 col-md-6 col-lg-4">
             <article class="h-100 border rounded p-4">
               <h4 class="h5 mb-2">Estudiantes</h4>
-              <p class="text-secondary mb-4">Registra y administra a los estudiantes del colegio.</p>
+              <p class="text-secondary mb-4">
+                Registra y administra a los estudiantes del colegio.
+              </p>
               <a routerLink="/estudiantes" class="btn btn-primary">Ver estudiantes</a>
             </article>
           </div>
@@ -179,7 +181,9 @@
           <div class="col-12 col-md-6 col-lg-4">
             <article class="h-100 border rounded p-4">
               <h4 class="h5 mb-2">Estudiantes</h4>
-              <p class="text-secondary mb-4">Registra y administra a los estudiantes del colegio.</p>
+              <p class="text-secondary mb-4">
+                Registra y administra a los estudiantes del colegio.
+              </p>
               <a routerLink="/estudiantes" class="btn btn-primary">Ver estudiantes</a>
             </article>
           </div>
@@ -222,15 +226,92 @@
       </div>
     }
 
-        @if (auth.tieneRol(['MAESTRO'])) {
+    @if (auth.tieneRol(['MAESTRO'])) {
       <div class="mb-5">
         <h3 class="h6 text-uppercase text-secondary fw-semibold mb-3">Docencia</h3>
         <div class="row g-4">
           <div class="col-12 col-md-6 col-lg-4">
             <article class="h-100 border rounded p-4">
               <h4 class="h5 mb-2">Mis cursos</h4>
-              <p class="text-secondary mb-4">Consulta tu nómina y toma la asistencia de tus cursos.</p>
+              <p class="text-secondary mb-4">
+                Consulta tu nómina y toma la asistencia de tus cursos.
+              </p>
               <a routerLink="/mis-cursos" class="btn btn-primary">Ver mis cursos</a>
+            </article>
+          </div>
+        </div>
+      </div>
+    }
+
+    @if (auth.tieneRol(['BIBLIOTECARIO'])) {
+      <div class="mb-5">
+        <h3 class="h6 text-uppercase text-secondary fw-semibold mb-3">Catálogo</h3>
+        <div class="row g-4">
+          <div class="col-12 col-md-6 col-lg-4">
+            <article class="h-100 border rounded p-4">
+              <h4 class="h5 mb-2">Libros</h4>
+              <p class="text-secondary mb-4">Administra el catálogo y el inventario de libros.</p>
+              <a routerLink="/libros" class="btn btn-primary">Ver libros</a>
+            </article>
+          </div>
+
+          <div class="col-12 col-md-6 col-lg-4">
+            <article class="h-100 border rounded p-4">
+              <h4 class="h5 mb-2">Parámetros</h4>
+              <p class="text-secondary mb-4">
+                Define los días de préstamo y la multa por día de atraso.
+              </p>
+              <a routerLink="/biblioteca/parametros" class="btn btn-primary">Ver parámetros</a>
+            </article>
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-5">
+        <h3 class="h6 text-uppercase text-secondary fw-semibold mb-3">Préstamos</h3>
+        <div class="row g-4">
+          <div class="col-12 col-md-6 col-lg-4">
+            <article class="h-100 border rounded p-4">
+              <h4 class="h5 mb-2">Préstamos</h4>
+              <p class="text-secondary mb-4">
+                Registra préstamos de libros a estudiantes y maestros.
+              </p>
+              <a routerLink="/prestamos" class="btn btn-primary">Ver préstamos</a>
+            </article>
+          </div>
+
+          <div class="col-12 col-md-6 col-lg-4">
+            <article class="h-100 border rounded p-4">
+              <h4 class="h5 mb-2">Devoluciones</h4>
+              <p class="text-secondary mb-4">
+                Registra la devolución de libros y detecta los atrasos.
+              </p>
+              <a routerLink="/devoluciones" class="btn btn-primary">Ver devoluciones</a>
+            </article>
+          </div>
+
+          <div class="col-12 col-md-6 col-lg-4">
+            <article class="h-100 border rounded p-4">
+              <h4 class="h5 mb-2">Multas</h4>
+              <p class="text-secondary mb-4">
+                Consulta las multas generadas y márcalas como pagadas.
+              </p>
+              <a routerLink="/multas" class="btn btn-primary">Ver multas</a>
+            </article>
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-5">
+        <h3 class="h6 text-uppercase text-secondary fw-semibold mb-3">Reportes</h3>
+        <div class="row g-4">
+          <div class="col-12 col-md-6 col-lg-4">
+            <article class="h-100 border rounded p-4">
+              <h4 class="h5 mb-2">Préstamos en mora</h4>
+              <p class="text-secondary mb-4">
+                Consulta los libros no devueltos a tiempo y descarga el reporte en PDF.
+              </p>
+              <a routerLink="/reportes/prestamos-mora" class="btn btn-primary">Ver reporte</a>
             </article>
           </div>
         </div>

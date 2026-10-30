@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+              name="PrestamosMora" pageWidth="595" pageHeight="842" columnWidth="555"
+              leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20"
+              whenNoDataType="AllSectionsNoDetail">
+    <parameter name="TITULO" class="java.lang.String"/>
+    <parameter name="FILTROS" class="java.lang.String"/>
+    <parameter name="GENERADO" class="java.lang.String"/>
+    <field name="libro" class="java.lang.String"/>
+    <field name="solicitante" class="java.lang.String"/>
+    <field name="tipoSolicitante" class="java.lang.String"/>
+    <field name="fechaPrestamo" class="java.lang.String"/>
+    <field name="fechaEsperada" class="java.lang.String"/>
+    <field name="diasAtraso" class="java.lang.Integer"/>
+    <field name="multaEstimada" class="java.math.BigDecimal"/>
+    <title>
+        <band height="70">
+            <textField>
+                <reportElement uuid="6ad4157f-4da6-49c6-9dfb-87f726324bd8" x="0" y="5" width="555" height="28"/>
+                <textElement textAlignment="Center"><font size="16" isBold="true"/></textElement>
+                <textFieldExpression><![CDATA[$P{TITULO}]]></textFieldExpression>
+            </textField>
+            <textField isBlankWhenNull="true">
+                <reportElement uuid="11e75562-7bc2-4a7d-919d-683f123493cc" x="0" y="36" width="555" height="14"/>
+                <textElement textAlignment="Center"><font size="9"/></textElement>
+                <textFieldExpression><![CDATA[$P{FILTROS}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement uuid="cf425e0e-fa42-4417-8bfd-73670e63e43a" x="0" y="52" width="555" height="14"/>
+                <textElement textAlignment="Center"><font size="9"/></textElement>
+                <textFieldExpression><![CDATA["Generado: " + $P{GENERADO}]]></textFieldExpression>
+            </textField>
+        </band>
+    </title>
+    <columnHeader>
+        <band height="26">
+            <staticText>
+                <reportElement uuid="b59d472c-8236-4a7b-98f8-e39df7e35a8b" x="0" y="0" width="130" height="20"/>
+                <textElement><font size="9" isBold="true"/></textElement>
+                <text><![CDATA[Libro]]></text>
+            </staticText>
+            <staticText>
+                <reportElement uuid="c15252ff-e48c-42ac-b813-8e411d7eb2f6" x="130" y="0" width="140" height="20"/>
+                <textElement><font size="9" isBold="true"/></textElement>
+                <text><![CDATA[Solicitante]]></text>
+            </staticText>
+            <staticText>
+                <reportElement uuid="cab3e06c-9d9e-48d6-bf93-7a62fecca9b4" x="270" y="0" width="55" height="20"/>
+                <textElement><font size="9" isBold="true"/></textElement>
+                <text><![CDATA[Tipo]]></text>
+            </staticText>
+            <staticText>
+                <reportElement uuid="9fd79f4d-86c2-4075-bf8b-fd3259384cfd" x="325" y="0" width="62" height="20"/>
+                <textElement><font size="9" isBold="true"/></textElement>
+                <text><![CDATA[Préstamo]]></text>
+            </staticText>
+            <staticText>
+                <reportElement uuid="1a852b0e-ee6e-4a5e-b0c6-4020a12dcca8" x="387" y="0" width="62" height="20"/>
+                <textElement><font size="9" isBold="true"/></textElement>
+                <text><![CDATA[Esperada]]></text>
+            </staticText>
+            <staticText>
+                <reportElement uuid="2cd9bb92-6338-4787-8bf4-b831335cf320" x="449" y="0" width="34" height="20"/>
+                <textElement textAlignment="Right"><font size="9" isBold="true"/></textElement>
+                <text><![CDATA[Días]]></text>
+            </staticText>
+            <staticText>
+                <reportElement uuid="c6373a38-e33f-4c82-93ef-fdbf899bea4a" x="483" y="0" width="72" height="20"/>
+                <textElement textAlignment="Right"><font size="9" isBold="true"/></textElement>
+                <text><![CDATA[Multa]]></text>
+            </staticText>
+            <line>
+                <reportElement uuid="841cd08d-366c-4105-b15d-7cac7303d91c" x="0" y="23" width="555" height="1"/>
+            </line>
+        </band>
+    </columnHeader>
+    <detail>
+        <band height="22">
+            <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+                <reportElement uuid="e55852f4-38cf-42ef-a6e1-54005b0fb537" x="0" y="0" width="130" height="20"/>
+                <textElement><font size="9"/></textElement>
+                <textFieldExpression><![CDATA[$F{libro}]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+                <reportElement uuid="c82bbbf7-abff-4b94-8f4d-50414a85853f" x="130" y="0" width="140" height="20"/>
+                <textElement><font size="9"/></textElement>
+                <textFieldExpression><![CDATA[$F{solicitante}]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+                <reportElement uuid="960aae44-9967-4514-b598-a08b387b8a75" x="270" y="0" width="55" height="20"/>
+                <textElement><font size="9"/></textElement>
+                <textFieldExpression><![CDATA[$F{tipoSolicitante}]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+                <reportElement uuid="d50e738f-23d2-45ae-a443-53b7ac4e0572" x="325" y="0" width="62" height="20"/>
+                <textElement><font size="9"/></textElement>
+                <textFieldExpression><![CDATA[$F{fechaPrestamo}]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+                <reportElement uuid="bb976930-a4e1-4202-a5a4-4727e28efabf" x="387" y="0" width="62" height="20"/>
+                <textElement><font size="9"/></textElement>
+                <textFieldExpression><![CDATA[$F{fechaEsperada}]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+                <reportElement uuid="bfeef0fb-9c4d-4ecb-b3bb-27c38033faa7" x="449" y="0" width="34" height="20"/>
+                <textElement textAlignment="Right"><font size="9"/></textElement>
+                <textFieldExpression><![CDATA[$F{diasAtraso}]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true" isBlankWhenNull="true" pattern="Q #,##0.00">
+                <reportElement uuid="da7ed0ca-8724-4605-8859-df3e58103a05" x="483" y="0" width="72" height="20"/>
+                <textElement textAlignment="Right"><font size="9"/></textElement>
+                <textFieldExpression><![CDATA[$F{multaEstimada}]]></textFieldExpression>
+            </textField>
+        </band>
+    </detail>
+    <pageFooter>
+        <band height="20">
+            <textField>
+                <reportElement uuid="90f04e89-52ac-4122-aad4-bd0e14494e8b" x="0" y="2" width="555" height="16"/>
+                <textElement textAlignment="Center"><font size="9"/></textElement>
+                <textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER}]]></textFieldExpression>
+            </textField>
+        </band>
+    </pageFooter>
+</jasperReport>

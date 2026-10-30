@@ -1,12 +1,12 @@
 package servlet.admin;
 
-import dto.PeticionAsignacion;
+import dto.personal.PeticionAsignacion;
 import exception.DatosInvalidosException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import service.AsignacionService;
+import service.personal.AsignacionService;
 import util.Auth;
 import util.Errores;
 import util.Json;

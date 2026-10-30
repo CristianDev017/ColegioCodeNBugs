@@ -1,12 +1,12 @@
 package servlet.admin;
 
-import dto.PeticionUsuarioOperativo;
+import dto.personal.PeticionUsuarioOperativo;
 import exception.DatosInvalidosException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import service.UsuarioOperativoService;
+import service.personal.UsuarioOperativoService;
 import util.Auth;
 import util.Errores;
 import util.Json;

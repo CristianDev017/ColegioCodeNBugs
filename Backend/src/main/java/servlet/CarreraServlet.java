@@ -1,12 +1,12 @@
 package servlet;
 
-import dto.PeticionCarrera;
+import dto.academico.PeticionCarrera;
 import exception.DatosInvalidosException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import service.CarreraService;
+import service.academico.CarreraService;
 import util.Auth;
 import util.Errores;
 import util.Json;

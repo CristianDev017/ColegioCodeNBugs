@@ -39,3 +39,15 @@ export interface PaginaPonderaciones {
   tamano: number;
   suma: number;
 }
+
+export interface AlumnoNota {
+  idInscripcion: number;
+  carnet: string;
+  estudiante: string;
+  valor?: number;
+}
+
+export interface RegistroNota {
+  idInscripcion: number;
+  valor: number;
+}

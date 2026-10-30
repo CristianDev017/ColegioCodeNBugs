@@ -1,7 +1,7 @@
 package servlet;
 
-import dao.CicloEscolarDao;
-import model.CicloEscolar;
+import dao.academico.CicloEscolarDao;
+import model.academico.CicloEscolar;
 import util.Auth;
 import util.Json;
 import util.Roles;

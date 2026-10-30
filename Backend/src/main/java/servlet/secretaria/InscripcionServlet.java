@@ -1,11 +1,11 @@
 package servlet.secretaria;
 
-import dto.PeticionInscripcion;
+import dto.estudiantes.PeticionInscripcion;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import service.InscripcionService;
+import service.estudiantes.InscripcionService;
 import util.Auth;
 import util.Errores;
 import util.Json;

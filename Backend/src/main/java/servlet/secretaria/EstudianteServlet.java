@@ -1,13 +1,13 @@
 package servlet.secretaria;
 
-import dto.PeticionEstado;
-import dto.PeticionEstudiante;
+import dto.estudiantes.PeticionEstado;
+import dto.estudiantes.PeticionEstudiante;
 import exception.DatosInvalidosException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import service.EstudianteService;
+import service.estudiantes.EstudianteService;
 import util.Auth;
 import util.Errores;
 import util.Json;

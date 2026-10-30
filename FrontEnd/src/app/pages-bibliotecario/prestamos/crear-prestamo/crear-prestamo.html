@@ -1,0 +1,65 @@
+<div class="container py-4">
+  <h3 class="mb-4">Nuevo préstamo</h3>
+
+  @if (config) {
+    <p class="text-secondary">
+      Los préstamos duran {{ config.diasPrestamo }} días. La multa por atraso es de Q{{ config.multaPorDia }} por día.
+    </p>
+  }
+
+  <form [formGroup]="form" (ngSubmit)="guardar()" novalidate>
+    <div class="row g-3 mb-4">
+      <div class="col-md-4">
+        <label class="form-label" for="tipoSolicitante">Tipo de solicitante</label>
+        <select id="tipoSolicitante" class="form-select" formControlName="tipoSolicitante">
+          <option value="ESTUDIANTE">Estudiante</option>
+          <option value="MAESTRO">Maestro</option>
+          <option value="PERSONAL">Otro personal</option>
+        </select>
+      </div>
+
+      <div class="col-md-8">
+        <label class="form-label" for="idSolicitante">Solicitante</label>
+        <select id="idSolicitante" class="form-select" formControlName="idSolicitante"
+                [class.is-invalid]="form.controls.idSolicitante.touched && form.controls.idSolicitante.invalid">
+          <option [ngValue]="null">Selecciona al solicitante</option>
+          @for (s of solicitantes; track s.id) {
+            <option [ngValue]="s.id">{{ s.texto }}</option>
+          }
+        </select>
+        @if (solicitantes.length === 0) {
+          <div class="form-text">No hay personas activas de este tipo.</div>
+        }
+        <div class="invalid-feedback">Debes elegir al solicitante</div>
+      </div>
+
+      <div class="col-12">
+        <label class="form-label" for="idLibro">Libro</label>
+        <select id="idLibro" class="form-select" formControlName="idLibro"
+                [class.is-invalid]="form.controls.idLibro.touched && form.controls.idLibro.invalid">
+          <option [ngValue]="null">Selecciona un libro</option>
+          @for (l of libros; track l.id) {
+            <option [ngValue]="l.id">{{ l.texto }}</option>
+          }
+        </select>
+        @if (libros.length === 0) {
+          <div class="form-text">No hay libros disponibles.</div>
+        }
+        <div class="invalid-feedback">Debes elegir un libro</div>
+      </div>
+    </div>
+
+    @if (mensajeExito) {
+      <div class="alert alert-success">{{ mensajeExito }}</div>
+    }
+    @if (mensajeErrorServidor) {
+      <div class="alert alert-danger">{{ mensajeErrorServidor }}</div>
+    }
+
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+      <a routerLink="/prestamos" class="btn btn-outline-primary me-md-2">Volver al listado</a>
+      <button type="button" class="btn btn-secondary me-md-2" (click)="limpiar()">Limpiar</button>
+      <button type="submit" class="btn btn-primary" [disabled]="form.invalid">Registrar préstamo</button>
+    </div>
+  </form>
+</div>

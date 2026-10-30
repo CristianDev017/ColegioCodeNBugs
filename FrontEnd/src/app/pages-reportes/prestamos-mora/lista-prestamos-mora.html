@@ -1,0 +1,72 @@
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <div class="d-flex align-items-center gap-3">
+      <a routerLink="/inicio" class="btn btn-outline-secondary">Volver</a>
+      <h3 class="mb-0">Préstamos en mora</h3>
+    </div>
+    <button type="button" class="btn btn-primary" (click)="descargarPdf()">Descargar PDF</button>
+  </div>
+
+  @if (mensajeError) {
+    <div class="alert alert-danger">{{ mensajeError }}</div>
+  }
+
+  <form [formGroup]="filtros" class="row g-2 mb-3">
+    <div class="col-md-7">
+      <input type="text" class="form-control" formControlName="buscar" placeholder="Buscar por libro o solicitante">
+    </div>
+    <div class="col-md-3">
+      <select class="form-select" formControlName="tipo">
+        <option value="">Todos los solicitantes</option>
+        <option value="ESTUDIANTE">Estudiantes</option>
+        <option value="EMPLEADO">Maestros y personal</option>
+      </select>
+    </div>
+    <div class="col-md-2 d-grid">
+      <button type="button" class="btn btn-outline-secondary" (click)="limpiarFiltros()">Limpiar</button>
+    </div>
+  </form>
+
+  <div class="table-responsive">
+    <table class="table table-striped align-middle">
+      <thead>
+        <tr>
+          <th>Libro</th>
+          <th>Solicitante</th>
+          <th>Tipo</th>
+          <th>Préstamo</th>
+          <th>Fecha esperada</th>
+          <th class="text-end">Días de atraso</th>
+          <th class="text-end">Multa estimada</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (f of filas; track $index) {
+          <tr>
+            <td>{{ f.libro }}</td>
+            <td>{{ f.solicitante }}</td>
+            <td>{{ f.tipoSolicitante }}</td>
+            <td>{{ f.fechaPrestamo }}</td>
+            <td>{{ f.fechaEsperada }}</td>
+            <td class="text-end">{{ f.diasAtraso }}</td>
+            <td class="text-end">{{ f.multaEstimada === undefined ? '-' : 'Q' + f.multaEstimada.toFixed(2) }}</td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="7" class="text-center text-muted">
+              {{ cargando ? 'Cargando...' : 'No hay préstamos en mora' }}
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <div class="d-flex justify-content-between align-items-center">
+    <span class="text-muted">Página {{ pagina }} de {{ totalPaginas }} ({{ total }} elementos)</span>
+    <div>
+      <button type="button" class="btn btn-outline-secondary me-2" [disabled]="pagina <= 1" (click)="anterior()">Anterior</button>
+      <button type="button" class="btn btn-outline-secondary" [disabled]="pagina >= totalPaginas" (click)="siguiente()">Siguiente</button>
+    </div>
+  </div>
+</div>

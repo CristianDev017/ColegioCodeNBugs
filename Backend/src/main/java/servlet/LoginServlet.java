@@ -1,7 +1,7 @@
 package servlet;
 
-import dao.UsuarioDao;
-import model.Usuario;
+import dao.auth.UsuarioDao;
+import model.auth.Usuario;
 import util.Json;
 import util.JwtUtil;
 import util.PasswordService;

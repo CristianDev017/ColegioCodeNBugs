@@ -1,6 +1,6 @@
 package servlet;
 
-import dao.NivelDao;
+import dao.academico.NivelDao;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;

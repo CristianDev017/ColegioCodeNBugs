@@ -1,12 +1,12 @@
 package servlet.secretaria;
 
-import dto.PeticionPago;
+import dto.finanzas.PeticionPago;
 import exception.DatosInvalidosException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import service.PagoService;
+import service.finanzas.PagoService;
 import util.Auth;
 import util.Errores;
 import util.Json;

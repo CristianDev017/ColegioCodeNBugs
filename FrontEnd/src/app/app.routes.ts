@@ -50,7 +50,19 @@ import { CursoAsistencia } from './pages-maestro/curso-asistencia/curso-asistenc
 import { ListaPonderaciones } from './pages-maestro/ponderaciones/lista-ponderaciones/lista-ponderaciones';
 import { CrearPonderacion } from './pages-maestro/ponderaciones/crear-ponderacion/crear-ponderacion';
 import { EditarPonderacion } from './pages-maestro/ponderaciones/editar-ponderacion/editar-ponderacion';
+import { CursoNotas } from './pages-maestro/curso-notas/curso-notas';
 
+import { ListaLibros } from './pages-bibliotecario/libros/lista-libros/lista-libros';
+import { CrearLibro } from './pages-bibliotecario/libros/crear-libro/crear-libro';
+import { EditarLibro } from './pages-bibliotecario/libros/editar-libro/editar-libro';
+import { ParametrosBiblioteca } from './pages-bibliotecario/parametros/parametros-biblioteca';
+import { ListaPrestamos } from './pages-bibliotecario/prestamos/lista-prestamos/lista-prestamos';
+import { CrearPrestamo } from './pages-bibliotecario/prestamos/crear-prestamo/crear-prestamo';
+import { ListaDevoluciones } from './pages-bibliotecario/devoluciones/lista-devoluciones/lista-devoluciones';
+import { ListaMultas } from './pages-bibliotecario/multas/lista-multas/lista-multas';
+
+
+import { ListaPrestamosMora } from './pages-reportes/prestamos-mora/lista-prestamos-mora';
 export const routes: Routes = [
   // publicas
   { path: 'login', component: Login },
@@ -128,6 +140,24 @@ export const routes: Routes = [
   { path: 'mis-cursos/:id/ponderaciones/nueva', component: CrearPonderacion, canActivate: [authGuard], data: { roles: ['MAESTRO'] } },
   { path: 'mis-cursos/:id/ponderaciones/editar/:idPonderacion', component: EditarPonderacion, canActivate: [authGuard], data: { roles: ['MAESTRO'] } },
   { path: 'mis-cursos/:id/asistencia', component: CursoAsistencia, canActivate: [authGuard], data: { roles: ['MAESTRO'] } },
+  { path: 'mis-cursos/:id/notas', component: CursoNotas, canActivate: [authGuard], data: { roles: ['MAESTRO'] } },
+
+
+  // bibliotecario
+  { path: 'libros', component: ListaLibros, canActivate: [authGuard], data: { roles: ['BIBLIOTECARIO'] } },
+  { path: 'libros/nuevo', component: CrearLibro, canActivate: [authGuard], data: { roles: ['BIBLIOTECARIO'] } },
+  { path: 'libros/editar/:id', component: EditarLibro, canActivate: [authGuard], data: { roles: ['BIBLIOTECARIO'] } },
+  { path: 'biblioteca/parametros', component: ParametrosBiblioteca, canActivate: [authGuard], data: { roles: ['BIBLIOTECARIO'] } },
+  { path: 'prestamos', component: ListaPrestamos, canActivate: [authGuard], data: { roles: ['BIBLIOTECARIO'] } },
+  { path: 'prestamos/nuevo', component: CrearPrestamo, canActivate: [authGuard], data: { roles: ['BIBLIOTECARIO'] } },
+  { path: 'devoluciones', component: ListaDevoluciones, canActivate: [authGuard], data: { roles: ['BIBLIOTECARIO'] } },
+  { path: 'multas', component: ListaMultas, canActivate: [authGuard], data: { roles: ['BIBLIOTECARIO'] } },
+
+
+  // reportes
+{ path: 'reportes/prestamos-mora', component: ListaPrestamosMora, canActivate: [authGuard], data: { roles: ['BIBLIOTECARIO'] } },
+
+
   // redirecciones
   { path: '', pathMatch: 'full', redirectTo: 'inicio' },
   { path: '**', redirectTo: 'inicio' }

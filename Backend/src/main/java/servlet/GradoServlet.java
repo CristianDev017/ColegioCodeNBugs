@@ -1,13 +1,13 @@
 package servlet;
 
-import dto.PeticionCupo;
-import dto.PeticionGrado;
+import dto.academico.PeticionCupo;
+import dto.academico.PeticionGrado;
 import exception.DatosInvalidosException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import service.GradoService;
+import service.academico.GradoService;
 import util.Auth;
 import util.Errores;
 import util.Json;

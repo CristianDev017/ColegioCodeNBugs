@@ -1,0 +1,35 @@
+<div class="container py-4">
+  <div class="d-flex align-items-center gap-3 mb-4">
+    <a routerLink="/inicio" class="btn btn-outline-secondary">Volver</a>
+    <h3 class="mb-0">Parámetros de biblioteca</h3>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="guardar()" novalidate>
+    <div class="row g-3 mb-4">
+      <div class="col-md-6">
+        <label class="form-label" for="diasPrestamo">Días de préstamo</label>
+        <input id="diasPrestamo" type="number" min="1" max="365" class="form-control" formControlName="diasPrestamo"
+               [class.is-invalid]="mensajeError('diasPrestamo')">
+        <div class="invalid-feedback">{{ mensajeError('diasPrestamo') }}</div>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label" for="multaPorDia">Multa por día de atraso (Q)</label>
+        <input id="multaPorDia" type="number" min="0" step="0.01" class="form-control" formControlName="multaPorDia"
+               [class.is-invalid]="mensajeError('multaPorDia')">
+        <div class="invalid-feedback">{{ mensajeError('multaPorDia') }}</div>
+      </div>
+    </div>
+
+    @if (mensajeExito) {
+      <div class="alert alert-success">{{ mensajeExito }}</div>
+    }
+    @if (mensajeErrorServidor) {
+      <div class="alert alert-danger">{{ mensajeErrorServidor }}</div>
+    }
+
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+      <a routerLink="/inicio" class="btn btn-outline-primary me-md-2">Volver</a>
+      <button type="submit" class="btn btn-primary" [disabled]="form.invalid">Guardar</button>
+    </div>
+  </form>
+</div>

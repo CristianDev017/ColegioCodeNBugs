@@ -1,12 +1,12 @@
 package servlet.admin;
 
-import dto.PeticionActividad;
+import dto.finanzas.PeticionActividad;
 import exception.DatosInvalidosException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import service.ActividadService;
+import service.finanzas.ActividadService;
 import util.Auth;
 import util.Errores;
 import util.Json;

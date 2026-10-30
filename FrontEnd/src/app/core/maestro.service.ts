@@ -2,12 +2,14 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import {
+  AlumnoNota,
   AlumnoNomina,
   CursoMaestro,
   DatosPonderacion,
   PaginaPonderaciones,
   Ponderacion,
   RegistroAsistencia,
+  RegistroNota,
 } from '../models/maestro';
 import { Pagina } from '../models/pagina';
 import { API_URL } from './rest-constants';
@@ -82,5 +84,27 @@ export class MaestroService {
     return this.http.delete<{ mensaje: string }>(
       `${this.url}/${idAsignacion}/ponderaciones/${idPonderacion}`,
     );
+  }
+
+  notas(
+    idAsignacion: number,
+    idPonderacion: number,
+    pagina: number,
+    tamano: number,
+  ): Observable<Pagina<AlumnoNota>> {
+    return this.http.get<Pagina<AlumnoNota>>(`${this.url}/${idAsignacion}/notas`, {
+      params: { idPonderacion, pagina, tamano },
+    });
+  }
+
+  guardarNotas(
+    idAsignacion: number,
+    idPonderacion: number,
+    notas: RegistroNota[],
+  ): Observable<{ mensaje: string }> {
+    return this.http.post<{ mensaje: string }>(`${this.url}/${idAsignacion}/notas`, {
+      idPonderacion,
+      notas,
+    });
   }
 }

@@ -1,12 +1,12 @@
 package servlet.admin;
 
-import dto.PeticionCurriculoCurso;
+import dto.academico.PeticionCurriculoCurso;
 import exception.DatosInvalidosException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import service.CurriculoService;
+import service.academico.CurriculoService;
 import util.Auth;
 import util.Errores;
 import util.Json;

@@ -1,14 +1,16 @@
 package servlet.maestro;
 
-import dto.PeticionAsistencia;
-import dto.PeticionPonderacion;
+import dto.docencia.PeticionAsistencia;
+import dto.docencia.PeticionNotas;
+import dto.docencia.PeticionPonderacion;
 import exception.DatosInvalidosException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import service.MaestroService;
-import service.PonderacionService;
+import service.docencia.MaestroService;
+import service.docencia.NotaService;
+import service.docencia.PonderacionService;
 import util.Auth;
 import util.Errores;
 import util.Json;
@@ -22,6 +24,7 @@ public class CursoMaestroServlet extends HttpServlet {
 
     private final MaestroService servicio = new MaestroService();
     private final PonderacionService ponderaciones = new PonderacionService();
+    private final NotaService notas = new NotaService();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -63,6 +66,13 @@ public class CursoMaestroServlet extends HttpServlet {
                         "suma", ponderaciones.suma(idUsuario, idAsignacion)));
             } else if (partes.length == 4 && partes[2].equals("ponderaciones")) {
                 Json.escribir(resp, 200, ponderaciones.obtener(idUsuario, idAsignacion, leerId(partes[3])));
+            } else if (partes.length == 3 && partes[2].equals("notas")) {
+                int idPonderacion = numero(req.getParameter("idPonderacion"), 0);
+                Json.escribir(resp, 200, Map.of(
+                        "datos", notas.listar(idUsuario, idAsignacion, idPonderacion, pagina, tamano),
+                        "total", servicio.contarNomina(idUsuario, idAsignacion),
+                        "pagina", pagina,
+                        "tamano", tamano));
             } else {
                 Json.error(resp, 404, "Ruta no encontrada");
             }
@@ -85,6 +95,10 @@ public class CursoMaestroServlet extends HttpServlet {
             } else if (partes.length == 3 && partes[2].equals("ponderaciones")) {
                 PeticionPonderacion datos = Json.leer(req, PeticionPonderacion.class);
                 Json.escribir(resp, 201, ponderaciones.crear(Auth.idUsuario(req), leerId(partes[1]), datos));
+            } else if (partes.length == 3 && partes[2].equals("notas")) {
+                PeticionNotas datos = Json.leer(req, PeticionNotas.class);
+                notas.guardar(Auth.idUsuario(req), leerId(partes[1]), datos);
+                Json.escribir(resp, 200, Map.of("mensaje", "Notas guardadas"));
             } else {
                 Json.error(resp, 404, "Ruta no encontrada");
             }

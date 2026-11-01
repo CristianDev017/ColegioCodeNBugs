@@ -1,21 +1,15 @@
 <main class="container py-5">
-  <header
-    class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 mb-5"
-  >
+  <header class="d-flex justify-content-between align-items-center mb-4">
     <div>
-      <h1 class="h3 mb-2">Panel principal</h1>
+      <h3>Inicio</h3>
       @if (auth.usuario$ | async; as usuario) {
-        <div class="d-flex flex-wrap align-items-center gap-2">
-          <p class="text-secondary mb-0">¡Hola, {{ usuario.username }}!</p>
-          <span class="badge rounded-pill text-bg-light border text-secondary">{{
-            usuario.rol
-          }}</span>
-        </div>
+        <p>Bienvenido, {{ usuario.username }}</p>
       }
     </div>
+
     <button
       type="button"
-      class="btn btn-outline-secondary align-self-sm-center"
+      class="btn btn-outline-secondary"
       (click)="cerrarSesion()"
     >
       Cerrar sesión
@@ -32,7 +26,9 @@
           <div class="col-12 col-md-6 col-lg-4">
             <article class="h-100 border rounded p-4">
               <h4 class="h5 mb-2">Usuarios administrativos</h4>
-              <p class="text-secondary mb-4">Administra las cuentas y los accesos del personal.</p>
+              <p class="text-secondary mb-4">
+                Crea usuarios administradores, cambia sus datos y revisa sus cuentas.
+              </p>
               <a routerLink="/usuarios-admin" class="btn btn-primary">Ver usuarios</a>
             </article>
           </div>
@@ -40,7 +36,9 @@
           <div class="col-12 col-md-6 col-lg-4">
             <article class="h-100 border rounded p-4">
               <h4 class="h5 mb-2">Años lectivos</h4>
-              <p class="text-secondary mb-4">Consulta y administra los ciclos escolares.</p>
+              <p class="text-secondary mb-4">
+                Mira los años escolares, agrega nuevos o cambia su estado.
+              </p>
               <a routerLink="/ciclos" class="btn btn-primary">Ver años lectivos</a>
             </article>
           </div>
@@ -48,7 +46,9 @@
           <div class="col-12 col-md-6 col-lg-4">
             <article class="h-100 border rounded p-4">
               <h4 class="h5 mb-2">Grados por defecto</h4>
-              <p class="text-secondary mb-4">Ajusta el cupo por defecto de cada grado.</p>
+              <p class="text-secondary mb-4">
+                Cambia los cupos que tendran los grados.
+              </p>
               <a routerLink="/grados-defecto" class="btn btn-primary">Ver grados por defecto</a>
             </article>
           </div>
@@ -56,7 +56,9 @@
           <div class="col-12 col-md-6 col-lg-4">
             <article class="h-100 border rounded p-4">
               <h4 class="h5 mb-2">Carreras</h4>
-              <p class="text-secondary mb-4">Carreras del nivel Diversificado.</p>
+              <p class="text-secondary mb-4">
+                Agrega o modifica las carreras de diversificado.
+              </p>
               <a routerLink="/carreras" class="btn btn-primary">Ver carreras</a>
             </article>
           </div>
@@ -71,7 +73,9 @@
           <div class="col-12 col-md-6 col-lg-4">
             <article class="h-100 border rounded p-4">
               <h4 class="h5 mb-2">Grados</h4>
-              <p class="text-secondary mb-4">Administra los grados de la institución.</p>
+              <p class="text-secondary mb-4">
+                Crea grados, modifica sus datos o desactivalos.
+              </p>
               <a routerLink="/grados" class="btn btn-primary">Ver grados</a>
             </article>
           </div>
@@ -79,7 +83,9 @@
           <div class="col-12 col-md-6 col-lg-4">
             <article class="h-100 border rounded p-4">
               <h4 class="h5 mb-2">Secciones</h4>
-              <p class="text-secondary mb-4">Administra las secciones de cada grado.</p>
+              <p class="text-secondary mb-4">
+                Agrega secciones a los grados y cambia sus cupos.
+              </p>
               <a routerLink="/secciones" class="btn btn-primary">Ver secciones</a>
             </article>
           </div>
@@ -87,7 +93,9 @@
           <div class="col-12 col-md-6 col-lg-4">
             <article class="h-100 border rounded p-4">
               <h4 class="h5 mb-2">Cursos</h4>
-              <p class="text-secondary mb-4">Administra el catálogo de cursos de la institución.</p>
+              <p class="text-secondary mb-4">
+                Crea cursos y modifica los que ya existen.
+              </p>
               <a routerLink="/cursos" class="btn btn-primary">Ver cursos</a>
             </article>
           </div>
@@ -95,7 +103,9 @@
           <div class="col-12 col-md-6 col-lg-4">
             <article class="h-100 border rounded p-4">
               <h4 class="h5 mb-2">Currículo</h4>
-              <p class="text-secondary mb-4">Define los cursos de cada grado en un año lectivo.</p>
+              <p class="text-secondary mb-4">
+                Selecciona los cursos que llevara cada grado durante el año.
+              </p>
               <a routerLink="/curriculo" class="btn btn-primary">Ver currículo</a>
             </article>
           </div>
@@ -108,7 +118,9 @@
           <div class="col-12 col-md-6 col-lg-4">
             <article class="h-100 border rounded p-4">
               <h4 class="h5 mb-2">Empleados</h4>
-              <p class="text-secondary mb-4">Registra y administra al personal del colegio.</p>
+              <p class="text-secondary mb-4">
+                Registra empleados, consulta sus datos y editalos.
+              </p>
               <a routerLink="/empleados" class="btn btn-primary">Ver empleados</a>
             </article>
           </div>
@@ -116,7 +128,9 @@
           <div class="col-12 col-md-6 col-lg-4">
             <article class="h-100 border rounded p-4">
               <h4 class="h5 mb-2">Asignaciones</h4>
-              <p class="text-secondary mb-4">Asigna maestros a los cursos de cada sección.</p>
+              <p class="text-secondary mb-4">
+                Asigna maestros a los cursos y secciones.
+              </p>
               <a routerLink="/asignaciones" class="btn btn-primary">Ver asignaciones</a>
             </article>
           </div>
@@ -125,7 +139,7 @@
             <article class="h-100 border rounded p-4">
               <h4 class="h5 mb-2">Usuarios operativos</h4>
               <p class="text-secondary mb-4">
-                Administra las cuentas de secretaría, maestros, biblioteca y mantenimiento.
+                Crea cuentas para maestros, secretaria y demas empleados.
               </p>
               <a routerLink="/usuarios-operativos" class="btn btn-primary">Ver usuarios</a>
             </article>
@@ -140,7 +154,7 @@
             <article class="h-100 border rounded p-4">
               <h4 class="h5 mb-2">Estudiantes</h4>
               <p class="text-secondary mb-4">
-                Registra y administra a los estudiantes del colegio.
+                Registra estudiantes, consulta sus datos y editalos.
               </p>
               <a routerLink="/estudiantes" class="btn btn-primary">Ver estudiantes</a>
             </article>
@@ -155,7 +169,7 @@
             <article class="h-100 border rounded p-4">
               <h4 class="h5 mb-2">Tarifas</h4>
               <p class="text-secondary mb-4">
-                Define los montos de inscripción y mensualidad por grado.
+                Cambia los precios de inscripcion y mensualidades.
               </p>
               <a routerLink="/tarifas" class="btn btn-primary">Ver tarifas</a>
             </article>
@@ -165,7 +179,7 @@
             <article class="h-100 border rounded p-4">
               <h4 class="h5 mb-2">Actividades</h4>
               <p class="text-secondary mb-4">
-                Administra las actividades extracurriculares con su costo y cupo.
+                Agrega actividades, cambia sus precios y cupos.
               </p>
               <a routerLink="/actividades" class="btn btn-primary">Ver actividades</a>
             </article>
@@ -182,7 +196,7 @@
             <article class="h-100 border rounded p-4">
               <h4 class="h5 mb-2">Estudiantes</h4>
               <p class="text-secondary mb-4">
-                Registra y administra a los estudiantes del colegio.
+                Registra estudiantes, consulta sus datos y editalos.
               </p>
               <a routerLink="/estudiantes" class="btn btn-primary">Ver estudiantes</a>
             </article>
@@ -192,7 +206,7 @@
             <article class="h-100 border rounded p-4">
               <h4 class="h5 mb-2">Inscripciones</h4>
               <p class="text-secondary mb-4">
-                Inscribe estudiantes en un grado y sección del año activo.
+                Inscribe estudiantes en los grados y secciones disponibles.
               </p>
               <a routerLink="/inscripciones" class="btn btn-primary">Ver inscripciones</a>
             </article>
@@ -207,7 +221,7 @@
             <article class="h-100 border rounded p-4">
               <h4 class="h5 mb-2">Pagos</h4>
               <p class="text-secondary mb-4">
-                Registra inscripciones, mensualidades y actividades, y emite comprobantes.
+                Registra pagos de inscripciones, mensualidades y actividades, tambien puedes generar comprobantes.
               </p>
               <a routerLink="/pagos" class="btn btn-primary">Ver pagos</a>
             </article>
@@ -217,7 +231,7 @@
             <article class="h-100 border rounded p-4">
               <h4 class="h5 mb-2">Solvencias</h4>
               <p class="text-secondary mb-4">
-                Emite constancias de solvencia a estudiantes sin saldos pendientes.
+                Genera solvencias para los estudiantes que no tienen pagos pendientes.
               </p>
               <a routerLink="/solvencias" class="btn btn-primary">Ver solvencias</a>
             </article>
@@ -234,7 +248,7 @@
             <article class="h-100 border rounded p-4">
               <h4 class="h5 mb-2">Mis cursos</h4>
               <p class="text-secondary mb-4">
-                Consulta tu nómina y toma la asistencia de tus cursos.
+                Mira los cursos que tienes asignados, pasa asistencia y registra notas.
               </p>
               <a routerLink="/mis-cursos" class="btn btn-primary">Ver mis cursos</a>
             </article>
@@ -250,7 +264,9 @@
           <div class="col-12 col-md-6 col-lg-4">
             <article class="h-100 border rounded p-4">
               <h4 class="h5 mb-2">Libros</h4>
-              <p class="text-secondary mb-4">Administra el catálogo y el inventario de libros.</p>
+              <p class="text-secondary mb-4">
+                Agrega libros, cambia sus datos y revisa cuantos hay disponibles.
+              </p>
               <a routerLink="/libros" class="btn btn-primary">Ver libros</a>
             </article>
           </div>
@@ -259,7 +275,7 @@
             <article class="h-100 border rounded p-4">
               <h4 class="h5 mb-2">Parámetros</h4>
               <p class="text-secondary mb-4">
-                Define los días de préstamo y la multa por día de atraso.
+                Cambia los dias de prestamo y el costo de las multas.
               </p>
               <a routerLink="/biblioteca/parametros" class="btn btn-primary">Ver parámetros</a>
             </article>
@@ -274,7 +290,7 @@
             <article class="h-100 border rounded p-4">
               <h4 class="h5 mb-2">Préstamos</h4>
               <p class="text-secondary mb-4">
-                Registra préstamos de libros a estudiantes y maestros.
+                Presta libros a estudiantes y empleados del colegio.
               </p>
               <a routerLink="/prestamos" class="btn btn-primary">Ver préstamos</a>
             </article>
@@ -284,7 +300,7 @@
             <article class="h-100 border rounded p-4">
               <h4 class="h5 mb-2">Devoluciones</h4>
               <p class="text-secondary mb-4">
-                Registra la devolución de libros y detecta los atrasos.
+                Registra los libros devueltos y revisa si hubo atrasos.
               </p>
               <a routerLink="/devoluciones" class="btn btn-primary">Ver devoluciones</a>
             </article>
@@ -294,26 +310,79 @@
             <article class="h-100 border rounded p-4">
               <h4 class="h5 mb-2">Multas</h4>
               <p class="text-secondary mb-4">
-                Consulta las multas generadas y márcalas como pagadas.
+                Mira las multas pendientes y registra cuando las paguen.
               </p>
               <a routerLink="/multas" class="btn btn-primary">Ver multas</a>
             </article>
           </div>
         </div>
       </div>
+    }
 
+    @if (auth.tieneRol(['SUPER_ADMIN', 'ADMIN', 'SECRETARIA', 'BIBLIOTECARIO'])) {
       <div class="mb-5">
         <h3 class="h6 text-uppercase text-secondary fw-semibold mb-3">Reportes</h3>
+
         <div class="row g-4">
-          <div class="col-12 col-md-6 col-lg-4">
-            <article class="h-100 border rounded p-4">
-              <h4 class="h5 mb-2">Préstamos en mora</h4>
-              <p class="text-secondary mb-4">
-                Consulta los libros no devueltos a tiempo y descarga el reporte en PDF.
-              </p>
-              <a routerLink="/reportes/prestamos-mora" class="btn btn-primary">Ver reporte</a>
-            </article>
-          </div>
+          @if (auth.tieneRol(['SUPER_ADMIN', 'ADMIN', 'BIBLIOTECARIO'])) {
+            <div class="col-12 col-md-6 col-lg-4">
+              <article class="h-100 border rounded p-4">
+                <h4 class="h5 mb-2">Préstamos en mora</h4>
+                <p class="text-secondary mb-4">
+                  Mira que libros estan atrasados, tambien puedes descargar el PDF.
+                </p>
+                <a routerLink="/reportes/prestamos-mora" class="btn btn-primary">Ver reporte</a>
+              </article>
+            </div>
+          }
+
+          @if (auth.tieneRol(['SUPER_ADMIN', 'ADMIN', 'SECRETARIA'])) {
+            <div class="col-12 col-md-6 col-lg-4">
+              <article class="h-100 border rounded p-4">
+                <h4 class="h5 mb-2">Solventes y morosos</h4>
+                <p class="text-secondary mb-4">
+                  Revisa que estudiantes tienen pagos pendientes y cuanto deben.
+                </p>
+                <a routerLink="/reportes/solventes" class="btn btn-primary">Ver reporte</a>
+              </article>
+            </div>
+          }
+
+          @if (auth.tieneRol(['SUPER_ADMIN', 'ADMIN'])) {
+            <div class="col-12 col-md-6 col-lg-4">
+              <article class="h-100 border rounded p-4">
+                <h4 class="h5 mb-2">Rendimiento académico</h4>
+                <p class="text-secondary mb-4">
+                  Mira los promedios de los cursos, por grado y seccion.
+                </p>
+                <a routerLink="/reportes/rendimiento-academico" class="btn btn-primary">Ver reporte</a>
+              </article>
+            </div>
+          }
+
+          @if (auth.tieneRol(['SUPER_ADMIN', 'ADMIN'])) {
+            <div class="col-12 col-md-6 col-lg-4">
+              <article class="h-100 border rounded p-4">
+                <h4 class="h5 mb-2">Historial de pagos</h4>
+                <p class="text-secondary mb-4">
+                  Revisa los pagos de cada estudiante y cuanto tiene pendiente.
+                </p>
+                <a routerLink="/reportes/historial-pagos" class="btn btn-primary">Ver reporte</a>
+              </article>
+            </div>
+          }
+
+          @if (auth.tieneRol(['SUPER_ADMIN'])) {
+            <div class="col-12 col-md-6 col-lg-4">
+              <article class="h-100 border rounded p-4">
+                <h4 class="h5 mb-2">Reporte de ingresos</h4>
+                <p class="text-secondary mb-4">
+                  Mira cuanto dinero ha ingresado al colegio por cada tipo de pago.
+                </p>
+                <a routerLink="/reportes/ingresos" class="btn btn-primary">Ver reporte</a>
+              </article>
+            </div>
+          }
         </div>
       </div>
     }

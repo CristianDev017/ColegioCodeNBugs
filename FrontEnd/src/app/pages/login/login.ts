@@ -8,7 +8,6 @@ import { AuthService } from '../../core/auth.service';
   selector: 'app-login',
   imports: [ReactiveFormsModule],
   templateUrl: './login.html',
-  styleUrl: './login.scss'
 })
 export class Login implements OnInit {
   formulario: FormGroup;

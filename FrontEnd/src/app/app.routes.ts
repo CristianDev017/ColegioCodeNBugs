@@ -1,7 +1,6 @@
 import { Routes } from '@angular/router';
 
 import { authGuard } from './core/auth.guard';
-
 import { Login } from './pages/login/login';
 import { Inicio } from './pages/inicio/inicio';
 import { NoAutorizado } from './pages/no-autorizado/no-autorizado';
@@ -63,6 +62,10 @@ import { ListaMultas } from './pages-bibliotecario/multas/lista-multas/lista-mul
 
 
 import { ListaPrestamosMora } from './pages-reportes/prestamos-mora/lista-prestamos-mora';
+import { ListaSolventes } from './pages-reportes/solventes/lista-solventes';
+import { ListaRendimientoAcademico } from './pages-reportes/rendimiento-academico/lista-rendimiento-academico';
+import { ListaHistorialPagos } from './pages-reportes/historial-pagos/lista-historial-pagos';
+import { ListaIngresos } from './pages-reportes/ingresos/listas-ingresos';
 export const routes: Routes = [
   // publicas
   { path: 'login', component: Login },
@@ -155,7 +158,50 @@ export const routes: Routes = [
 
 
   // reportes
-{ path: 'reportes/prestamos-mora', component: ListaPrestamosMora, canActivate: [authGuard], data: { roles: ['BIBLIOTECARIO'] } },
+{
+  path: 'reportes/prestamos-mora',
+  component: ListaPrestamosMora,
+  canActivate: [authGuard],
+  data: {
+    roles: ['BIBLIOTECARIO', 'ADMIN', 'SUPER_ADMIN']
+  }
+},
+
+{
+  path: 'reportes/solventes',
+  component: ListaSolventes,
+  canActivate: [authGuard],
+  data: {
+    roles: ['SECRETARIA', 'ADMIN', 'SUPER_ADMIN']
+  }
+},
+
+{
+  path: 'reportes/rendimiento-academico',
+  component: ListaRendimientoAcademico,
+  canActivate: [authGuard],
+  data: {
+    roles: ['ADMIN', 'SUPER_ADMIN']
+  }
+},
+
+{
+  path: 'reportes/historial-pagos',
+  component: ListaHistorialPagos,
+  canActivate: [authGuard],
+  data: {
+    roles: ['ADMIN', 'SUPER_ADMIN']
+  }
+},
+
+{
+  path: 'reportes/ingresos',
+  component: ListaIngresos,
+  canActivate: [authGuard],
+  data: {
+    roles: ['SUPER_ADMIN']
+  }
+},
 
 
   // redirecciones

@@ -67,7 +67,7 @@ public class PeticionEncargado {
             throw new DatosInvalidosException("La dirección del encargado no puede pasar de 200 caracteres");
         }
         if (parentesco == null || parentesco.length() > 30) {
-            throw new DatosInvalidosException("El parentesco es obligatorio (máximo 30 caracteres)");
+            throw new DatosInvalidosException("El parentesco es obligatorio ");
         }
     }
 }

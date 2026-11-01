@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { LibroService } from '../../../core/libro.service';
+import { LibroService } from '../../../servicios/libro.service';
 import { Libro } from '../../../models/libro';
 import { LibroForm } from '../libro-form/libro-form';
 

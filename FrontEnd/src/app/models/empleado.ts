@@ -1,4 +1,4 @@
-export const PUESTOS = ['Maestro', 'Limpieza', 'Biblioteca', 'Mantenimiento', 'Administrativo'];
+export const PUESTOS = ['Maestro', 'Secretaría', 'Biblioteca', 'Limpieza', 'Mantenimiento'];
 
 export interface Empleado {
   id: number;

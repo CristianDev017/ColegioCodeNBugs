@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { LibroService } from '../../../core/libro.service';
+import { LibroService } from '../../../servicios/libro.service';
 import { DatosLibro, Libro } from '../../../models/libro';
 
 @Component({

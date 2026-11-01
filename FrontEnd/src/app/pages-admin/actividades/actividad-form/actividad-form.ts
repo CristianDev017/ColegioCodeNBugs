@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { ActividadService } from '../../../core/actividad.service';
+import { ActividadService } from '../../../servicios/actividad.service';
 import { Actividad, DatosActividad } from '../../../models/actividad';
 
 @Component({

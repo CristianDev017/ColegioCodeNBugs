@@ -57,8 +57,8 @@ public class PeticionEncargado {
         if (!Validaciones.soloDigitos(dpi, 13, 13)) {
             throw new DatosInvalidosException("El DPI del encargado debe tener 13 números");
         }
-        if (!Validaciones.soloDigitos(telefono, 8, 15)) {
-            throw new DatosInvalidosException("El teléfono del encargado debe tener entre 8 y 15 números");
+        if (!Validaciones.soloDigitos(telefono, 8, 8)) {
+            throw new DatosInvalidosException("El teléfono del encargado debe tener 8 números");
         }
         if (correo != null && (!Validaciones.correoValido(correo) || correo.length() > 100)) {
             throw new DatosInvalidosException("El correo del encargado no es válido");
@@ -67,7 +67,7 @@ public class PeticionEncargado {
             throw new DatosInvalidosException("La dirección del encargado no puede pasar de 200 caracteres");
         }
         if (parentesco == null || parentesco.length() > 30) {
-            throw new DatosInvalidosException("El parentesco es obligatorio (máximo 30 caracteres)");
+            throw new DatosInvalidosException("El parentesco es obligatorio ");
         }
     }
 }

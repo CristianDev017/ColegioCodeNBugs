@@ -3,7 +3,7 @@ import { DecimalPipe } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { Subscription, debounceTime } from 'rxjs';
-import { EmpleadoService } from '../../../core/empleado.service';
+import { EmpleadoService } from '../../../servicios/empleado.service';
 import { Empleado, PUESTOS } from '../../../models/empleado';
 
 @Component({

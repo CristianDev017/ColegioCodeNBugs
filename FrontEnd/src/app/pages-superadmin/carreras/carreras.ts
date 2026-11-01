@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { CarreraService } from '../../core/carrera.service';
+import { CarreraService } from '../../servicios/carrera.service';
 import { Carrera } from '../../models/carrera';
-import { AuthService } from '../../core/auth.service';
+import { AuthService } from '../../servicios/auth.service';
 
 @Component({
   selector: 'app-carreras',

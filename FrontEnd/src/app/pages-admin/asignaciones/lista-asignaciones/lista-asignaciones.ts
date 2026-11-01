@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { AsignacionService } from '../../../core/asignacion.service';
+import { AsignacionService } from '../../../servicios/asignacion.service';
 import { Asignacion, OpcionAsignacion } from '../../../models/asignacion';
 
 @Component({

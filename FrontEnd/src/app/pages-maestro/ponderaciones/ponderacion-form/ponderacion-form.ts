@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { MaestroService } from '../../../core/maestro.service';
+import { MaestroService } from '../../../servicios/maestro.service';
 import { DatosPonderacion, Ponderacion } from '../../../models/maestro';
 
 @Component({

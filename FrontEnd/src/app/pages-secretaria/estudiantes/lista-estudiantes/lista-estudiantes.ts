@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { EstudianteService } from '../../../core/estudiante.service';
+import { EstudianteService } from '../../../servicios/estudiante.service';
 import { Estudiante } from '../../../models/estudiante';
 
 @Component({

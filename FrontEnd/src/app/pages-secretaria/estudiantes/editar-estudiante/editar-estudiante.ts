@@ -1,6 +1,6 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { EstudianteService } from '../../../core/estudiante.service';
+import { EstudianteService } from '../../../servicios/estudiante.service';
 import { Estudiante } from '../../../models/estudiante';
 import { EstudianteForm } from '../estudiante-form/estudiante-form';
 

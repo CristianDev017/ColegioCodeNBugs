@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { CicloEscolarService } from '../../core/ciclo-escolar.service';
+import { CicloEscolarService } from '../../servicios/ciclo-escolar.service';
 import { CicloEscolar } from '../../models/ciclo-escolar';
 
 @Component({

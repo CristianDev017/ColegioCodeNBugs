@@ -1,9 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { CicloEscolarService } from '../../../core/ciclo-escolar.service';
-import { GradoService } from '../../../core/grado.service';
-import { TarifaService } from '../../../core/tarifa.service';
+import { CicloEscolarService } from '../../../servicios/ciclo-escolar.service';
+import { GradoService } from '../../../servicios/grado.service';
+import { TarifaService } from '../../../servicios/tarifa.service';
 import { CicloEscolar } from '../../../models/ciclo-escolar';
 import { Grado } from '../../../models/grado';
 import { DatosTarifa, Tarifa } from '../../../models/tarifa';

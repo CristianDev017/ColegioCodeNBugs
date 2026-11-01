@@ -2,9 +2,9 @@ import { CurrencyPipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { AuthService } from '../../../core/auth.service';
-import { CicloEscolarService } from '../../../core/ciclo-escolar.service';
-import { PagoService } from '../../../core/pago.service';
+import { AuthService } from '../../../servicios/auth.service';
+import { CicloEscolarService } from '../../../servicios/ciclo-escolar.service';
+import { PagoService } from '../../../servicios/pago.service';
 import { CicloEscolar } from '../../../models/ciclo-escolar';
 import { MESES, Pago } from '../../../models/pago';
 

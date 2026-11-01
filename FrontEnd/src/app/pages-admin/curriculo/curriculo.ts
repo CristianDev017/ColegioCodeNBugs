@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { CicloEscolarService } from '../../core/ciclo-escolar.service';
-import { GradoService } from '../../core/grado.service';
-import { CursoService } from '../../core/curso.service';
-import { CurriculoService } from '../../core/curriculo.service';
+import { CicloEscolarService } from '../../servicios/ciclo-escolar.service';
+import { GradoService } from '../../servicios/grado.service';
+import { CursoService } from '../../servicios/curso.service';
+import { CurriculoService } from '../../servicios/curriculo.service';
 import { CicloEscolar } from '../../models/ciclo-escolar';
 import { Grado } from '../../models/grado';
 import { Curso } from '../../models/curso';

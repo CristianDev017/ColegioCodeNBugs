@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { GradoService } from '../../core/grado.service';
-import { SeccionService } from '../../core/seccion.service';
+import { GradoService } from '../../servicios/grado.service';
+import { SeccionService } from '../../servicios/seccion.service';
 import { Grado } from '../../models/grado';
 import { DatosSeccion, Seccion } from '../../models/seccion';
 

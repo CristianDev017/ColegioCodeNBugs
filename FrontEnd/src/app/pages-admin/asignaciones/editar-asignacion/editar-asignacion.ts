@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { AsignacionService } from '../../../core/asignacion.service';
+import { AsignacionService } from '../../../servicios/asignacion.service';
 import { Asignacion } from '../../../models/asignacion';
 import { AsignacionForm } from '../asignacion-form/asignacion-form';
 

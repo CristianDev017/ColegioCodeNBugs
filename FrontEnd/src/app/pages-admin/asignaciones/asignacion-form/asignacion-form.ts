@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { AsignacionService } from '../../../core/asignacion.service';
+import { AsignacionService } from '../../../servicios/asignacion.service';
 import { Asignacion, CursoSeccion, DatosAsignacion, OpcionAsignacion } from '../../../models/asignacion';
 
 @Component({

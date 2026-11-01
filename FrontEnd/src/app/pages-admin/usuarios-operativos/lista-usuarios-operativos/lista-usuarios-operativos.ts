@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { Subscription, debounceTime } from 'rxjs';
-import { UsuarioOperativoService } from '../../../core/usuario-operativo.service';
+import { UsuarioOperativoService } from '../../../servicios/usuario-operativo.service';
 import { ROLES_OPERATIVOS, UsuarioOperativo } from '../../../models/usuario-operativo';
 
 @Component({

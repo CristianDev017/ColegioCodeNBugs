@@ -29,7 +29,12 @@ public class ReporteSolventesServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        if (!Auth.exigirRol(req, resp, Roles.SECRETARIA)) {
+        if (!Auth.exigirRol(
+                req,
+                resp,
+                Roles.SECRETARIA,
+                Roles.ADMIN,
+                Roles.SUPER_ADMIN)) {
             return;
         }
         try {

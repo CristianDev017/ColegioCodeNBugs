@@ -2,7 +2,7 @@ import { AsyncPipe } from '@angular/common';
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
-import { AuthService } from '../../core/auth.service';
+import { AuthService } from '../../servicios/auth.service';
 
 @Component({
   selector: 'app-inicio',

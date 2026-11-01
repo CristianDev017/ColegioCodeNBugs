@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { EmpleadoService } from '../../../core/empleado.service';
+import { EmpleadoService } from '../../../servicios/empleado.service';
 import { DatosEmpleado, Empleado, PUESTOS } from '../../../models/empleado';
 
 @Component({
@@ -21,7 +21,7 @@ export class EmpleadoForm implements OnInit {
 
   textosPattern: { [ruta: string]: string } = {
     dpi: 'El DPI debe tener exactamente 13 números',
-    telefono: 'El teléfono debe tener entre 8 y 15 números',
+    telefono: 'El teléfono debe tener 8 números',
     salario: 'Solo números con hasta 2 decimales'
   };
 
@@ -30,7 +30,7 @@ export class EmpleadoForm implements OnInit {
     apellidos: new FormControl('', [Validators.required, Validators.maxLength(80)]),
     dpi: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]{13}$/)]),
     fechaNacimiento: new FormControl('', [Validators.required]),
-    telefono: new FormControl('', [Validators.pattern(/^[0-9]{8,15}$/)]),
+    telefono: new FormControl('', [Validators.pattern(/^[0-9]{8}$/)]),
     direccion: new FormControl('', [Validators.maxLength(200)]),
     puesto: new FormControl<string | null>(null, [Validators.required]),
     fechaContratacion: new FormControl('', [Validators.required]),

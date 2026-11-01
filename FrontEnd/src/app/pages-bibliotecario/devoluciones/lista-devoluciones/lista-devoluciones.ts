@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { Subscription, debounceTime } from 'rxjs';
-import { BibliotecaService } from '../../../core/biblioteca.service';
+import { BibliotecaService } from '../../../servicios/biblioteca.service';
 import { ConfigBiblioteca, Prestamo } from '../../../models/biblioteca';
 
 @Component({

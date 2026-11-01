@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { UsuarioOperativoService } from '../../../core/usuario-operativo.service';
+import { UsuarioOperativoService } from '../../../servicios/usuario-operativo.service';
 import { UsuarioOperativo } from '../../../models/usuario-operativo';
 import { UsuarioOperativoForm } from '../usuario-operativo-form/usuario-operativo-form';
 

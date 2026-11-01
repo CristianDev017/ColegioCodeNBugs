@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { EstudianteService } from '../../../core/estudiante.service';
+import { EstudianteService } from '../../../servicios/estudiante.service';
 import { DatosEstudiante, Estudiante } from '../../../models/estudiante';
 import { RouterLink } from '@angular/router';
 
@@ -30,12 +30,12 @@ export class EstudianteForm implements OnInit {
       alergias: ['', [Validators.maxLength(500)]],
       condiciones: ['', [Validators.maxLength(500)]],
       contactoEmergencia: ['', [Validators.required, Validators.maxLength(100)]],
-      telefonoEmergencia: ['', [Validators.required, Validators.pattern(/^[0-9]{8,15}$/)]],
+      telefonoEmergencia: ['', [Validators.required, Validators.pattern(/^[0-9]{8}$/)]],
       encargado: this.fb.group({
         nombres: ['', [Validators.required, Validators.maxLength(80)]],
         apellidos: ['', [Validators.required, Validators.maxLength(80)]],
         dpi: ['', [Validators.required, Validators.pattern(/^[0-9]{13}$/)]],
-        telefono: ['', [Validators.required, Validators.pattern(/^[0-9]{8,15}$/)]],
+        telefono: ['', [Validators.required, Validators.pattern(/^[0-9]{8}$/)]],
         correo: ['', [Validators.email, Validators.maxLength(100)]],
         direccion: ['', [Validators.maxLength(200)]],
         parentesco: ['', [Validators.required, Validators.maxLength(30)]]

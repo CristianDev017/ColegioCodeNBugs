@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { debounceTime } from 'rxjs';
-import { EstudianteService } from '../../../core/estudiante.service';
-import { InscripcionService } from '../../../core/inscripcion.service';
+import { EstudianteService } from '../../../servicios/estudiante.service';
+import { InscripcionService } from '../../../servicios/inscripcion.service';
 import { Estudiante } from '../../../models/estudiante';
 import { SeccionDisponible } from '../../../models/inscripcion';
 

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { CursoService } from '../../core/curso.service';
+import { CursoService } from '../../servicios/curso.service';
 import { Curso } from '../../models/curso';
 
 @Component({

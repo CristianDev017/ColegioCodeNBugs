@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { MaestroService } from '../../../core/maestro.service';
+import { MaestroService } from '../../../servicios/maestro.service';
 import { Ponderacion } from '../../../models/maestro';
 import { PonderacionForm } from '../ponderacion-form/ponderacion-form';
 

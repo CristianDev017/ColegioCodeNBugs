@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { Subscription, debounceTime } from 'rxjs';
-import { ReportesService } from '../../core/reportes.service';
+import { ReportesService } from '../../servicios/reportes.service';
 import { FilaSolvencia, OpcionReporte } from '../../models/reportes';
 
 @Component({
@@ -21,14 +21,12 @@ export class ListaSolventes implements OnInit, OnDestroy {
   cargando: boolean = false;
   mensajeError: string = '';
 
-  filtros = new FormGroup({
-    idCiclo: new FormControl<number>(0),
-    idGrado: new FormControl<number>(0),
-    idSeccion: new FormControl<number>(0),
-    estado: new FormControl(''),
-    desde: new FormControl(''),
-    hasta: new FormControl('')
-  });
+filtros = new FormGroup({
+  idCiclo: new FormControl<number>(0),
+  idGrado: new FormControl<number>(0),
+  idSeccion: new FormControl<number>(0),
+  estado: new FormControl('')
+});
 
   private suscripcion?: Subscription;
 
@@ -71,17 +69,16 @@ export class ListaSolventes implements OnInit, OnDestroy {
     return Math.max(1, Math.ceil(this.total / this.tamano));
   }
 
-  armarFiltros(): any {
-    const f = this.filtros.value;
-    return {
-      idCiclo: f.idCiclo ?? 0,
-      idGrado: f.idGrado ?? 0,
-      idSeccion: f.idSeccion ?? 0,
-      estado: f.estado ?? '',
-      desde: f.desde ?? '',
-      hasta: f.hasta ?? ''
-    };
-  }
+armarFiltros(): any {
+  const f = this.filtros.value;
+
+  return {
+    idCiclo: f.idCiclo ?? 0,
+    idGrado: f.idGrado ?? 0,
+    idSeccion: f.idSeccion ?? 0,
+    estado: f.estado ?? ''
+  };
+}
 
   cargar(): void {
     this.cargando = true;
@@ -112,10 +109,16 @@ export class ListaSolventes implements OnInit, OnDestroy {
     });
   }
 
-  limpiarFiltros(): void {
-    const primero = this.ciclos.length > 0 ? this.ciclos[0].id : 0;
-    this.filtros.reset({ idCiclo: primero, idGrado: 0, idSeccion: 0, estado: '', desde: '', hasta: '' });
-  }
+limpiarFiltros(): void {
+  const primero = this.ciclos.length > 0 ? this.ciclos[0].id : 0;
+
+  this.filtros.reset({
+    idCiclo: primero,
+    idGrado: 0,
+    idSeccion: 0,
+    estado: ''
+  });
+}
 
   anterior(): void {
     if (this.pagina > 1) {

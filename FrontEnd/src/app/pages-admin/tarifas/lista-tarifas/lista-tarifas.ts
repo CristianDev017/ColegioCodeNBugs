@@ -2,8 +2,8 @@ import { CurrencyPipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { CicloEscolarService } from '../../../core/ciclo-escolar.service';
-import { TarifaService } from '../../../core/tarifa.service';
+import { CicloEscolarService } from '../../../servicios/ciclo-escolar.service';
+import { TarifaService } from '../../../servicios/tarifa.service';
 import { CicloEscolar } from '../../../models/ciclo-escolar';
 import { Tarifa } from '../../../models/tarifa';
 

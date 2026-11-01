@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { UsuarioOperativoService } from '../../../core/usuario-operativo.service';
+import { UsuarioOperativoService } from '../../../servicios/usuario-operativo.service';
 import {
   DatosUsuarioOperativo,
   OpcionEmpleado,

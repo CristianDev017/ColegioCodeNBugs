@@ -10,7 +10,7 @@ import java.util.List;
 public class PeticionEmpleado {
 
     public static final List<String> PUESTOS =
-            List.of("Maestro", "Limpieza", "Biblioteca", "Mantenimiento", "Administrativo");
+            List.of("Maestro", "Secretaría", "Biblioteca", "Limpieza", "Mantenimiento");
 
     private String nombres;
     private String apellidos;
@@ -86,8 +86,8 @@ public class PeticionEmpleado {
             throw new DatosInvalidosException("El empleado debe ser mayor de 18 años");
         }
 
-        if (getTelefono() != null && !getTelefono().matches("[0-9]{8,15}")) {
-            throw new DatosInvalidosException("El teléfono debe tener entre 8 y 15 números");
+        if (getTelefono() != null && !getTelefono().matches("[0-9]{8}")) {
+            throw new DatosInvalidosException("El teléfono debe tener 8 números");
         }
         if (getDireccion() != null && getDireccion().length() > 200) {
             throw new DatosInvalidosException("La dirección no puede pasar de 200 caracteres");

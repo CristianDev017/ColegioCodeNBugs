@@ -29,9 +29,9 @@
     </div>
     <div class="col-md-4">
       <label class="form-label" for="telefono">Teléfono (opcional)</label>
-      <input id="telefono" type="text" class="form-control" formControlName="telefono" maxlength="15"
+      <input id="telefono" type="text" class="form-control" formControlName="telefono" maxlength="8"
              [class.is-invalid]="mensajeError('telefono')">
-      <div class="form-text">De 8 a 15 números</div>
+      <div class="form-text">8 números</div>
       <div class="invalid-feedback">{{ mensajeError('telefono') }}</div>
     </div>
     <div class="col-12">

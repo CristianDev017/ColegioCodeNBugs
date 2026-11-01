@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { GradoService } from '../../core/grado.service';
+import { GradoService } from '../../servicios/grado.service';
 import { Grado } from '../../models/grado';
 
 @Component({

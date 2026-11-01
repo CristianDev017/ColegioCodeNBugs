@@ -112,8 +112,8 @@ public class PeticionEstudiante {
         if (contactoEmergencia == null || contactoEmergencia.length() > 100) {
             throw new DatosInvalidosException("El contacto de emergencia es obligatorio (máximo 100 caracteres)");
         }
-        if (!Validaciones.soloDigitos(telefonoEmergencia, 8, 15)) {
-            throw new DatosInvalidosException("El teléfono de emergencia debe tener entre 8 y 15 números");
+        if (!Validaciones.soloDigitos(telefonoEmergencia, 8, 8)) {
+            throw new DatosInvalidosException("El teléfono de emergencia debe tener 8 números");
         }
         if (encargado == null) {
             throw new DatosInvalidosException("Faltan los datos del encargado");

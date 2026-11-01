@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 
-import { UsuarioAdminService } from '../../core/usuario-admin.service';
+import { UsuarioAdminService } from '../../servicios/usuario-admin.service';
 import { UsuarioAdmin } from '../../models/usuario-admin';
 
 @Component({

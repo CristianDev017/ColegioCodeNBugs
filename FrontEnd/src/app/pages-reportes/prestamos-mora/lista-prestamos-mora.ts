@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { Subscription, debounceTime } from 'rxjs';
-import { ReportesService } from '../../core/reportes.service';
+import { ReportesService } from '../../servicios/reportes.service';
 import { FilaMora } from '../../models/reportes';
 
 @Component({

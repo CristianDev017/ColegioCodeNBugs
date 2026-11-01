@@ -1,7 +1,7 @@
 import { DecimalPipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { MaestroService } from '../../core/maestro.service';
+import { MaestroService } from '../../servicios/maestro.service';
 import { AlumnoNota, CursoMaestro, Ponderacion, RegistroNota } from '../../models/maestro';
 
 @Component({

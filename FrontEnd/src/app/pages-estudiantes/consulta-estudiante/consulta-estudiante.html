@@ -1,0 +1,141 @@
+<main class="container py-4">
+
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h3>Mi informacion</h3>
+    <a routerLink="/inicio" class="btn btn-outline-secondary">
+      Volver
+    </a>
+  </div>
+
+  @if (cargando) {
+    <p>Cargando informacion...</p>
+  }
+
+  @if (mensajeError) {
+    <div class="alert alert-danger">
+      {{ mensajeError }}
+    </div>
+  }
+
+  @if (perfil) {
+
+    <h5>Mi perfil</h5>
+
+    <div class="border rounded p-3 mb-4">
+      <p><strong>Carnet:</strong> {{ perfil.carnet }}</p>
+      <p><strong>Nombre:</strong> {{ perfil.nombres }} {{ perfil.apellidos }}</p>
+      <p><strong>Correo:</strong> {{ perfil.correo }}</p>
+      <p><strong>Fecha de nacimiento:</strong> {{ perfil.fechaNacimiento }}</p>
+      <p><strong>Genero:</strong> {{ perfil.genero }}</p>
+      <p><strong>Direccion:</strong> {{ perfil.direccion || 'No registrada' }}</p>
+      <p class="mb-0"><strong>Estado:</strong> {{ perfil.estado }}</p>
+    </div>
+
+    <h5>Mis notas</h5>
+
+    <div class="mb-3">
+      <label class="form-label">Año lectivo</label>
+
+      <select
+        class="form-select"
+        style="max-width: 250px"
+        [value]="anioSeleccionado"
+        (change)="cambiarAnio($event)"
+      >
+        <option value="0">Todos</option>
+
+        @for (anio of anios; track anio) {
+          <option [value]="anio">{{ anio }}</option>
+        }
+      </select>
+    </div>
+
+    <div class="table-responsive mb-5">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Año</th>
+            <th>Curso</th>
+            <th>Actividad</th>
+            <th>Nota</th>
+            <th>Nota maxima</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          @for (nota of notasFiltradas; track $index) {
+            <tr>
+              <td>{{ nota.anio }}</td>
+              <td>{{ nota.curso }}</td>
+              <td>{{ nota.actividad }}</td>
+              <td>{{ nota.nota }}</td>
+              <td>{{ nota.notaMaxima }}</td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="5" class="text-center">
+                No hay notas registradas
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <h5>Mi estado de cuenta</h5>
+
+    <div class="row mb-3">
+      <div class="col-md-6 mb-2">
+        <div class="border rounded p-3">
+          <p class="mb-1">Total pagado</p>
+          <h5>Q{{ totalPagado.toFixed(2) }}</h5>
+        </div>
+      </div>
+
+      <div class="col-md-6 mb-2">
+        <div class="border rounded p-3">
+          <p class="mb-1">Saldo pendiente</p>
+          <h5>Q{{ saldoPendiente.toFixed(2) }}</h5>
+        </div>
+      </div>
+    </div>
+
+    <h6>Pagos realizados</h6>
+
+    <div class="table-responsive">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Año</th>
+            <th>Concepto</th>
+            <th>Detalle</th>
+            <th>Comprobante</th>
+            <th>Monto</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          @for (pago of pagos; track pago.idPago) {
+            <tr>
+              <td>{{ pago.fechaPago }}</td>
+              <td>{{ pago.anio }}</td>
+              <td>{{ pago.concepto }}</td>
+              <td>{{ pago.detalle }}</td>
+              <td>{{ pago.comprobante || '-' }}</td>
+              <td>Q{{ pago.monto.toFixed(2) }}</td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="6" class="text-center">
+                No hay pagos registrados
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+  }
+
+</main>

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { SolvenciaService } from '../../../core/solvencia.service';
+import { SolvenciaService } from '../../../servicios/solvencia.service';
 import { Solvencia } from '../../../models/solvencia';
 
 @Component({

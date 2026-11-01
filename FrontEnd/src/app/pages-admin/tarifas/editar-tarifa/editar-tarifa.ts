@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { TarifaService } from '../../../core/tarifa.service';
+import { TarifaService } from '../../../servicios/tarifa.service';
 import { Tarifa } from '../../../models/tarifa';
 import { TarifaForm } from '../tarifa-form/tarifa-form';
 

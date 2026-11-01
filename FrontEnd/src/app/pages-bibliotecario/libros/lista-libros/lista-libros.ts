@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { Subscription, debounceTime } from 'rxjs';
-import { LibroService } from '../../../core/libro.service';
+import { LibroService } from '../../../servicios/libro.service';
 import { Libro } from '../../../models/libro';
 
 @Component({

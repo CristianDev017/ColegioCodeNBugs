@@ -2,7 +2,7 @@ import { CurrencyPipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { ActividadService } from '../../../core/actividad.service';
+import { ActividadService } from '../../../servicios/actividad.service';
 import { Actividad } from '../../../models/actividad';
 
 @Component({

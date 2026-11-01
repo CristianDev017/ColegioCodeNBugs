@@ -1,7 +1,7 @@
 import { CurrencyPipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { PagoService } from '../../../core/pago.service';
+import { PagoService } from '../../../servicios/pago.service';
 import { MESES, Pago } from '../../../models/pago';
 
 @Component({

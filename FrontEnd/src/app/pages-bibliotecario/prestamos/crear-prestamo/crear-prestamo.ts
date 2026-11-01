@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { BibliotecaService } from '../../../core/biblioteca.service';
+import { BibliotecaService } from '../../../servicios/biblioteca.service';
 import { ConfigBiblioteca, OpcionBiblioteca } from '../../../models/biblioteca';
 
 @Component({

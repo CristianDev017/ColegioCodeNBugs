@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { MaestroService } from '../../core/maestro.service';
+import { MaestroService } from '../../servicios/maestro.service';
 import { CursoMaestro } from '../../models/maestro';
 
 @Component({

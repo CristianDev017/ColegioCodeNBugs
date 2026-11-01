@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+              name="RendimientoAcademico"
+              pageWidth="595" pageHeight="842" columnWidth="555"
+              leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20"
+              whenNoDataType="AllSectionsNoDetail">
+
+    <parameter name="TITULO" class="java.lang.String"/>
+    <parameter name="FILTROS" class="java.lang.String"/>
+    <parameter name="GENERADO" class="java.lang.String"/>
+
+    <field name="curso" class="java.lang.String"/>
+    <field name="grado" class="java.lang.String"/>
+    <field name="seccion" class="java.lang.String"/>
+    <field name="alumnosEvaluados" class="java.lang.Integer"/>
+    <field name="promedio" class="java.math.BigDecimal"/>
+    <field name="rendimiento" class="java.lang.String"/>
+
+    <title>
+        <band height="70">
+            <textField>
+                <reportElement uuid="b1000001-1111-4111-8111-111111111111"
+                               x="0" y="5" width="555" height="28"/>
+                <textElement textAlignment="Center">
+                    <font size="16" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{TITULO}]]></textFieldExpression>
+            </textField>
+
+            <textField isBlankWhenNull="true">
+                <reportElement uuid="b1000002-1111-4111-8111-111111111111"
+                               x="0" y="36" width="555" height="14"/>
+                <textElement textAlignment="Center">
+                    <font size="9"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{FILTROS}]]></textFieldExpression>
+            </textField>
+
+            <textField>
+                <reportElement uuid="b1000003-1111-4111-8111-111111111111"
+                               x="0" y="52" width="555" height="14"/>
+                <textElement textAlignment="Center">
+                    <font size="9"/>
+                </textElement>
+                <textFieldExpression><![CDATA["Generado: " + $P{GENERADO}]]></textFieldExpression>
+            </textField>
+        </band>
+    </title>
+
+    <columnHeader>
+        <band height="26">
+            <staticText>
+                <reportElement uuid="b1000004-1111-4111-8111-111111111111"
+                               x="0" y="0" width="155" height="20"/>
+                <textElement><font size="9" isBold="true"/></textElement>
+                <text><![CDATA[Curso]]></text>
+            </staticText>
+
+            <staticText>
+                <reportElement uuid="b1000005-1111-4111-8111-111111111111"
+                               x="155" y="0" width="105" height="20"/>
+                <textElement><font size="9" isBold="true"/></textElement>
+                <text><![CDATA[Grado]]></text>
+            </staticText>
+
+            <staticText>
+                <reportElement uuid="b1000006-1111-4111-8111-111111111111"
+                               x="260" y="0" width="45" height="20"/>
+                <textElement><font size="9" isBold="true"/></textElement>
+                <text><![CDATA[Sección]]></text>
+            </staticText>
+
+            <staticText>
+                <reportElement uuid="b1000007-1111-4111-8111-111111111111"
+                               x="305" y="0" width="75" height="20"/>
+                <textElement textAlignment="Right">
+                    <font size="9" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Evaluados]]></text>
+            </staticText>
+
+            <staticText>
+                <reportElement uuid="b1000008-1111-4111-8111-111111111111"
+                               x="380" y="0" width="70" height="20"/>
+                <textElement textAlignment="Right">
+                    <font size="9" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Promedio]]></text>
+            </staticText>
+
+            <staticText>
+                <reportElement uuid="b1000015-1111-4111-8111-111111111111"
+                               x="450" y="0" width="105" height="20"/>
+                <textElement>
+                    <font size="9" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Rendimiento]]></text>
+            </staticText>
+
+            <line>
+                <reportElement uuid="b1000009-1111-4111-8111-111111111111"
+                               x="0" y="23" width="555" height="1"/>
+            </line>
+        </band>
+    </columnHeader>
+
+    <detail>
+        <band height="30" splitType="Stretch">
+            <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+                <reportElement uuid="b1000010-1111-4111-8111-111111111111"
+                               x="0" y="0" width="155" height="28"/>
+                <textElement><font size="9"/></textElement>
+                <textFieldExpression><![CDATA[$F{curso}]]></textFieldExpression>
+            </textField>
+
+            <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+                <reportElement uuid="b1000011-1111-4111-8111-111111111111"
+                               x="155" y="0" width="105" height="28"/>
+                <textElement><font size="9"/></textElement>
+                <textFieldExpression><![CDATA[$F{grado}]]></textFieldExpression>
+            </textField>
+
+            <textField isBlankWhenNull="true">
+                <reportElement uuid="b1000012-1111-4111-8111-111111111111"
+                               x="260" y="0" width="45" height="28"/>
+                <textElement><font size="9"/></textElement>
+                <textFieldExpression><![CDATA[$F{seccion}]]></textFieldExpression>
+            </textField>
+
+            <textField>
+                <reportElement uuid="b1000013-1111-4111-8111-111111111111"
+                               x="305" y="0" width="75" height="28"/>
+                <textElement textAlignment="Right">
+                    <font size="9"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{alumnosEvaluados}]]></textFieldExpression>
+            </textField>
+
+            <textField pattern="#,##0.00" isBlankWhenNull="true">
+                <reportElement uuid="b1000014-1111-4111-8111-111111111111"
+                               x="380" y="0" width="70" height="28"/>
+                <textElement textAlignment="Right">
+                    <font size="9"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{promedio}]]></textFieldExpression>
+            </textField>
+
+            <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+                <reportElement uuid="b1000016-1111-4111-8111-111111111111"
+                               x="450" y="0" width="105" height="28"/>
+                <textElement>
+                    <font size="9"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{rendimiento}]]></textFieldExpression>
+            </textField>
+        </band>
+    </detail>
+
+    <pageFooter>
+        <band height="20">
+            <textField>
+                <reportElement uuid="b1000017-1111-4111-8111-111111111111"
+                               x="0" y="2" width="555" height="16"/>
+                <textElement textAlignment="Center">
+                    <font size="9"/>
+                </textElement>
+                <textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER}]]></textFieldExpression>
+            </textField>
+        </band>
+    </pageFooter>
+
+</jasperReport>

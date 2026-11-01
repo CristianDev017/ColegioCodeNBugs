@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { CarreraService } from '../../core/carrera.service';
-import { GradoService } from '../../core/grado.service';
-import { NivelService } from '../../core/nivel.service';
+import { CarreraService } from '../../servicios/carrera.service';
+import { GradoService } from '../../servicios/grado.service';
+import { NivelService } from '../../servicios/nivel.service';
 import { Carrera } from '../../models/carrera';
 import { DatosGrado, Grado } from '../../models/grado';
 import { Nivel } from '../../models/nivel';

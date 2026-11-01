@@ -23,7 +23,12 @@ public class ReportePrestamosMoraServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        if (!Auth.exigirRol(req, resp, Roles.BIBLIOTECARIO)) {
+        if (!Auth.exigirRol(
+                req,
+                resp,
+                Roles.BIBLIOTECARIO,
+                Roles.ADMIN,
+                Roles.SUPER_ADMIN)) {
             return;
         }
         try {

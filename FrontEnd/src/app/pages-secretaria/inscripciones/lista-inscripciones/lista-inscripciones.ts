@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { AuthService } from '../../../core/auth.service';
-import { InscripcionService } from '../../../core/inscripcion.service';
+import { AuthService } from '../../../servicios/auth.service';
+import { InscripcionService } from '../../../servicios/inscripcion.service';
 import { Inscripcion, SeccionDisponible } from '../../../models/inscripcion';
 
 @Component({

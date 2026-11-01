@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { AuthService } from '../../../core/auth.service';
-import { CicloEscolarService } from '../../../core/ciclo-escolar.service';
-import { SolvenciaService } from '../../../core/solvencia.service';
+import { AuthService } from '../../../servicios/auth.service';
+import { CicloEscolarService } from '../../../servicios/ciclo-escolar.service';
+import { SolvenciaService } from '../../../servicios/solvencia.service';
 import { CicloEscolar } from '../../../models/ciclo-escolar';
 import { Solvencia } from '../../../models/solvencia';
 

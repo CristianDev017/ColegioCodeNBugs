@@ -1,33 +1,37 @@
+
 package colegio.servlet;
 
 import colegio.model.Usuario;
 import colegio.services.AuthService;
+import colegio.services.JwtTokenService;
+import colegio.util.Json;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 import java.sql.SQLException;
-import com.google.gson.JsonParseException;
-import colegio.services.JwtTokenService;
+import java.util.Map;
 
 @WebServlet("/api/auth/login")
 public class AuthServlet extends HttpServlet {
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
 
         Gson gson = new Gson();
         JsonObject datos;
 
         try {
             datos = gson.fromJson(request.getReader(), JsonObject.class);
+
         } catch (JsonParseException | IllegalStateException e) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            response.getWriter().write("{\"mensaje\":\"JSON inválido\"}");
+            Json.error(response, 400, "JSON inválido");
             return;
         }
 
@@ -37,10 +41,9 @@ public class AuthServlet extends HttpServlet {
                 || !datos.get("usuario").isJsonPrimitive()
                 || !datos.get("password").isJsonPrimitive()
                 || !datos.get("usuario").getAsJsonPrimitive().isString()
-                || !datos.get("password").getAsJsonPrimitive().isString())
-        {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            response.getWriter().write("{\"mensaje\":\"Faltan datos obligatorios\"}");
+                || !datos.get("password").getAsJsonPrimitive().isString()) {
+
+            Json.error(response, 400, "Faltan datos obligatorios");
             return;
         }
 
@@ -48,8 +51,7 @@ public class AuthServlet extends HttpServlet {
         String password = datos.get("password").getAsString();
 
         if (usuario.isBlank() || password.isBlank()) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            response.getWriter().write("{\"mensaje\":\"El usuario y la contraseña son obligatorios \"}");
+            Json.error(response, 400, "El usuario y la contraseña son obligatorios");
             return;
         }
 
@@ -59,28 +61,24 @@ public class AuthServlet extends HttpServlet {
             Usuario resultado = auth.login(usuario, password);
 
             if (resultado == null) {
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                response.getWriter().write("{\"mensaje\":\"Credenciales incorrectas\"}");
+                Json.error(response, 401, "Credenciales incorrectas");
+
             } else {
                 JwtTokenService jwtService = new JwtTokenService();
 
                 String token = jwtService.generate(resultado);
 
-                JsonObject respuesta = new JsonObject();
-                respuesta.addProperty("mensaje", "Login exitoso");
-                respuesta.addProperty("token", token);
-                respuesta.addProperty("rol", resultado.getRol());
-
-                response.setStatus(HttpServletResponse.SC_OK);
-                response.getWriter().write(gson.toJson(respuesta));
+                Json.escribir(response, 200, Map.of(
+                        "mensaje", "Login exitoso",
+                        "token", token,
+                        "rol", resultado.getRol()
+                ));
             }
 
         } catch (SQLException e) {
             System.out.println("Error al consultar la base de datos");
             e.printStackTrace();
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            response.getWriter().write("{\"mensaje\":\"Error interno del servidor\"}");
+            Json.error(response, 500, "Error interno del servidor");
         }
-
     }
 }

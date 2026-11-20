@@ -1,7 +1,8 @@
+
 package colegio.filter;
 
 import colegio.services.JwtTokenService;
-import com.google.gson.JsonObject;
+import colegio.util.Json;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
@@ -34,21 +35,17 @@ public class JwtFilter implements Filter {
             return;
         }
 
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-
         String authorization = request.getHeader("Authorization");
 
         if (authorization == null || !authorization.startsWith("Bearer ")) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("{\"mensaje\":\"No se envio el token\"}");
+            Json.error(response, 401, "No se envio el token");
             return;
         }
+
         String token = authorization.substring(7).trim();
 
         if (token.isEmpty()) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("{\"mensaje\":\"El token esta vacio\"}");
+            Json.error(response, 401, "El token esta vacio");
             return;
         }
 
@@ -61,8 +58,7 @@ public class JwtFilter implements Filter {
             Number id = datos.get("id", Number.class);
 
             if (usuario == null || usuario.isBlank() || rol == null || rol.isBlank() || id == null) {
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                response.getWriter().write("{\"mensaje\":\"Token invalido\"}");
+                Json.error(response, 401, "Token invalido");
                 return;
             }
 
@@ -73,8 +69,7 @@ public class JwtFilter implements Filter {
             chain.doFilter(req, res);
 
         } catch (JwtException | IllegalArgumentException e) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("{\"mensaje\":\"Token invalido o expirado\"}");
+            Json.error(response, 401, "Token invalido o expirado");
         }
     }
 }

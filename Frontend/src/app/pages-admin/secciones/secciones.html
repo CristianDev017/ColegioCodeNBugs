@@ -1,0 +1,219 @@
+
+<div class="container mt-4">
+
+  <a routerLink="/admin" class="btn btn-outline-secondary mb-3">
+    Volver al inicio
+  </a>
+
+  <h3>Administracion de Secciones</h3>
+  <p class="text-muted">
+    Organiza las secciones correspondientes a los ciclos y grados del colegio.
+  </p>
+  <hr>
+
+  <div *ngIf="mensaje" class="alert alert-success">
+    {{ mensaje }}
+  </div>
+
+  <div *ngIf="error" class="alert alert-danger">
+    {{ error }}
+  </div>
+
+  <div class="card mb-4">
+    <div class="card-body">
+
+      <h5>{{ idEditar === 0 ? 'Nueva seccion' : 'Editar seccion' }}</h5>
+
+      <form (ngSubmit)="guardar()">
+
+        <div class="row">
+
+          <div class="col-md-3 mb-3">
+            <label class="form-label">Ciclo escolar</label>
+
+            <select
+              class="form-select"
+              name="idCiclo"
+              [(ngModel)]="idCiclo"
+              (ngModelChange)="cambiarCiclo()"
+              [disabled]="idEditar !== 0"
+              required>
+
+              <option [ngValue]="0">
+                Selecciona un ciclo
+              </option>
+
+              <option
+                *ngFor="let anio of ciclosDisponibles()"
+                [ngValue]="anio">
+                {{ anio }}
+              </option>
+
+            </select>
+          </div>
+
+          <div class="col-md-4 mb-3">
+            <label class="form-label">Grado</label>
+
+            <select
+              class="form-select"
+              name="idCicloGrado"
+              [(ngModel)]="idCicloGrado"
+              (ngModelChange)="cambiarGrado()"
+              [disabled]="idCiclo === 0 || idEditar !== 0"
+              required>
+
+              <option [ngValue]="0">
+                Selecciona un grado
+              </option>
+
+              <option
+                *ngFor="let opcion of gradosDisponibles()"
+                [ngValue]="opcion.idCicloGrado">
+
+                {{ opcion.nivel }} -
+                {{ opcion.grado }}
+                {{ opcion.carrera ? '(' + opcion.carrera + ')' : '' }}
+
+              </option>
+
+            </select>
+          </div>
+
+          <div class="col-md-2 mb-3">
+            <label class="form-label">Seccion</label>
+
+            <input
+              type="text"
+              class="form-control"
+              name="nombre"
+              [(ngModel)]="nombre"
+              maxlength="10"
+              placeholder="Ejemplo: A"
+              required>
+          </div>
+
+          <div class="col-md-3 mb-3">
+            <label class="form-label">Cupo</label>
+
+            <input
+              type="number"
+              class="form-control"
+              name="cupo"
+              [(ngModel)]="cupo"
+              min="1"
+              required>
+          </div>
+
+        </div>
+
+        <button
+          type="submit"
+          class="btn btn-primary"
+          [disabled]="guardando || cambiandoEstado">
+
+          {{ guardando ? 'Guardando...' :
+             (idEditar === 0 ? 'Guardar' : 'Actualizar') }}
+
+        </button>
+
+        <button
+          *ngIf="idEditar !== 0"
+          type="button"
+          class="btn btn-secondary ms-2"
+          [disabled]="guardando || cambiandoEstado"
+          (click)="limpiar()">
+          Cancelar
+        </button>
+
+      </form>
+
+    </div>
+  </div>
+
+  <h5 class="mb-3">Secciones registradas</h5>
+
+  <p *ngIf="cargando" class="text-muted">
+    Cargando secciones...
+  </p>
+
+  <div class="table-responsive">
+
+    <table class="table table-striped align-middle">
+
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Ciclo</th>
+          <th>Nivel</th>
+          <th>Grado</th>
+          <th>Carrera</th>
+          <th>Seccion</th>
+          <th>Cupo</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+
+      <tbody>
+
+        <tr *ngFor="let seccion of secciones">
+
+          <td>{{ seccion.idSeccion }}</td>
+          <td>{{ seccion.anio }}</td>
+          <td>{{ seccion.nivel }}</td>
+          <td>{{ seccion.grado }}</td>
+          <td>{{ seccion.carrera || 'No aplica' }}</td>
+          <td>{{ seccion.nombre }}</td>
+          <td>{{ seccion.cupo }}</td>
+
+          <td>
+            <span
+              class="badge"
+              [ngClass]="seccion.activo ? 'bg-success' : 'bg-secondary'">
+
+              {{ seccion.activo ? 'Activa' : 'Inactiva' }}
+
+            </span>
+          </td>
+
+          <td>
+
+            <button
+              type="button"
+              class="btn btn-sm btn-warning me-2"
+              [disabled]="guardando || cambiandoEstado ||
+                          seccion.estadoCiclo === 'CERRADO'"
+              (click)="seleccionar(seccion)">
+              Editar
+            </button>
+
+            <button
+              type="button"
+              class="btn btn-sm"
+              [disabled]="guardando || cambiandoEstado ||
+                          seccion.estadoCiclo === 'CERRADO'"
+              [ngClass]="seccion.activo ? 'btn-danger' : 'btn-success'"
+              (click)="cambiarEstado(seccion)">
+
+              {{ seccion.activo ? 'Desactivar' : 'Activar' }}
+
+            </button>
+
+          </td>
+
+        </tr>
+
+        <tr *ngIf="!cargando && secciones.length === 0">
+          <td colspan="9" class="text-center text-muted">
+            No hay secciones registradas
+          </td>
+        </tr>
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+</div>

@@ -1,0 +1,167 @@
+<div class="container mt-4">
+
+  <a routerLink="/superadmin" class="btn btn-outline-secondary mb-3">
+    Volver al inicio
+  </a>
+
+  <h3>Grados por defecto</h3>
+  <p class="text-muted">
+    Administra los grados que ofrece normalmente el colegio.
+  </p>
+  <hr>
+
+  <div *ngIf="mensaje" class="alert alert-success">
+    {{ mensaje }}
+  </div>
+
+  <div *ngIf="error" class="alert alert-danger">
+    {{ error }}
+  </div>
+
+  <div class="card mb-4">
+    <div class="card-body">
+
+      <h5>{{ idEditar === 0 ? 'Nuevo grado' : 'Editar grado' }}</h5>
+
+      <form (ngSubmit)="guardar()">
+
+        <div class="row">
+
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Nivel educativo</label>
+            <select
+              class="form-select"
+              name="idNivel"
+              [(ngModel)]="idNivel"
+              (ngModelChange)="cambiarNivel()"
+              required>
+              <option [ngValue]="0">Selecciona un nivel</option>
+              <option *ngFor="let nivel of niveles" [ngValue]="nivel.idNivel">
+                {{ nivel.nombre }}
+              </option>
+            </select>
+          </div>
+
+          <div class="col-md-6 mb-3" *ngIf="esDiversificado()">
+            <label class="form-label">Carrera</label>
+            <select
+              class="form-select"
+              name="idCarrera"
+              [(ngModel)]="idCarrera"
+              required>
+              <option [ngValue]="null">Selecciona una carrera</option>
+              <option
+                *ngFor="let carrera of carrerasDisponibles()"
+                [ngValue]="carrera.idCarrera">
+                {{ carrera.nombre }}
+              </option>
+            </select>
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Nombre del grado</label>
+            <input
+              type="text"
+              class="form-control"
+              name="nombre"
+              [(ngModel)]="nombre"
+              maxlength="60"
+              placeholder="Ejemplo: Primero"
+              required>
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Cupo predeterminado</label>
+            <input
+              type="number"
+              class="form-control"
+              name="cupoDefault"
+              [(ngModel)]="cupoDefault"
+              min="1"
+              required>
+          </div>
+
+        </div>
+
+        <button
+          type="submit"
+          class="btn btn-primary"
+          [disabled]="guardando">
+          {{ guardando ? 'Guardando...' : (idEditar === 0 ? 'Guardar' : 'Actualizar') }}
+        </button>
+
+        <button
+          *ngIf="idEditar !== 0"
+          type="button"
+          class="btn btn-secondary ms-2"
+          [disabled]="guardando"
+          (click)="limpiar()">
+          Cancelar
+        </button>
+
+      </form>
+    </div>
+  </div>
+
+  <h5>Grados registrados</h5>
+
+  <div class="table-responsive">
+    <table class="table table-striped align-middle">
+
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nivel</th>
+          <th>Grado</th>
+          <th>Carrera</th>
+          <th>Cupo</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let grado of grados">
+          <td>{{ grado.idGrado }}</td>
+          <td>{{ grado.nivel }}</td>
+          <td>{{ grado.nombre }}</td>
+          <td>{{ grado.carrera || 'No aplica' }}</td>
+          <td>{{ grado.cupoDefault }}</td>
+          <td>
+            <span
+              class="badge"
+              [ngClass]="grado.activo ? 'bg-success' : 'bg-secondary'">
+              {{ grado.activo ? 'Activo' : 'Inactivo' }}
+            </span>
+          </td>
+          <td>
+            <button
+              type="button"
+              class="btn btn-sm btn-warning me-2"
+              [disabled]="guardando || cambiandoEstado"
+              (click)="seleccionar(grado)">
+              Editar
+            </button>
+
+            <button
+              type="button"
+              class="btn btn-sm"
+              [disabled]="guardando || cambiandoEstado"
+              [ngClass]="grado.activo ? 'btn-danger' : 'btn-success'"
+              (click)="cambiarEstado(grado)">
+              {{ grado.activo ? 'Desactivar' : 'Activar' }}
+            </button>
+          </td>
+        </tr>
+
+        <tr *ngIf="grados.length === 0">
+          <td colspan="7" class="text-center text-muted">
+            No hay grados registrados
+          </td>
+        </tr>
+      </tbody>
+
+    </table>
+  </div>
+
+</div>

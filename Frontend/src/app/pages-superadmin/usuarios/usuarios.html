@@ -1,0 +1,143 @@
+
+<div class="container mt-4">
+  <a routerLink="/superadmin" class="btn btn-outline-secondary mb-3">
+    Volver al inicio
+  </a>
+
+  <h3>Administracion de Usuarios</h3>
+  <hr>
+
+  <div *ngIf="mensaje" class="alert alert-success">
+    {{ mensaje }}
+  </div>
+
+  <div *ngIf="error" class="alert alert-danger">
+    {{ error }}
+  </div>
+
+  <div class="card mb-4">
+    <div class="card-body">
+      <h5>{{ idEditar === 0 ? 'Nuevo usuario' : 'Editar usuario' }}</h5>
+
+      <form (ngSubmit)="guardar()">
+        <div class="row">
+
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Nombre de usuario</label>
+            <input
+              type="text"
+              class="form-control"
+              name="username"
+              [(ngModel)]="username"
+              maxlength="50"
+              required>
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Correo electronico</label>
+            <input
+              type="email"
+              class="form-control"
+              name="correo"
+              [(ngModel)]="correo"
+              maxlength="100"
+              required>
+          </div>
+
+          <div class="col-md-6 mb-3" *ngIf="idEditar === 0">
+            <label class="form-label">Contraseña</label>
+            <input
+              type="password"
+              class="form-control"
+              name="password"
+              [(ngModel)]="password"
+              required>
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Rol</label>
+            <select
+              class="form-select"
+              name="idRol"
+              [(ngModel)]="idRol"
+              required>
+              <option [ngValue]="0">Selecciona un rol</option>
+              <option *ngFor="let rol of roles" [ngValue]="rol.id">
+                {{ rol.nombre }}
+              </option>
+            </select>
+          </div>
+
+        </div>
+
+        <button type="submit" class="btn btn-primary" [disabled]="guardando">
+          {{ guardando ? 'Guardando...' : (idEditar === 0 ? 'Guardar' : 'Actualizar') }}
+        </button>
+
+        <button
+          *ngIf="idEditar !== 0"
+          type="button"
+          class="btn btn-secondary ms-2"
+          [disabled]="guardando"
+          (click)="limpiar()">
+          Cancelar
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <h5>Usuarios registrados</h5>
+
+  <div class="table-responsive">
+    <table class="table table-striped align-middle">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Usuario</th>
+          <th>Correo</th>
+          <th>Rol</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let usuario of usuarios">
+          <td>{{ usuario.id }}</td>
+          <td>{{ usuario.username }}</td>
+          <td>{{ usuario.correo }}</td>
+          <td>{{ usuario.rol }}</td>
+          <td>
+            <span
+              class="badge"
+              [ngClass]="usuario.estado === 'ACTIVO' ? 'bg-success' : 'bg-secondary'">
+              {{ usuario.estado }}
+            </span>
+          </td>
+          <td>
+            <button
+              type="button"
+              class="btn btn-sm btn-warning me-2"
+              (click)="seleccionar(usuario)">
+              Editar
+            </button>
+
+            <button
+              type="button"
+              class="btn btn-sm"
+              [ngClass]="usuario.estado === 'ACTIVO' ? 'btn-danger' : 'btn-success'"
+              (click)="cambiarEstado(usuario)">
+              {{ usuario.estado === 'ACTIVO' ? 'Desactivar' : 'Activar' }}
+            </button>
+          </td>
+        </tr>
+
+        <tr *ngIf="usuarios.length === 0">
+          <td colspan="6" class="text-center text-muted">
+            No hay usuarios para mostrar
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

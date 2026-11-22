@@ -1,0 +1,10 @@
+
+<div *ngIf="sesionActiva" class="text-end p-3">
+  <button
+    class="btn btn-outline-danger"
+    (click)="cerrarSesion()">
+    Cerrar sesión
+  </button>
+</div>
+
+<router-outlet></router-outlet>

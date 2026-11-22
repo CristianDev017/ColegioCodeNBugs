@@ -1,0 +1,265 @@
+
+<div class="container mt-4">
+
+  <a routerLink="/superadmin" class="btn btn-outline-secondary mb-3">
+    Volver al inicio
+  </a>
+
+  <h3>Administracion de Años Lectivos</h3>
+  <p class="text-muted">
+    Crea años lectivos y asigna manualmente los grados que se ofreceran.
+  </p>
+  <hr>
+
+  <div *ngIf="mensaje" class="alert alert-success">
+    {{ mensaje }}
+  </div>
+
+  <div *ngIf="error" class="alert alert-danger">
+    {{ error }}
+  </div>
+
+  <div class="card mb-4">
+    <div class="card-body">
+
+      <h5>Nuevo año lectivo</h5>
+
+      <form (ngSubmit)="guardar()">
+        <div class="row">
+
+          <div class="col-md-4 mb-3">
+            <label class="form-label">Año</label>
+            <input
+              type="number"
+              class="form-control"
+              name="anio"
+              [(ngModel)]="anio"
+              min="2000"
+              max="2100"
+              placeholder="Ejemplo: 2027"
+              required>
+          </div>
+
+          <div class="col-md-4 mb-3">
+            <label class="form-label">Fecha de inicio</label>
+            <input
+              type="date"
+              class="form-control"
+              name="fechaInicio"
+              [(ngModel)]="fechaInicio"
+              required>
+          </div>
+
+          <div class="col-md-4 mb-3">
+            <label class="form-label">Fecha de finalizacion</label>
+            <input
+              type="date"
+              class="form-control"
+              name="fechaFin"
+              [(ngModel)]="fechaFin"
+              required>
+          </div>
+
+        </div>
+
+        <button
+          type="submit"
+          class="btn btn-primary"
+          [disabled]="guardando || cambiandoEstado || administrando">
+          {{ guardando ? 'Guardando...' : 'Crear año lectivo' }}
+        </button>
+
+      </form>
+    </div>
+  </div>
+
+  <h5>Años lectivos registrados</h5>
+
+  <div class="table-responsive mb-4">
+    <table class="table table-striped align-middle">
+
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Año</th>
+          <th>Inicio</th>
+          <th>Finalizacion</th>
+          <th>Grados</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let ciclo of ciclos">
+          <td>{{ ciclo.idCiclo }}</td>
+          <td>{{ ciclo.anio }}</td>
+          <td>{{ ciclo.fechaInicio }}</td>
+          <td>{{ ciclo.fechaFin }}</td>
+          <td>{{ ciclo.cantidadGrados }}</td>
+
+          <td>
+            <span
+              class="badge"
+              [ngClass]="{
+                'bg-primary': ciclo.estado === 'PLANIFICADO',
+                'bg-success': ciclo.estado === 'ACTIVO',
+                'bg-secondary': ciclo.estado === 'CERRADO'
+              }">
+              {{ ciclo.estado }}
+            </span>
+          </td>
+
+          <td>
+            <button
+              type="button"
+              class="btn btn-sm btn-primary me-2"
+              [disabled]="guardando || administrando || cambiandoEstado"
+              (click)="abrirGrados(ciclo)">
+              Administrar grados
+            </button>
+
+            <button
+              *ngIf="ciclo.estado === 'PLANIFICADO'"
+              type="button"
+              class="btn btn-sm btn-success me-2"
+              [disabled]="guardando || administrando || cambiandoEstado"
+              (click)="activar(ciclo)">
+              Activar
+            </button>
+
+            <button
+              *ngIf="ciclo.estado === 'ACTIVO'"
+              type="button"
+              class="btn btn-sm btn-danger"
+              [disabled]="guardando || administrando || cambiandoEstado"
+              (click)="cerrar(ciclo)">
+              Cerrar
+            </button>
+          </td>
+        </tr>
+
+        <tr *ngIf="!cargando && ciclos.length === 0">
+          <td colspan="7" class="text-center text-muted">
+            No hay años lectivos registrados
+          </td>
+        </tr>
+      </tbody>
+
+    </table>
+  </div>
+
+  <div *ngIf="cicloSeleccionado" class="card mb-4">
+    <div class="card-header">
+      <h5 class="mb-0">
+        Grados del año {{ cicloSeleccionado.anio }}
+      </h5>
+    </div>
+
+    <div class="card-body">
+
+      <p>
+        Estado:
+        <strong>{{ cicloSeleccionado.estado }}</strong>
+      </p>
+
+      <div *ngIf="cicloSeleccionado.estado === 'PLANIFICADO'">
+
+        <h6>Agregar grado</h6>
+
+        <div class="row mb-4">
+          <div class="col-md-8 mb-2">
+            <select
+              class="form-select"
+              name="gradoSeleccionado"
+              [(ngModel)]="gradoSeleccionado"
+              [disabled]="administrando">
+
+              <option [ngValue]="0">Selecciona un grado</option>
+
+              <option
+                *ngFor="let grado of gradosDisponibles()"
+                [ngValue]="grado.idGrado">
+                {{ grado.nivel }} - {{ grado.nombre }}
+                {{ grado.carrera ? '(' + grado.carrera + ')' : '' }}
+              </option>
+            </select>
+          </div>
+
+          <div class="col-md-4 mb-2">
+            <button
+              type="button"
+              class="btn btn-success"
+              [disabled]="administrando || gradoSeleccionado === 0"
+              (click)="agregarGrado()">
+              {{ administrando ? 'Procesando...' : 'Agregar grado' }}
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <h6>Grados asignados</h6>
+
+      <div class="table-responsive">
+        <table class="table table-bordered align-middle">
+
+          <thead>
+            <tr>
+              <th>Nivel</th>
+              <th>Grado</th>
+              <th>Carrera</th>
+              <th>Accion</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr *ngFor="let grado of gradosDelAnio()">
+              <td>{{ grado.nivel }}</td>
+              <td>{{ grado.nombre }}</td>
+              <td>{{ grado.carrera || 'No aplica' }}</td>
+              <td>
+                <button
+                  *ngIf="cicloSeleccionado.estado === 'PLANIFICADO'"
+                  type="button"
+                  class="btn btn-sm btn-danger"
+                  [disabled]="administrando"
+                  (click)="quitarGrado(grado)">
+                  Quitar
+                </button>
+
+                <span
+                  *ngIf="cicloSeleccionado.estado !== 'PLANIFICADO'"
+                  class="text-muted">
+                  Asignado
+                </span>
+              </td>
+            </tr>
+
+            <tr *ngIf="gradosAsignados.length === 0">
+              <td colspan="4" class="text-center text-muted">
+                Todavia no hay grados asignados a este año
+              </td>
+            </tr>
+          </tbody>
+
+        </table>
+      </div>
+
+      <button
+        type="button"
+        class="btn btn-secondary mt-2"
+        [disabled]="administrando"
+        (click)="cerrarAdministracion()">
+        Volver a los años lectivos
+      </button>
+
+    </div>
+  </div>
+
+  <div class="alert alert-info">
+    Los años lectivos se crean sin grados. Puedes agregarlos manualmente
+    desde la opcion Administrar grados mientras el año este PLANIFICADO.
+  </div>
+
+</div>

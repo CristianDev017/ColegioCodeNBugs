@@ -1,4 +1,3 @@
-
 package colegio.servlet;
 
 import colegio.dto.PeticionCarrera;
@@ -19,8 +18,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
-import java.sql.SQLException;
-import java.util.List;
+import java.sql.SQLException;import java.util.List;
 import java.util.Map;
 
 @WebServlet("/api/carreras/*")

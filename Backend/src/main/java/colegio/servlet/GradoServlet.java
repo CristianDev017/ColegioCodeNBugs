@@ -9,7 +9,7 @@ import colegio.services.Permisos;
 import colegio.util.Json;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
+import com.google.gson.JsonParseException;
 
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -30,7 +30,7 @@ public class GradoServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
 
-        if (!verificarPermiso(req, resp)) {
+        if (!verificarPermiso(req, resp, "ADMIN", "SUPER_ADMIN")) {
             return;
         }
 
@@ -58,7 +58,7 @@ public class GradoServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
 
-        if (!verificarPermiso(req, resp)) {
+        if (!verificarPermiso(req, resp, "SUPER_ADMIN")) {
             return;
         }
 
@@ -78,7 +78,7 @@ public class GradoServlet extends HttpServlet {
                     "mensaje", "Grado creado correctamente"
             ));
 
-        } catch (JsonSyntaxException | DatosInvalidosException e) {
+        } catch (DatosInvalidosException | JsonParseException e) {
             Json.error(resp, 400, e.getMessage());
         } catch (ConflictoException e) {
             Json.error(resp, 409, e.getMessage());
@@ -91,7 +91,7 @@ public class GradoServlet extends HttpServlet {
     protected void doPut(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
 
-        if (!verificarPermiso(req, resp)) {
+        if (!verificarPermiso(req, resp, "SUPER_ADMIN")) {
             return;
         }
 
@@ -103,8 +103,7 @@ public class GradoServlet extends HttpServlet {
             }
 
             if (ruta.endsWith("/estado")) {
-                String parteId = ruta.substring(0, ruta.length() - 7);
-                int id = obtenerId(parteId);
+                int id = obtenerId(ruta.substring(0, ruta.length() - 7));
 
                 EstadoGrado datos = gson.fromJson(req.getReader(), EstadoGrado.class);
 
@@ -129,7 +128,7 @@ public class GradoServlet extends HttpServlet {
                     "mensaje", "Grado actualizado correctamente"
             ));
 
-        } catch (JsonSyntaxException | DatosInvalidosException e) {
+        } catch (DatosInvalidosException | JsonParseException e) {
             Json.error(resp, 400, e.getMessage());
         } catch (NoEncontradoException e) {
             Json.error(resp, 404, e.getMessage());
@@ -141,12 +140,19 @@ public class GradoServlet extends HttpServlet {
     }
 
     private int obtenerId(String ruta) throws DatosInvalidosException {
-        if (ruta == null || !ruta.matches("/[0-9]+")) {
+
+        if (ruta == null || !ruta.startsWith("/")) {
+            throw new DatosInvalidosException("ID de grado invalido");
+        }
+
+        String numero = ruta.substring(1);
+
+        if (numero.isEmpty() || numero.contains("/")) {
             throw new DatosInvalidosException("ID de grado invalido");
         }
 
         try {
-            int id = Integer.parseInt(ruta.substring(1));
+            int id = Integer.parseInt(numero);
 
             if (id <= 0) {
                 throw new DatosInvalidosException("ID de grado invalido");
@@ -160,11 +166,12 @@ public class GradoServlet extends HttpServlet {
     }
 
     private boolean verificarPermiso(HttpServletRequest req,
-                                     HttpServletResponse resp) throws IOException {
+                                     HttpServletResponse resp,
+                                     String... rolesPermitidos) throws IOException {
 
         String rol = (String) req.getAttribute("rol");
 
-        if (!Permisos.tienePermiso(rol, "SUPER_ADMIN")) {
+        if (!Permisos.tienePermiso(rol, rolesPermitidos)) {
             Json.error(resp, 403, "No tienes permiso para administrar grados");
             return false;
         }

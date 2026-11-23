@@ -1,0 +1,113 @@
+[33mcommit d70a70f1b54ff1518ee0d84f2427487826a91867[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m)[m
+Author: CristianDev017 <cristianchampet202330602@cunoc.edu.gt>
+Date:   Sat Nov 21 21:13:38 2026 -0600
+
+    UI superadmin terminado
+
+ Frontend/.editorconfig                             |   17 [32m+[m
+ Frontend/.gitignore                                |   44 [32m+[m
+ Frontend/.prettierrc                               |   12 [32m+[m
+ Frontend/README.md                                 |   59 [32m+[m
+ Frontend/angular.json                              |   77 [32m+[m
+ Frontend/package-lock.json                         | 7324 [32m++++++++++++++++++++[m
+ Frontend/package.json                              |   34 [32m+[m
+ Frontend/public/favicon.ico                        |  Bin [31m0[m -> [32m15086[m bytes
+ Frontend/src/app/app.config.ts                     |   13 [32m+[m
+ Frontend/src/app/app.html                          |   10 [32m+[m
+ Frontend/src/app/app.routes.ts                     |   75 [32m+[m
+ Frontend/src/app/app.spec.ts                       |   23 [32m+[m
+ Frontend/src/app/app.ts                            |   56 [32m+[m
+ Frontend/src/app/guards/auth-guard.ts              |   31 [32m+[m
+ Frontend/src/app/models/carrera.ts                 |   12 [32m+[m
+ Frontend/src/app/models/ciclo-escolar.ts           |   14 [32m+[m
+ Frontend/src/app/models/curso.ts                   |   12 [32m+[m
+ Frontend/src/app/models/grado.ts                   |   17 [32m+[m
+ Frontend/src/app/models/nivel.ts                   |    4 [32m+[m
+ Frontend/src/app/models/seccion.ts                 |   32 [32m+[m
+ Frontend/src/app/models/usuarios.ts                |   22 [32m+[m
+ Frontend/src/app/pages-admin/cursos/cursos.html    |  132 [32m+[m
+ Frontend/src/app/pages-admin/cursos/cursos.ts      |  169 [32m+[m
+ .../src/app/pages-admin/dashboard/dashboard.html   |  125 [32m+[m
+ .../src/app/pages-admin/dashboard/dashboard.ts     |   12 [32m+[m
+ .../src/app/pages-admin/secciones/secciones.html   |  219 [32m+[m
+ .../src/app/pages-admin/secciones/secciones.ts     |  248 [32m+[m
+ .../app/pages-superadmin/carreras/carreras.html    |  100 [32m+[m
+ .../src/app/pages-superadmin/carreras/carreras.ts  |  141 [32m+[m
+ .../src/app/pages-superadmin/ciclos/ciclos.html    |  265 [32m+[m
+ Frontend/src/app/pages-superadmin/ciclos/ciclos.ts |  349 [32m+[m
+ .../app/pages-superadmin/dashboard/dashboard.html  |   86 [32m+[m
+ .../app/pages-superadmin/dashboard/dashboard.ts    |   12 [32m+[m
+ .../src/app/pages-superadmin/grados/grados.html    |  167 [32m+[m
+ Frontend/src/app/pages-superadmin/grados/grados.ts |  220 [32m+[m
+ .../app/pages-superadmin/usuarios/usuarios.html    |  143 [32m+[m
+ .../src/app/pages-superadmin/usuarios/usuarios.ts  |  177 [32m+[m
+ Frontend/src/app/pages/login/login.css             |   70 [32m+[m
+ Frontend/src/app/pages/login/login.html            |   33 [32m+[m
+ Frontend/src/app/pages/login/login.ts              |   69 [32m+[m
+ Frontend/src/app/services/auth.ts                  |   16 [32m+[m
+ Frontend/src/app/services/carreras.ts              |   51 [32m+[m
+ Frontend/src/app/services/ciclos.ts                |   67 [32m+[m
+ Frontend/src/app/services/cursos.ts                |   52 [32m+[m
+ Frontend/src/app/services/grados.ts                |   45 [32m+[m
+ Frontend/src/app/services/niveles.ts               |   23 [32m+[m
+ Frontend/src/app/services/secciones.ts             |   56 [32m+[m
+ Frontend/src/app/services/usuarios.ts              |   52 [32m+[m
+ Frontend/src/index.html                            |   13 [32m+[m
+ Frontend/src/main.ts                               |    6 [32m+[m
+ Frontend/tsconfig.app.json                         |   10 [32m+[m
+ Frontend/tsconfig.json                             |   31 [32m+[m
+ Frontend/tsconfig.spec.json                        |    9 [32m+[m
+ 53 files changed, 11056 insertions(+)
+
+[33mcommit 831d20cba6f531c181e0e4f37f6693b9a21b9d77[m
+Author: CristianDev017 <cristianchampet202330602@cunoc.edu.gt>
+Date:   Sat Nov 21 21:13:38 2026 -0600
+
+    Reorganizacion: Backend en su propia carpeta
+
+ {.mvn => Backend/.mvn}/wrapper/maven-wrapper.jar            | Bin
+ {.mvn => Backend/.mvn}/wrapper/maven-wrapper.properties     |   0
+ Carrera.java => Backend/Carrera.java                        |   0
+ mvnw => Backend/mvnw                                        |   0
+ mvnw.cmd => Backend/mvnw.cmd                                |   0
+ pom.xml => Backend/pom.xml                                  |   0
+ .../src}/main/java/colegio/conexion/Conexion.java           |   0
+ {src => Backend/src}/main/java/colegio/dao/CarreraDAO.java  |   0
+ .../src}/main/java/colegio/dao/CicloEscolarDAO.java         |   0
+ {src => Backend/src}/main/java/colegio/dao/GradoDAO.java    |   0
+ {src => Backend/src}/main/java/colegio/dao/NivelDAO.java    |   0
+ {src => Backend/src}/main/java/colegio/dao/UsuarioDAO.java  |   0
+ .../src}/main/java/colegio/dto/PeticionCarrera.java         |   0
+ .../src}/main/java/colegio/dto/PeticionCiclo.java           |   0
+ .../src}/main/java/colegio/dto/PeticionEditarUsuario.java   |   0
+ .../src}/main/java/colegio/dto/PeticionGrado.java           |   0
+ .../src}/main/java/colegio/dto/PeticionUsuario.java         |   0
+ .../src}/main/java/colegio/dto/RespuestaUsuario.java        |   0
+ .../main/java/colegio/exception/ConflictoException.java     |   0
+ .../java/colegio/exception/DatosInvalidosException.java     |   0
+ .../main/java/colegio/exception/NoEncontradoException.java  |   0
+ .../src}/main/java/colegio/filter/CorsFilter.java           |   0
+ .../src}/main/java/colegio/filter/JwtFilter.java            |   0
+ {src => Backend/src}/main/java/colegio/model/Carrera.java   |   0
+ .../src}/main/java/colegio/model/CicloEscolar.java          |   0
+ {src => Backend/src}/main/java/colegio/model/Grado.java     |   0
+ {src => Backend/src}/main/java/colegio/model/Nivel.java     |   0
+ {src => Backend/src}/main/java/colegio/model/Usuario.java   |   0
+ .../src}/main/java/colegio/services/AuthService.java        |   0
+ .../src}/main/java/colegio/services/CarreraService.java     |   0
+ .../main/java/colegio/services/CicloEscolarService.java     |   0
+ .../src}/main/java/colegio/services/GradoService.java       |   0
+ .../src}/main/java/colegio/services/JwtTokenService.java    |   0
+ .../src}/main/java/colegio/services/NivelService.java       |   0
+ .../src}/main/java/colegio/services/Permisos.java           |   0
+ .../src}/main/java/colegio/services/UsuarioService.java     |   0
+ .../src}/main/java/colegio/servlet/AuthServlet.java         |   0
+ .../src}/main/java/colegio/servlet/CarreraServlet.java      |   0
+ .../src}/main/java/colegio/servlet/CicloEscolarServlet.java |   0
+ .../src}/main/java/colegio/servlet/GradoServlet.java        |   0
+ .../src}/main/java/colegio/servlet/NivelServlet.java        |   0
+ .../src}/main/java/colegio/servlet/UsuarioServlet.java      |   0
+ {src => Backend/src}/main/java/colegio/util/Json.java       |   0
+ {src => Backend/src}/main/webapp/WEB-INF/web.xml            |   0
+ {src => Backend/src}/main/webapp/index.jsp                  |   0
+ 45 files changed, 0 insertions(+), 0 deletions(-)

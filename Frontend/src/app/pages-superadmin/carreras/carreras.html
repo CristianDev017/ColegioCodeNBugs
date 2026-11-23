@@ -1,10 +1,11 @@
 
 <div class="container mt-4">
+
   <a routerLink="/superadmin" class="btn btn-outline-secondary mb-3">
     Volver al inicio
   </a>
 
-  <h3>Administracion de Carreras</h3>
+  <h3>Administración de Carreras</h3>
   <hr>
 
   <div *ngIf="mensaje" class="alert alert-success">
@@ -17,11 +18,16 @@
 
   <div class="card mb-4">
     <div class="card-body">
-      <h5>{{ idEditar === 0 ? 'Nueva carrera' : 'Editar carrera' }}</h5>
+
+      <h5>
+        {{ idEditar === 0 ? 'Nueva carrera' : 'Editar carrera' }}
+      </h5>
 
       <form (ngSubmit)="guardar()">
+
         <div class="mb-3">
           <label class="form-label">Nombre</label>
+
           <input
             type="text"
             class="form-control"
@@ -32,15 +38,22 @@
         </div>
 
         <div class="mb-3">
-          <label class="form-label">Descripcion</label>
+          <label class="form-label">Descripción</label>
+
           <textarea
             class="form-control"
             name="descripcion"
-            [(ngModel)]="descripcion"></textarea>
+            [(ngModel)]="descripcion">
+          </textarea>
         </div>
 
-        <button type="submit" class="btn btn-primary" [disabled]="guardando">
-          {{ guardando ? 'Guardando...' : (idEditar === 0 ? 'Guardar' : 'Actualizar') }}
+        <button
+          type="submit"
+          class="btn btn-primary"
+          [disabled]="guardando">
+
+          {{ guardando ? 'Guardando...' :
+             (idEditar === 0 ? 'Guardar' : 'Actualizar') }}
         </button>
 
         <button
@@ -51,50 +64,106 @@
           (click)="limpiar()">
           Cancelar
         </button>
+
       </form>
     </div>
   </div>
 
-  <table class="table table-striped align-middle">
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Nombre</th>
-        <th>Descripcion</th>
-        <th>Estado</th>
-        <th>Acciones</th>
-      </tr>
-    </thead>
+  <h5 class="mb-3">Carreras registradas</h5>
 
-    <tbody>
-      <tr *ngFor="let carrera of carreras">
-        <td>{{ carrera.idCarrera }}</td>
-        <td>{{ carrera.nombre }}</td>
-        <td>{{ carrera.descripcion }}</td>
-        <td>
-          <span
-            class="badge"
-            [ngClass]="carrera.activo ? 'bg-success' : 'bg-secondary'">
-            {{ carrera.activo ? 'Activa' : 'Inactiva' }}
-          </span>
-        </td>
-        <td>
-          <button
-            type="button"
-            class="btn btn-sm btn-warning me-2"
-            (click)="seleccionar(carrera)">
-            Editar
-          </button>
+  <p *ngIf="cargando" class="text-muted">
+    Cargando carreras...
+  </p>
 
-          <button
-            type="button"
-            class="btn btn-sm"
-            [ngClass]="carrera.activo ? 'btn-danger' : 'btn-success'"
-            (click)="cambiarEstado(carrera)">
-            {{ carrera.activo ? 'Desactivar' : 'Activar' }}
-          </button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="table-responsive">
+    <table class="table table-striped align-middle">
+
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Descripción</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+
+      <tbody>
+
+        <tr *ngFor="let carrera of carreras">
+
+          <td>{{ carrera.idCarrera }}</td>
+          <td>{{ carrera.nombre }}</td>
+          <td>{{ carrera.descripcion }}</td>
+
+          <td>
+            <span
+              class="badge"
+              [ngClass]="carrera.activo ? 'bg-success' : 'bg-secondary'">
+              {{ carrera.activo ? 'Activa' : 'Inactiva' }}
+            </span>
+          </td>
+
+          <td>
+            <button
+              type="button"
+              class="btn btn-sm btn-warning me-2"
+              [disabled]="guardando"
+              (click)="seleccionar(carrera)">
+              Editar
+            </button>
+
+            <button
+              type="button"
+              class="btn btn-sm"
+              [disabled]="guardando"
+              [ngClass]="carrera.activo ? 'btn-danger' : 'btn-success'"
+              (click)="cambiarEstado(carrera)">
+
+              {{ carrera.activo ? 'Desactivar' : 'Activar' }}
+            </button>
+          </td>
+
+        </tr>
+
+        <tr *ngIf="!cargando && carreras.length === 0">
+          <td colspan="5" class="text-center text-muted">
+            No hay carreras registradas
+          </td>
+        </tr>
+
+      </tbody>
+
+    </table>
+  </div>
+
+  <div
+    *ngIf="total > 0"
+    class="d-flex justify-content-between align-items-center mt-3 mb-4">
+
+    <span class="text-muted">
+      Página {{ pagina }} de {{ totalPaginas }}
+      ({{ total }} carreras)
+    </span>
+
+    <div>
+      <button
+        type="button"
+        class="btn btn-outline-secondary me-2"
+        [disabled]="cargando || pagina === 1"
+        (click)="cambiarPagina(pagina - 1)">
+        Anterior
+      </button>
+
+      <button
+        type="button"
+        class="btn btn-outline-secondary"
+        [disabled]="cargando || pagina === totalPaginas"
+        (click)="cambiarPagina(pagina + 1)">
+        Siguiente
+      </button>
+    </div>
+
+  </div>
+
 </div>

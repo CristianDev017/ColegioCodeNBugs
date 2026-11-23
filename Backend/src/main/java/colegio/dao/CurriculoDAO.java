@@ -1,3 +1,4 @@
+
 package colegio.dao;
 
 import colegio.conexion.Conexion;
@@ -14,7 +15,8 @@ import java.util.Map;
 
 public class CurriculoDAO {
 
-    public List<Curriculo> listar() throws SQLException {
+    public List<Curriculo> listar(int pagina, int tamano)
+            throws SQLException {
 
         List<Curriculo> lista = new ArrayList<>();
 
@@ -27,30 +29,49 @@ public class CurriculoDAO {
                         "JOIN nivel n ON g.id_nivel = n.id_nivel " +
                         "LEFT JOIN carrera ca ON g.id_carrera = ca.id_carrera " +
                         "JOIN ciclo_escolar ce ON cu.id_ciclo = ce.id_ciclo " +
-                        "ORDER BY ce.anio DESC, n.nombre, g.nombre";
+                        "ORDER BY ce.anio DESC, n.nombre, g.nombre, cu.id_curriculo " +
+                        "LIMIT ? OFFSET ?";
 
         try (Connection con = Conexion.obtenerConexion();
-             PreparedStatement ps = con.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+             PreparedStatement ps = con.prepareStatement(sql)) {
 
-            while (rs.next()) {
-                lista.add(new Curriculo(
-                        rs.getInt("id_curriculo"),
-                        rs.getInt("id_grado"),
-                        rs.getInt("id_ciclo"),
-                        rs.getString("grado"),
-                        rs.getString("nivel"),
-                        rs.getString("carrera"),
-                        rs.getInt("anio"),
-                        rs.getString("estado_ciclo")
-                ));
+            ps.setInt(1, tamano);
+            ps.setInt(2, (pagina - 1) * tamano);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    lista.add(new Curriculo(
+                            rs.getInt("id_curriculo"),
+                            rs.getInt("id_grado"),
+                            rs.getInt("id_ciclo"),
+                            rs.getString("grado"),
+                            rs.getString("nivel"),
+                            rs.getString("carrera"),
+                            rs.getInt("anio"),
+                            rs.getString("estado_ciclo")
+                    ));
+                }
             }
         }
 
         return lista;
     }
 
-    public List<Map<String, Object>> listarCursos(int idCurriculo)
+    public int contar() throws SQLException {
+
+        String sql = "SELECT COUNT(*) FROM curriculo";
+
+        try (Connection con = Conexion.obtenerConexion();
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            rs.next();
+            return rs.getInt(1);
+        }
+    }
+
+    public List<Map<String, Object>> listarCursos(
+            int idCurriculo, int pagina, int tamano)
             throws SQLException {
 
         List<Map<String, Object>> lista = new ArrayList<>();
@@ -60,16 +81,18 @@ public class CurriculoDAO {
                         "FROM curriculo_curso cc " +
                         "JOIN curso c ON c.id_curso = cc.id_curso " +
                         "WHERE cc.id_curriculo = ? " +
-                        "ORDER BY c.nombre";
+                        "ORDER BY c.nombre, c.id_curso " +
+                        "LIMIT ? OFFSET ?";
 
         try (Connection con = Conexion.obtenerConexion();
              PreparedStatement ps = con.prepareStatement(sql)) {
 
             ps.setInt(1, idCurriculo);
+            ps.setInt(2, tamano);
+            ps.setInt(3, (pagina - 1) * tamano);
 
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-
                     Map<String, Object> item = new LinkedHashMap<>();
 
                     item.put("idCurso", rs.getInt("id_curso"));
@@ -83,6 +106,24 @@ public class CurriculoDAO {
         }
 
         return lista;
+    }
+
+    public int contarCursos(int idCurriculo) throws SQLException {
+
+        String sql =
+                "SELECT COUNT(*) FROM curriculo_curso " +
+                        "WHERE id_curriculo = ?";
+
+        try (Connection con = Conexion.obtenerConexion();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, idCurriculo);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                rs.next();
+                return rs.getInt(1);
+            }
+        }
     }
 
     public boolean existeCurriculo(int idCurriculo)
@@ -165,7 +206,6 @@ public class CurriculoDAO {
 
             ps.setInt(1, idGrado);
             ps.setInt(2, idCiclo);
-
             ps.executeUpdate();
         }
     }
@@ -182,7 +222,6 @@ public class CurriculoDAO {
 
             ps.setInt(1, idCurriculo);
             ps.setInt(2, idCurso);
-
             ps.executeUpdate();
         }
     }

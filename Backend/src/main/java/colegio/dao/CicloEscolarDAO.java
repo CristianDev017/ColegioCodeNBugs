@@ -9,7 +9,6 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,15 +21,22 @@ public class CicloEscolarDAO {
                     "LEFT JOIN ciclo_grado cg ON c.id_ciclo = cg.id_ciclo " +
                     "AND cg.habilitado = 1 ";
 
-    public List<CicloEscolar> listar() throws SQLException {
+    public List<CicloEscolar> listar(int pagina, int tamano)
+            throws SQLException {
+
         List<CicloEscolar> ciclos = new ArrayList<>();
 
         String sql = CONSULTA +
-                "GROUP BY c.id_ciclo, c.anio, c.fecha_inicio, c.fecha_fin, c.estado " +
-                "ORDER BY c.anio DESC";
+                "GROUP BY c.id_ciclo, c.anio, c.fecha_inicio, " +
+                "c.fecha_fin, c.estado " +
+                "ORDER BY c.anio DESC, c.id_ciclo DESC " +
+                "LIMIT ? OFFSET ?";
 
         try (Connection con = Conexion.obtenerConexion();
              PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, tamano);
+            ps.setInt(2, (pagina - 1) * tamano);
 
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
@@ -42,10 +48,23 @@ public class CicloEscolarDAO {
         return ciclos;
     }
 
+    public int contar() throws SQLException {
+        String sql = "SELECT COUNT(*) FROM ciclo_escolar";
+
+        try (Connection con = Conexion.obtenerConexion();
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            rs.next();
+            return rs.getInt(1);
+        }
+    }
+
     public CicloEscolar buscarPorId(int id) throws SQLException {
         String sql = CONSULTA +
                 "WHERE c.id_ciclo = ? " +
-                "GROUP BY c.id_ciclo, c.anio, c.fecha_inicio, c.fecha_fin, c.estado";
+                "GROUP BY c.id_ciclo, c.anio, c.fecha_inicio, " +
+                "c.fecha_fin, c.estado";
 
         try (Connection con = Conexion.obtenerConexion();
              PreparedStatement ps = con.prepareStatement(sql)) {
@@ -76,10 +95,13 @@ public class CicloEscolarDAO {
         }
     }
 
-    public void crear(int anio, Date inicio, Date fin) throws SQLException {
-        String sql = "INSERT INTO ciclo_escolar " +
-                "(anio, fecha_inicio, fecha_fin, estado) " +
-                "VALUES (?, ?, ?, 'PLANIFICADO')";
+    public void crear(int anio, Date inicio, Date fin)
+            throws SQLException {
+
+        String sql =
+                "INSERT INTO ciclo_escolar " +
+                        "(anio, fecha_inicio, fecha_fin, estado) " +
+                        "VALUES (?, ?, ?, 'PLANIFICADO')";
 
         try (Connection con = Conexion.obtenerConexion();
              PreparedStatement ps = con.prepareStatement(sql)) {
@@ -91,11 +113,15 @@ public class CicloEscolarDAO {
         }
     }
 
-    public List<Integer> listarGrados(int idCiclo) throws SQLException {
+    public List<Integer> listarGrados(int idCiclo)
+            throws SQLException {
+
         List<Integer> grados = new ArrayList<>();
 
-        String sql = "SELECT id_grado FROM ciclo_grado " +
-                "WHERE id_ciclo = ? AND habilitado = 1 ORDER BY id_grado";
+        String sql =
+                "SELECT id_grado FROM ciclo_grado " +
+                        "WHERE id_ciclo = ? AND habilitado = 1 " +
+                        "ORDER BY id_grado";
 
         try (Connection con = Conexion.obtenerConexion();
              PreparedStatement ps = con.prepareStatement(sql)) {
@@ -112,9 +138,12 @@ public class CicloEscolarDAO {
         return grados;
     }
 
-    public String buscarEstado(Connection con, int idCiclo) throws SQLException {
-        String sql = "SELECT estado FROM ciclo_escolar " +
-                "WHERE id_ciclo = ? FOR UPDATE";
+    public String buscarEstado(Connection con, int idCiclo)
+            throws SQLException {
+
+        String sql =
+                "SELECT estado FROM ciclo_escolar " +
+                        "WHERE id_ciclo = ? FOR UPDATE";
 
         try (PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, idCiclo);
@@ -129,9 +158,12 @@ public class CicloEscolarDAO {
         return null;
     }
 
-    public boolean gradoActivo(Connection con, int idGrado) throws SQLException {
-        String sql = "SELECT 1 FROM grado " +
-                "WHERE id_grado = ? AND activo = 1";
+    public boolean gradoActivo(Connection con, int idGrado)
+            throws SQLException {
+
+        String sql =
+                "SELECT 1 FROM grado " +
+                        "WHERE id_grado = ? AND activo = 1";
 
         try (PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, idGrado);
@@ -142,11 +174,13 @@ public class CicloEscolarDAO {
         }
     }
 
-    public boolean gradoAsignado(Connection con, int idCiclo, int idGrado)
-            throws SQLException {
+    public boolean gradoAsignado(Connection con, int idCiclo,
+                                 int idGrado) throws SQLException {
 
-        String sql = "SELECT 1 FROM ciclo_grado " +
-                "WHERE id_ciclo = ? AND id_grado = ? AND habilitado = 1";
+        String sql =
+                "SELECT 1 FROM ciclo_grado " +
+                        "WHERE id_ciclo = ? AND id_grado = ? " +
+                        "AND habilitado = 1";
 
         try (PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, idCiclo);
@@ -158,12 +192,13 @@ public class CicloEscolarDAO {
         }
     }
 
-    public void agregarGrado(Connection con, int idCiclo, int idGrado)
-            throws SQLException {
+    public void agregarGrado(Connection con, int idCiclo,
+                             int idGrado) throws SQLException {
 
-        String sql = "INSERT INTO ciclo_grado " +
-                "(id_ciclo, id_grado, habilitado) VALUES (?, ?, 1) " +
-                "ON DUPLICATE KEY UPDATE habilitado = 1";
+        String sql =
+                "INSERT INTO ciclo_grado " +
+                        "(id_ciclo, id_grado, habilitado) VALUES (?, ?, 1) " +
+                        "ON DUPLICATE KEY UPDATE habilitado = 1";
 
         try (PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, idCiclo);
@@ -172,11 +207,13 @@ public class CicloEscolarDAO {
         }
     }
 
-    public boolean quitarGrado(Connection con, int idCiclo, int idGrado)
-            throws SQLException {
+    public boolean quitarGrado(Connection con, int idCiclo,
+                               int idGrado) throws SQLException {
 
-        String sql = "UPDATE ciclo_grado SET habilitado = 0 " +
-                "WHERE id_ciclo = ? AND id_grado = ? AND habilitado = 1";
+        String sql =
+                "UPDATE ciclo_grado SET habilitado = 0 " +
+                        "WHERE id_ciclo = ? AND id_grado = ? " +
+                        "AND habilitado = 1";
 
         try (PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, idCiclo);
@@ -187,16 +224,16 @@ public class CicloEscolarDAO {
     }
 
     public String buscarCicloActivo() throws SQLException {
-        String sql = "SELECT anio FROM ciclo_escolar " +
-                "WHERE estado = 'ACTIVO' LIMIT 1";
+        String sql =
+                "SELECT anio FROM ciclo_escolar " +
+                        "WHERE estado = 'ACTIVO' LIMIT 1";
 
         try (Connection con = Conexion.obtenerConexion();
-             PreparedStatement ps = con.prepareStatement(sql)) {
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
 
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    return rs.getString("anio");
-                }
+            if (rs.next()) {
+                return rs.getString("anio");
             }
         }
 
@@ -204,8 +241,9 @@ public class CicloEscolarDAO {
     }
 
     public int contarGrados(int idCiclo) throws SQLException {
-        String sql = "SELECT COUNT(*) FROM ciclo_grado " +
-                "WHERE id_ciclo = ? AND habilitado = 1";
+        String sql =
+                "SELECT COUNT(*) FROM ciclo_grado " +
+                        "WHERE id_ciclo = ? AND habilitado = 1";
 
         try (Connection con = Conexion.obtenerConexion();
              PreparedStatement ps = con.prepareStatement(sql)) {
@@ -225,7 +263,9 @@ public class CicloEscolarDAO {
     public boolean cambiarEstado(int idCiclo, String estado)
             throws SQLException {
 
-        String sql = "UPDATE ciclo_escolar SET estado = ? WHERE id_ciclo = ?";
+        String sql =
+                "UPDATE ciclo_escolar SET estado = ? " +
+                        "WHERE id_ciclo = ?";
 
         try (Connection con = Conexion.obtenerConexion();
              PreparedStatement ps = con.prepareStatement(sql)) {

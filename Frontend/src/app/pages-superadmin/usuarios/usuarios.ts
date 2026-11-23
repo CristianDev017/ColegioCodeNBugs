@@ -16,6 +16,15 @@ export class UsuariosPagina implements OnInit {
 
   usuarios: Usuario[] = [];
 
+  pagina = 1;
+  tamano = 10;
+  total = 0;
+  cargando = false;
+
+  get totalPaginas(): number {
+    return Math.max(1, Math.ceil(this.total / this.tamano));
+  }
+
   username = '';
   correo = '';
   password = '';
@@ -46,16 +55,41 @@ export class UsuariosPagina implements OnInit {
   }
 
   listar() {
-    this.usuariosService.listar().subscribe({
-      next: (datos) => {
-        this.usuarios = datos;
+    this.cargando = true;
+    this.detector.detectChanges();
+
+    this.usuariosService.listar(this.pagina, this.tamano).subscribe({
+      next: (respuesta) => {
+        this.usuarios = respuesta.datos;
+        this.total = respuesta.total;
+        this.cargando = false;
+
+        if (this.pagina > this.totalPaginas) {
+          this.pagina = this.totalPaginas;
+          this.listar();
+          return;
+        }
+
         this.detector.detectChanges();
       },
       error: (e) => {
+        this.cargando = false;
         this.error = e.error?.mensaje || 'No se pudieron cargar los usuarios';
         this.detector.detectChanges();
       }
     });
+  }
+
+  cambiarPagina(nuevaPagina: number) {
+    if (this.cargando ||
+        nuevaPagina < 1 ||
+        nuevaPagina > this.totalPaginas ||
+        nuevaPagina === this.pagina) {
+      return;
+    }
+
+    this.pagina = nuevaPagina;
+    this.listar();
   }
 
   guardar() {

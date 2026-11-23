@@ -1,3 +1,4 @@
+
 package colegio.services;
 
 import colegio.dao.CurriculoDAO;
@@ -16,17 +17,30 @@ public class CurriculoService {
 
     private final CurriculoDAO dao = new CurriculoDAO();
 
-    public List<Curriculo> listar() throws SQLException {
-        return dao.listar();
+    public List<Curriculo> listar(int pagina, int tamano)
+            throws SQLException {
+        return dao.listar(pagina, tamano);
     }
 
-    public List<Map<String, Object>> listarCursos(int idCurriculo)
+    public int contar() throws SQLException {
+        return dao.contar();
+    }
+
+    public List<Map<String, Object>> listarCursos(
+            int idCurriculo, int pagina, int tamano)
             throws SQLException, DatosInvalidosException,
             NoEncontradoException {
 
         validarCurriculo(idCurriculo);
+        return dao.listarCursos(idCurriculo, pagina, tamano);
+    }
 
-        return dao.listarCursos(idCurriculo);
+    public int contarCursos(int idCurriculo)
+            throws SQLException, DatosInvalidosException,
+            NoEncontradoException {
+
+        validarCurriculo(idCurriculo);
+        return dao.contarCursos(idCurriculo);
     }
 
     public void crear(PeticionCurriculo datos)
@@ -34,7 +48,9 @@ public class CurriculoService {
             ConflictoException {
 
         if (datos == null) {
-            throw new DatosInvalidosException("Ingresa los datos del curriculo");
+            throw new DatosInvalidosException(
+                    "Ingresa los datos del curriculo"
+            );
         }
 
         datos.validar();
@@ -67,7 +83,8 @@ public class CurriculoService {
         }
     }
 
-    public void agregarCurso(int idCurriculo, PeticionCursoCurriculo datos)
+    public void agregarCurso(int idCurriculo,
+                             PeticionCursoCurriculo datos)
             throws SQLException, DatosInvalidosException,
             NoEncontradoException, ConflictoException {
 
@@ -129,7 +146,9 @@ public class CurriculoService {
         }
 
         if (!dao.existeCurriculo(idCurriculo)) {
-            throw new NoEncontradoException("Curriculo no encontrado");
+            throw new NoEncontradoException(
+                    "Curriculo no encontrado"
+            );
         }
     }
 }

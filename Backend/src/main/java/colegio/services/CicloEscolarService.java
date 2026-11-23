@@ -16,10 +16,15 @@ import java.util.List;
 
 public class CicloEscolarService {
 
-    private CicloEscolarDAO dao = new CicloEscolarDAO();
+    private final CicloEscolarDAO dao = new CicloEscolarDAO();
 
-    public List<CicloEscolar> listar() throws SQLException {
-        return dao.listar();
+    public List<CicloEscolar> listar(int pagina, int tamano)
+            throws SQLException {
+        return dao.listar(pagina, tamano);
+    }
+
+    public int contar() throws SQLException {
+        return dao.contar();
     }
 
     public CicloEscolar buscarPorId(int id)
@@ -28,23 +33,30 @@ public class CicloEscolarService {
         CicloEscolar ciclo = dao.buscarPorId(id);
 
         if (ciclo == null) {
-            throw new NoEncontradoException("No se encontro el año lectivo");
+            throw new NoEncontradoException(
+                    "No se encontro el año lectivo"
+            );
         }
 
         return ciclo;
     }
 
     public void crear(PeticionCiclo datos)
-            throws SQLException, DatosInvalidosException, ConflictoException {
+            throws SQLException, DatosInvalidosException,
+            ConflictoException {
 
         if (datos == null) {
-            throw new DatosInvalidosException("Debes enviar los datos del año lectivo");
+            throw new DatosInvalidosException(
+                    "Debes enviar los datos del año lectivo"
+            );
         }
 
         datos.validar();
 
         if (dao.existeAnio(datos.getAnio())) {
-            throw new ConflictoException("Ya existe un año lectivo con ese año");
+            throw new ConflictoException(
+                    "Ya existe un año lectivo con ese año"
+            );
         }
 
         dao.crear(
@@ -66,7 +78,9 @@ public class CicloEscolarService {
             NoEncontradoException, ConflictoException {
 
         if (idCiclo <= 0 || idGrado <= 0) {
-            throw new DatosInvalidosException("Los identificadores no son validos");
+            throw new DatosInvalidosException(
+                    "Los identificadores no son validos"
+            );
         }
 
         try (Connection con = Conexion.obtenerConexion()) {
@@ -76,7 +90,9 @@ public class CicloEscolarService {
                 String estado = dao.buscarEstado(con, idCiclo);
 
                 if (estado == null) {
-                    throw new NoEncontradoException("No se encontro el año lectivo");
+                    throw new NoEncontradoException(
+                            "No se encontro el año lectivo"
+                    );
                 }
 
                 if (!estado.equals("PLANIFICADO")) {
@@ -113,7 +129,9 @@ public class CicloEscolarService {
             NoEncontradoException, ConflictoException {
 
         if (idCiclo <= 0 || idGrado <= 0) {
-            throw new DatosInvalidosException("Los identificadores no son validos");
+            throw new DatosInvalidosException(
+                    "Los identificadores no son validos"
+            );
         }
 
         try (Connection con = Conexion.obtenerConexion()) {
@@ -123,7 +141,9 @@ public class CicloEscolarService {
                 String estado = dao.buscarEstado(con, idCiclo);
 
                 if (estado == null) {
-                    throw new NoEncontradoException("No se encontro el año lectivo");
+                    throw new NoEncontradoException(
+                            "No se encontro el año lectivo"
+                    );
                 }
 
                 if (!estado.equals("PLANIFICADO")) {
@@ -132,7 +152,9 @@ public class CicloEscolarService {
                     );
                 }
 
-                boolean quitado = dao.quitarGrado(con, idCiclo, idGrado);
+                boolean quitado = dao.quitarGrado(
+                        con, idCiclo, idGrado
+                );
 
                 if (!quitado) {
                     throw new NoEncontradoException(
@@ -155,22 +177,32 @@ public class CicloEscolarService {
             DatosInvalidosException, ConflictoException {
 
         if (estado == null ||
-                (!estado.equals("ACTIVO") && !estado.equals("CERRADO"))) {
-            throw new DatosInvalidosException("El estado solicitado no es valido");
+                (!estado.equals("ACTIVO") &&
+                        !estado.equals("CERRADO"))) {
+            throw new DatosInvalidosException(
+                    "El estado solicitado no es valido"
+            );
         }
 
         CicloEscolar ciclo = buscarPorId(id);
 
         if (ciclo.getEstado().equals("CERRADO")) {
-            throw new ConflictoException("No se puede modificar un año lectivo cerrado");
+            throw new ConflictoException(
+                    "No se puede modificar un año lectivo cerrado"
+            );
         }
 
         if (ciclo.getEstado().equals(estado)) {
-            throw new ConflictoException("El año lectivo ya tiene ese estado");
+            throw new ConflictoException(
+                    "El año lectivo ya tiene ese estado"
+            );
         }
 
-        if (estado.equals("CERRADO") && !ciclo.getEstado().equals("ACTIVO")) {
-            throw new ConflictoException("Solo puedes cerrar un año lectivo activo");
+        if (estado.equals("CERRADO") &&
+                !ciclo.getEstado().equals("ACTIVO")) {
+            throw new ConflictoException(
+                    "Solo puedes cerrar un año lectivo activo"
+            );
         }
 
         if (estado.equals("ACTIVO")) {

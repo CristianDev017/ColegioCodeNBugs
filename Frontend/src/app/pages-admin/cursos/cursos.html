@@ -129,4 +129,32 @@
     </table>
   </div>
 
+  <div
+    *ngIf="total > 0"
+    class="d-flex justify-content-between align-items-center mt-3 mb-4">
+
+    <span class="text-muted">
+      Página {{ pagina }} de {{ totalPaginas }} ({{ total }} cursos)
+    </span>
+
+    <div>
+      <button
+        type="button"
+        class="btn btn-outline-secondary me-2"
+        [disabled]="cargando || pagina === 1"
+        (click)="cambiarPagina(pagina - 1)">
+        Anterior
+      </button>
+
+      <button
+        type="button"
+        class="btn btn-outline-secondary"
+        [disabled]="cargando || pagina === totalPaginas"
+        (click)="cambiarPagina(pagina + 1)">
+        Siguiente
+      </button>
+    </div>
+
+  </div>
+
 </div>

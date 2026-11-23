@@ -3,7 +3,9 @@
 
   <div class="mb-5">
     <h3 class="fw-bold">Panel de Administrador</h3>
-    <p class="text-muted">Selecciona el modulo que deseas administrar</p>
+    <p class="text-muted">
+      Selecciona el modulo que deseas administrar
+    </p>
     <hr>
   </div>
 
@@ -42,11 +44,11 @@
         <div class="card-body text-center p-4">
           <h5>Curriculos</h5>
           <p class="text-muted small">
-            Asigna cursos a los grados.
+            Asigna cursos a los grados y ciclos escolares.
           </p>
-          <button class="btn btn-primary w-100 mt-3" disabled>
+          <a routerLink="/admin/curriculos" class="btn btn-primary w-100 mt-3">
             Administrar curriculos
-          </button>
+          </a>
         </div>
       </div>
     </div>
@@ -56,11 +58,11 @@
         <div class="card-body text-center p-4">
           <h5>Empleados</h5>
           <p class="text-muted small">
-            Gestiona el personal del colegio.
+            Registra empleados y sus cuentas de acceso.
           </p>
-          <button class="btn btn-primary w-100 mt-3" disabled>
+          <a routerLink="/admin/empleados" class="btn btn-primary w-100 mt-3">
             Administrar empleados
-          </button>
+          </a>
         </div>
       </div>
     </div>
@@ -72,23 +74,9 @@
           <p class="text-muted small">
             Asigna maestros a cursos y secciones.
           </p>
-          <button class="btn btn-primary w-100 mt-3" disabled>
+          <a routerLink="/admin/asignaciones" class="btn btn-primary w-100 mt-3">
             Administrar asignaciones
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-lg-4 col-md-6">
-      <div class="card h-100 border-0 shadow-sm">
-        <div class="card-body text-center p-4">
-          <h5>Usuarios operativos</h5>
-          <p class="text-muted small">
-            Gestiona las cuentas del personal.
-          </p>
-          <button class="btn btn-primary w-100 mt-3" disabled>
-            Administrar usuarios
-          </button>
+          </a>
         </div>
       </div>
     </div>
@@ -98,11 +86,12 @@
         <div class="card-body text-center p-4">
           <h5>Tarifas y actividades</h5>
           <p class="text-muted small">
-            Configura cobros y actividades.
+            Administra los cobros y las actividades del colegio.
           </p>
-          <button class="btn btn-primary w-100 mt-3" disabled>
-            Administrar tarifas
-          </button>
+          <a routerLink="/admin/tarifas-actividades"
+             class="btn btn-primary w-100 mt-3">
+            Administrar tarifas y actividades
+          </a>
         </div>
       </div>
     </div>
@@ -122,4 +111,5 @@
     </div>
 
   </div>
+
 </div>

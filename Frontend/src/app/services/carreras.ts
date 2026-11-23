@@ -7,6 +7,7 @@ import { Carrera, PeticionCarrera } from '../models/carrera';
   providedIn: 'root'
 })
 export class Carreras {
+
   private url = 'http://localhost:8080/ColegioBackend_war_exploded/api/carreras';
 
   constructor(private http: HttpClient) {}
@@ -19,9 +20,26 @@ export class Carreras {
     });
   }
 
+  // Catalogo completo para el selector de Grados
   listar() {
-    return this.http.get<Carrera[]>(this.url, {
+    return this.http.get<Carrera[]>(`${this.url}/catalogo`, {
       headers: this.obtenerHeaders()
+    });
+  }
+
+  // Listado paginado para la pantalla de Carreras
+  listarPaginado(pagina = 1, tamano = 10) {
+    return this.http.get<{
+      datos: Carrera[];
+      total: number;
+      pagina: number;
+      tamano: number;
+    }>(this.url, {
+      headers: this.obtenerHeaders(),
+      params: {
+        pagina: String(pagina),
+        tamano: String(tamano)
+      }
     });
   }
 

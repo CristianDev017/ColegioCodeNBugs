@@ -1,33 +1,47 @@
-
 <div class="container mt-5">
   <div class="row justify-content-center">
-    <div class="col-md-5">
-
-      <div class="card shadow">
+    <div class="col-md-5 col-lg-4">
+      <div class="card shadow-sm">
         <div class="card-body p-4">
           <h3 class="text-center mb-4">Iniciar sesión</h3>
+
+          <div *ngIf="error" class="alert alert-danger" role="alert">
+            {{ error }}
+          </div>
 
           <form (ngSubmit)="iniciarSesion()">
             <div class="mb-3">
               <label class="form-label">Usuario o correo</label>
-              <input type="text" name="usuario" [(ngModel)]="usuario"
-                     class="form-control" placeholder="Ingresa tu usuario">
+
+              <input
+                type="text"
+                class="form-control"
+                name="usuario"
+                [(ngModel)]="usuario"
+                [disabled]="ingresando"
+                required
+              />
             </div>
 
             <div class="mb-3">
               <label class="form-label">Contraseña</label>
-              <input type="password" name="password" [(ngModel)]="password"
-                     class="form-control" placeholder="Ingresa tu contraseña">
+
+              <input
+                type="password"
+                class="form-control"
+                name="password"
+                [(ngModel)]="password"
+                [disabled]="ingresando"
+                required
+              />
             </div>
 
-            <button type="submit" class="btn btn-primary w-100">
-              Iniciar sesión
+            <button type="submit" class="btn btn-primary w-100" [disabled]="ingresando">
+              {{ ingresando ? 'Ingresando...' : 'Iniciar sesión' }}
             </button>
           </form>
-
         </div>
       </div>
-
     </div>
   </div>
 </div>

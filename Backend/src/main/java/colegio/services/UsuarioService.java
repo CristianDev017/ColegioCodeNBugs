@@ -1,3 +1,4 @@
+
 package colegio.services;
 
 import colegio.conexion.Conexion;
@@ -21,14 +22,18 @@ public class UsuarioService {
 
     private final UsuarioDAO dao = new UsuarioDAO();
 
-    public List<RespuestaUsuario> listar() throws SQLException {
-        List<Usuario> usuarios = dao.listar();
+    public List<RespuestaUsuario> listar(int pagina, int tamano) throws SQLException {
+        List<Usuario> usuarios = dao.listar(pagina, tamano);
         List<RespuestaUsuario> respuestas = new ArrayList<>();
 
         for (Usuario usuario : usuarios) {
             respuestas.add(new RespuestaUsuario(usuario));
         }
         return respuestas;
+    }
+
+    public int contar() throws SQLException {
+        return dao.contar();
     }
 
     public RespuestaUsuario buscarPorId(int idUsuario)

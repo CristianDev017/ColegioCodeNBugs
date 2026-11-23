@@ -1,3 +1,4 @@
+
 package colegio.servlet;
 
 import colegio.dto.PeticionEditarUsuario;
@@ -53,8 +54,15 @@ public class UsuarioServlet extends HttpServlet {
 
         try {
             if (ruta == null || ruta.equals("/")) {
-                List<RespuestaUsuario> usuarios = service.listar();
-                Json.escribir(response, 200, usuarios);
+                int pagina = leerParametro(request, "pagina", 1);
+                int tamano = leerParametro(request, "tamano", 10);
+                if (pagina < 1 || tamano < 1 || tamano > 50) {
+                    throw new DatosInvalidosException("Pagina o tamaño invalido");
+                }
+                List<RespuestaUsuario> usuarios = service.listar(pagina, tamano);
+                Json.escribir(response, 200, Map.of(
+                        "datos", usuarios, "total", service.contar(),
+                        "pagina", pagina, "tamano", tamano));
                 return;
             }
 
@@ -79,6 +87,17 @@ public class UsuarioServlet extends HttpServlet {
 
         } catch (SQLException e) {
             Json.error(response, 500, "Error al consultar usuarios");
+        }
+    }
+
+    private int leerParametro(HttpServletRequest request, String nombre, int defecto)
+            throws DatosInvalidosException {
+        String valor = request.getParameter(nombre);
+        if (valor == null || valor.isBlank()) return defecto;
+        try {
+            return Integer.parseInt(valor);
+        } catch (NumberFormatException e) {
+            throw new DatosInvalidosException("Parametro invalido: " + nombre);
         }
     }
 

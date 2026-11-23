@@ -1,3 +1,4 @@
+
 package colegio.dao;
 
 import colegio.conexion.Conexion;
@@ -17,18 +18,53 @@ public class GradoDAO {
                     "JOIN nivel n ON g.id_nivel = n.id_nivel " +
                     "LEFT JOIN carrera c ON g.id_carrera = c.id_carrera ";
 
-    public List<Grado> listar() throws SQLException {
+    public List<Grado> listar(int pagina, int tamano) throws SQLException {
         List<Grado> grados = new ArrayList<>();
 
-        String sql = CONSULTA + "ORDER BY n.nombre, g.nombre";
+        String sql = CONSULTA +
+                "ORDER BY n.nombre, g.nombre, g.id_grado LIMIT ? OFFSET ?";
 
         try (Connection con = Conexion.obtenerConexion();
              PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, tamano);
+            ps.setInt(2, (pagina - 1) * tamano);
 
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     grados.add(convertir(rs));
                 }
+            }
+        }
+
+        return grados;
+    }
+
+    public int contar() throws SQLException {
+        String sql = "SELECT COUNT(*) FROM grado";
+
+        try (Connection con = Conexion.obtenerConexion();
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            rs.next();
+            return rs.getInt(1);
+        }
+    }
+
+    // Listado completo para seleccionar grados en Ciclos escolares.
+    public List<Grado> listar() throws SQLException {
+        List<Grado> grados = new ArrayList<>();
+
+        String sql = CONSULTA +
+                "ORDER BY n.nombre, g.nombre, g.id_grado";
+
+        try (Connection con = Conexion.obtenerConexion();
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                grados.add(convertir(rs));
             }
         }
 

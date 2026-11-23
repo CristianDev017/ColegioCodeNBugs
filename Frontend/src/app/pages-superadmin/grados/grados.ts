@@ -1,3 +1,4 @@
+
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -22,6 +23,15 @@ export class GradosPagina implements OnInit {
   grados: Grado[] = [];
   niveles: Nivel[] = [];
   carreras: Carrera[] = [];
+
+  pagina = 1;
+  tamano = 10;
+  total = 0;
+  cargando = false;
+
+  get totalPaginas(): number {
+    return Math.max(1, Math.ceil(this.total / this.tamano));
+  }
 
   idEditar = 0;
   idNivel = 0;
@@ -48,16 +58,44 @@ export class GradosPagina implements OnInit {
   }
 
   listar() {
-    this.gradosService.listar().subscribe({
-      next: (datos) => {
-        this.grados = datos;
+    this.cargando = true;
+    this.detector.detectChanges();
+
+    this.gradosService.listarPaginado(
+      this.pagina, this.tamano
+    ).subscribe({
+      next: (respuesta) => {
+        this.grados = respuesta.datos;
+        this.total = respuesta.total;
+        this.cargando = false;
+
+        if (this.pagina > this.totalPaginas) {
+          this.pagina = this.totalPaginas;
+          this.listar();
+          return;
+        }
+
         this.detector.detectChanges();
       },
       error: (e) => {
-        this.error = e.error?.mensaje || 'No se pudieron cargar los grados';
+        this.cargando = false;
+        this.error = e.error?.mensaje ||
+          'No se pudieron cargar los grados';
         this.detector.detectChanges();
       }
     });
+  }
+
+  cambiarPagina(nuevaPagina: number) {
+    if (this.cargando ||
+        nuevaPagina < 1 ||
+        nuevaPagina > this.totalPaginas ||
+        nuevaPagina === this.pagina) {
+      return;
+    }
+
+    this.pagina = nuevaPagina;
+    this.listar();
   }
 
   cargarNiveles() {
@@ -67,7 +105,8 @@ export class GradosPagina implements OnInit {
         this.detector.detectChanges();
       },
       error: (e) => {
-        this.error = e.error?.mensaje || 'No se pudieron cargar los niveles';
+        this.error = e.error?.mensaje ||
+          'No se pudieron cargar los niveles';
         this.detector.detectChanges();
       }
     });
@@ -80,14 +119,17 @@ export class GradosPagina implements OnInit {
         this.detector.detectChanges();
       },
       error: (e) => {
-        this.error = e.error?.mensaje || 'No se pudieron cargar las carreras';
+        this.error = e.error?.mensaje ||
+          'No se pudieron cargar las carreras';
         this.detector.detectChanges();
       }
     });
   }
 
   esDiversificado() {
-    const nivel = this.niveles.find(n => n.idNivel === this.idNivel);
+    const nivel = this.niveles.find(
+      n => n.idNivel === this.idNivel
+    );
 
     return nivel?.nombre.toLowerCase() === 'diversificado';
   }
@@ -104,14 +146,17 @@ export class GradosPagina implements OnInit {
   }
 
   guardar() {
-    if (this.guardando) {
+    if (this.guardando || this.cambiandoEstado) {
       return;
     }
 
     this.mensaje = '';
     this.error = '';
 
-    if (!this.nombre.trim() || this.idNivel === 0 || this.cupoDefault <= 0) {
+    if (!this.nombre.trim() ||
+        this.idNivel === 0 ||
+        this.cupoDefault <= 0) {
+
       this.error = 'Completa los campos obligatorios';
       this.detector.detectChanges();
       return;
@@ -167,6 +212,10 @@ export class GradosPagina implements OnInit {
   }
 
   seleccionar(grado: Grado) {
+    if (this.guardando || this.cambiandoEstado) {
+      return;
+    }
+
     this.idEditar = grado.idGrado;
     this.idNivel = grado.idNivel;
     this.idCarrera = grado.idCarrera;
@@ -179,7 +228,7 @@ export class GradosPagina implements OnInit {
   }
 
   cambiarEstado(grado: Grado) {
-    if (this.cambiandoEstado) {
+    if (this.cambiandoEstado || this.guardando) {
       return;
     }
 
@@ -194,7 +243,9 @@ export class GradosPagina implements OnInit {
     this.cambiandoEstado = true;
     this.detector.detectChanges();
 
-    this.gradosService.cambiarEstado(grado.idGrado, !grado.activo).subscribe({
+    this.gradosService.cambiarEstado(
+      grado.idGrado, !grado.activo
+    ).subscribe({
       next: () => {
         this.cambiandoEstado = false;
         this.mensaje = 'Estado actualizado correctamente';
@@ -203,7 +254,8 @@ export class GradosPagina implements OnInit {
       },
       error: (e) => {
         this.cambiandoEstado = false;
-        this.error = e.error?.mensaje || 'No se pudo cambiar el estado';
+        this.error = e.error?.mensaje ||
+          'No se pudo cambiar el estado';
         this.detector.detectChanges();
       }
     });

@@ -1,8 +1,7 @@
-
-import { Router } from '@angular/router';
 import { Component, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { Auth } from '../../services/auth';
 
 @Component({
@@ -10,10 +9,8 @@ import { Auth } from '../../services/auth';
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './login.html',
-  styleUrl: './login.css'
 })
 export class Login {
-
   usuario = '';
   password = '';
   error = '';
@@ -22,7 +19,7 @@ export class Login {
   constructor(
     private auth: Auth,
     private router: Router,
-    private detector: ChangeDetectorRef
+    private detector: ChangeDetectorRef,
   ) {}
 
   iniciarSesion() {
@@ -43,27 +40,32 @@ export class Login {
 
     this.auth.login(this.usuario.trim(), this.password).subscribe({
       next: (res) => {
+        this.ingresando = false;
+
         sessionStorage.setItem('token', res.token);
         sessionStorage.setItem('rol', res.rol);
 
         if (res.rol === 'SUPER_ADMIN') {
           this.router.navigate(['/superadmin']);
-
         } else if (res.rol === 'ADMIN') {
           this.router.navigate(['/admin']);
-
         } else {
-          this.error = 'Este rol todavia no tiene una pantalla disponible';
+          this.error = 'Este rol todavía no tiene una pantalla disponible';
         }
 
-        this.ingresando = false;
         this.detector.detectChanges();
       },
       error: (e) => {
         this.ingresando = false;
-        this.error = e.error?.mensaje || 'No se pudo iniciar sesion';
+
+        if (e.status === 401) {
+          this.error = 'Correo o contraseña incorrectos';
+        } else {
+          this.error = 'No se pudo iniciar sesión. Inténtalo nuevamente';
+        }
+
         this.detector.detectChanges();
-      }
+      },
     });
   }
 }

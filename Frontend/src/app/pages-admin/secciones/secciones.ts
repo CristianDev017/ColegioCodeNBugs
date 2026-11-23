@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 
 import { Secciones } from '../../services/secciones';
+
 import {
   Seccion,
   PeticionSeccion,
@@ -21,6 +22,14 @@ export class SeccionesPagina implements OnInit {
 
   secciones: Seccion[] = [];
   opciones: OpcionSeccion[] = [];
+
+  pagina = 1;
+  tamano = 10;
+  total = 0;
+
+  get totalPaginas(): number {
+    return Math.max(1, Math.ceil(this.total / this.tamano));
+  }
 
   idEditar = 0;
   idCiclo = 0;
@@ -48,18 +57,39 @@ export class SeccionesPagina implements OnInit {
     this.cargando = true;
     this.detector.detectChanges();
 
-    this.seccionesService.listar().subscribe({
-      next: (datos) => {
-        this.secciones = datos;
+    this.seccionesService.listar(this.pagina, this.tamano).subscribe({
+      next: (respuesta) => {
+        this.secciones = respuesta.datos;
+        this.total = respuesta.total;
         this.cargando = false;
+
+        if (this.pagina > this.totalPaginas) {
+          this.pagina = this.totalPaginas;
+          this.listar();
+          return;
+        }
+
         this.detector.detectChanges();
       },
       error: (e) => {
         this.cargando = false;
-        this.error = e.error?.mensaje || 'No se pudieron cargar las secciones';
+        this.error = e.error?.mensaje ||
+          'No se pudieron cargar las secciones';
         this.detector.detectChanges();
       }
     });
+  }
+
+  cambiarPagina(nuevaPagina: number) {
+    if (this.cargando ||
+        nuevaPagina < 1 ||
+        nuevaPagina > this.totalPaginas ||
+        nuevaPagina === this.pagina) {
+      return;
+    }
+
+    this.pagina = nuevaPagina;
+    this.listar();
   }
 
   cargarOpciones() {
@@ -69,7 +99,8 @@ export class SeccionesPagina implements OnInit {
         this.detector.detectChanges();
       },
       error: (e) => {
-        this.error = e.error?.mensaje || 'No se pudieron cargar los grados habilitados';
+        this.error = e.error?.mensaje ||
+          'No se pudieron cargar los grados habilitados';
         this.detector.detectChanges();
       }
     });
@@ -140,6 +171,7 @@ export class SeccionesPagina implements OnInit {
           this.limpiar();
           this.guardando = false;
           this.mensaje = 'Seccion creada correctamente';
+          this.detector.detectChanges();
           this.listar();
         },
         error: (e) => {
@@ -156,6 +188,7 @@ export class SeccionesPagina implements OnInit {
           this.limpiar();
           this.guardando = false;
           this.mensaje = 'Seccion actualizada correctamente';
+          this.detector.detectChanges();
           this.listar();
         },
         error: (e) => {
@@ -227,11 +260,13 @@ export class SeccionesPagina implements OnInit {
       next: () => {
         this.cambiandoEstado = false;
         this.mensaje = 'Estado actualizado correctamente';
+        this.detector.detectChanges();
         this.listar();
       },
       error: (e) => {
         this.cambiandoEstado = false;
-        this.error = e.error?.mensaje || 'No se pudo cambiar el estado';
+        this.error = e.error?.mensaje ||
+          'No se pudo cambiar el estado';
         this.detector.detectChanges();
       }
     });

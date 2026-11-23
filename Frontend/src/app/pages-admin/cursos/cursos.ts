@@ -17,6 +17,14 @@ export class CursosPagina implements OnInit {
 
   cursos: Curso[] = [];
 
+  pagina = 1;
+  tamano = 10;
+  total = 0;
+
+  get totalPaginas(): number {
+    return Math.max(1, Math.ceil(this.total / this.tamano));
+  }
+
   idEditar = 0;
   nombre = '';
   descripcion = '';
@@ -40,10 +48,18 @@ export class CursosPagina implements OnInit {
     this.cargando = true;
     this.detector.detectChanges();
 
-    this.cursosService.listar().subscribe({
-      next: (datos) => {
-        this.cursos = datos;
+    this.cursosService.listar(this.pagina, this.tamano).subscribe({
+      next: (respuesta) => {
+        this.cursos = respuesta.datos;
+        this.total = respuesta.total;
         this.cargando = false;
+
+        if (this.pagina > this.totalPaginas) {
+          this.pagina = this.totalPaginas;
+          this.listar();
+          return;
+        }
+
         this.detector.detectChanges();
       },
       error: (e) => {
@@ -52,6 +68,18 @@ export class CursosPagina implements OnInit {
         this.detector.detectChanges();
       }
     });
+  }
+
+  cambiarPagina(nuevaPagina: number) {
+    if (this.cargando ||
+        nuevaPagina < 1 ||
+        nuevaPagina > this.totalPaginas ||
+        nuevaPagina === this.pagina) {
+      return;
+    }
+
+    this.pagina = nuevaPagina;
+    this.listar();
   }
 
   guardar() {

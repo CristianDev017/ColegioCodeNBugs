@@ -75,7 +75,11 @@
 
   <h5>Años lectivos registrados</h5>
 
-  <div class="table-responsive mb-4">
+  <p *ngIf="cargando" class="text-muted">
+    Cargando años lectivos...
+  </p>
+
+  <div class="table-responsive mb-3">
     <table class="table table-striped align-middle">
 
       <thead>
@@ -149,6 +153,34 @@
     </table>
   </div>
 
+  <div
+    *ngIf="total > 0"
+    class="d-flex justify-content-between align-items-center mb-4">
+
+    <span class="text-muted">
+      Página {{ pagina }} de {{ totalPaginas }}
+      ({{ total }} años lectivos)
+    </span>
+
+    <div>
+      <button
+        type="button"
+        class="btn btn-outline-secondary me-2"
+        [disabled]="cargando || pagina === 1"
+        (click)="cambiarPagina(pagina - 1)">
+        Anterior
+      </button>
+
+      <button
+        type="button"
+        class="btn btn-outline-secondary"
+        [disabled]="cargando || pagina === totalPaginas"
+        (click)="cambiarPagina(pagina + 1)">
+        Siguiente
+      </button>
+    </div>
+  </div>
+
   <div *ngIf="cicloSeleccionado" class="card mb-4">
     <div class="card-header">
       <h5 class="mb-0">
@@ -175,7 +207,9 @@
               [(ngModel)]="gradoSeleccionado"
               [disabled]="administrando">
 
-              <option [ngValue]="0">Selecciona un grado</option>
+              <option [ngValue]="0">
+                Selecciona un grado
+              </option>
 
               <option
                 *ngFor="let grado of gradosDisponibles()"
@@ -183,6 +217,7 @@
                 {{ grado.nivel }} - {{ grado.nombre }}
                 {{ grado.carrera ? '(' + grado.carrera + ')' : '' }}
               </option>
+
             </select>
           </div>
 
@@ -255,11 +290,6 @@
       </button>
 
     </div>
-  </div>
-
-  <div class="alert alert-info">
-    Los años lectivos se crean sin grados. Puedes agregarlos manualmente
-    desde la opcion Administrar grados mientras el año este PLANIFICADO.
   </div>
 
 </div>

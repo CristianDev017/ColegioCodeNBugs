@@ -1,3 +1,4 @@
+
 package colegio.services;
 
 import colegio.dao.CarreraDAO;
@@ -14,15 +15,28 @@ public class CarreraService {
 
     private final CarreraDAO dao = new CarreraDAO();
 
+    public List<Carrera> listar(int pagina, int tamano)
+            throws SQLException {
+        return dao.listar(pagina, tamano);
+    }
+
+    public int contar() throws SQLException {
+        return dao.contar();
+    }
+
+    // Se conserva para el catalogo de Grados
     public List<Carrera> listar() throws SQLException {
         return dao.listar();
     }
 
     public Carrera buscarPorId(int idCarrera)
-            throws SQLException, DatosInvalidosException, NoEncontradoException {
+            throws SQLException, DatosInvalidosException,
+            NoEncontradoException {
 
         if (idCarrera <= 0) {
-            throw new DatosInvalidosException("El id de la carrera no es valido");
+            throw new DatosInvalidosException(
+                    "El id de la carrera no es valido"
+            );
         }
 
         Carrera carrera = dao.buscarPorId(idCarrera);
@@ -35,12 +49,15 @@ public class CarreraService {
     }
 
     public void crear(PeticionCarrera datos)
-            throws SQLException, DatosInvalidosException, ConflictoException {
+            throws SQLException, DatosInvalidosException,
+            ConflictoException {
 
         datos.validar();
 
         if (dao.existeNombre(datos.getNombre())) {
-            throw new ConflictoException("Ya existe una carrera con ese nombre");
+            throw new ConflictoException(
+                    "Ya existe una carrera con ese nombre"
+            );
         }
 
         Carrera carrera = new Carrera(
@@ -54,17 +71,22 @@ public class CarreraService {
     }
 
     public void editar(int idCarrera, PeticionCarrera datos)
-            throws SQLException, DatosInvalidosException, NoEncontradoException, ConflictoException {
+            throws SQLException, DatosInvalidosException,
+            NoEncontradoException, ConflictoException {
 
         if (idCarrera <= 0) {
-            throw new DatosInvalidosException("El id de la carrera no es valido");
+            throw new DatosInvalidosException(
+                    "El id de la carrera no es valido"
+            );
         }
 
         datos.validar();
 
-        // Comprobamos que el nombre no este registrado en otra carrera
-        if (dao.existeNombreEnOtraCarrera(datos.getNombre(), idCarrera)) {
-            throw new ConflictoException("Ya existe una carrera con ese nombre");
+        if (dao.existeNombreEnOtraCarrera(
+                datos.getNombre(), idCarrera)) {
+            throw new ConflictoException(
+                    "Ya existe una carrera con ese nombre"
+            );
         }
 
         Carrera carrera = new Carrera(
@@ -80,10 +102,13 @@ public class CarreraService {
     }
 
     public void cambiarEstado(int idCarrera, boolean activo)
-            throws SQLException, DatosInvalidosException, NoEncontradoException {
+            throws SQLException, DatosInvalidosException,
+            NoEncontradoException {
 
         if (idCarrera <= 0) {
-            throw new DatosInvalidosException("El id de la carrera no es valido");
+            throw new DatosInvalidosException(
+                    "El id de la carrera no es valido"
+            );
         }
 
         if (!dao.cambiarEstado(idCarrera, activo)) {

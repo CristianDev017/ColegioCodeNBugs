@@ -6,7 +6,12 @@ import { RouterLink } from '@angular/router';
 
 import { Ciclos } from '../../services/ciclos';
 import { Grados } from '../../services/grados';
-import { CicloEscolar, PeticionCiclo } from '../../models/ciclo-escolar';
+
+import {
+  CicloEscolar,
+  PeticionCiclo
+} from '../../models/ciclo-escolar';
+
 import { Grado } from '../../models/grado';
 
 @Component({
@@ -21,6 +26,14 @@ export class CiclosPagina implements OnInit {
   grados: Grado[] = [];
   gradosAsignados: number[] = [];
 
+  pagina = 1;
+  tamano = 10;
+  total = 0;
+
+  get totalPaginas(): number {
+    return Math.max(1, Math.ceil(this.total / this.tamano));
+  }
+
   anio: number | null = null;
   fechaInicio = '';
   fechaFin = '';
@@ -30,6 +43,7 @@ export class CiclosPagina implements OnInit {
 
   mensaje = '';
   error = '';
+
   guardando = false;
   cambiandoEstado = false;
   cargando = false;
@@ -50,18 +64,56 @@ export class CiclosPagina implements OnInit {
     this.cargando = true;
     this.detector.detectChanges();
 
-    this.ciclosService.listar().subscribe({
-      next: (datos) => {
-        this.ciclos = datos;
+    this.ciclosService.listar(
+      this.pagina, this.tamano
+    ).subscribe({
+      next: (respuesta) => {
+        this.ciclos = respuesta.datos;
+        this.total = respuesta.total;
         this.cargando = false;
+
+        if (this.pagina > this.totalPaginas) {
+          this.pagina = this.totalPaginas;
+          this.listar();
+          return;
+        }
+
+        this.actualizarCicloSeleccionado();
         this.detector.detectChanges();
       },
       error: (e) => {
         this.cargando = false;
-        this.error = e.error?.mensaje || 'No se pudieron cargar los años lectivos';
+        this.error = e.error?.mensaje ||
+          'No se pudieron cargar los años lectivos';
         this.detector.detectChanges();
       }
     });
+  }
+
+  cambiarPagina(nuevaPagina: number) {
+    if (this.cargando ||
+        nuevaPagina < 1 ||
+        nuevaPagina > this.totalPaginas ||
+        nuevaPagina === this.pagina) {
+      return;
+    }
+
+    this.pagina = nuevaPagina;
+    this.listar();
+  }
+
+  private actualizarCicloSeleccionado() {
+    if (!this.cicloSeleccionado) {
+      return;
+    }
+
+    const actualizado = this.ciclos.find(
+      c => c.idCiclo === this.cicloSeleccionado?.idCiclo
+    );
+
+    if (actualizado) {
+      this.cicloSeleccionado = actualizado;
+    }
   }
 
   cargarCatalogo() {
@@ -71,14 +123,17 @@ export class CiclosPagina implements OnInit {
         this.detector.detectChanges();
       },
       error: (e) => {
-        this.error = e.error?.mensaje || 'No se pudo cargar el catalogo de grados';
+        this.error = e.error?.mensaje ||
+          'No se pudo cargar el catalogo de grados';
         this.detector.detectChanges();
       }
     });
   }
 
   guardar() {
-    if (this.guardando || this.cambiandoEstado || this.administrando) {
+    if (this.guardando ||
+        this.cambiandoEstado ||
+        this.administrando) {
       return;
     }
 
@@ -116,20 +171,25 @@ export class CiclosPagina implements OnInit {
       next: () => {
         this.limpiar();
         this.guardando = false;
-        this.mensaje = 'Año lectivo creado. Ahora puedes asignarle grados';
+        this.pagina = 1;
+        this.mensaje =
+          'Año lectivo creado. Ahora puedes asignarle grados';
         this.detector.detectChanges();
         this.listar();
       },
       error: (e) => {
         this.guardando = false;
-        this.error = e.error?.mensaje || 'No se pudo crear el año lectivo';
+        this.error = e.error?.mensaje ||
+          'No se pudo crear el año lectivo';
         this.detector.detectChanges();
       }
     });
   }
 
   abrirGrados(ciclo: CicloEscolar) {
-    if (this.administrando || this.guardando || this.cambiandoEstado) {
+    if (this.administrando ||
+        this.guardando ||
+        this.cambiandoEstado) {
       return;
     }
 
@@ -148,7 +208,8 @@ export class CiclosPagina implements OnInit {
         this.detector.detectChanges();
       },
       error: (e) => {
-        this.error = e.error?.mensaje || 'No se pudieron consultar los grados del año';
+        this.error = e.error?.mensaje ||
+          'No se pudieron consultar los grados del año';
         this.administrando = false;
         this.detector.detectChanges();
       }
@@ -157,7 +218,8 @@ export class CiclosPagina implements OnInit {
 
   gradosDisponibles() {
     return this.grados.filter(grado =>
-      grado.activo && !this.gradosAsignados.includes(grado.idGrado)
+      grado.activo &&
+      !this.gradosAsignados.includes(grado.idGrado)
     );
   }
 
@@ -189,7 +251,9 @@ export class CiclosPagina implements OnInit {
     this.administrando = true;
     this.detector.detectChanges();
 
-    this.ciclosService.agregarGrado(idCiclo, this.gradoSeleccionado).subscribe({
+    this.ciclosService.agregarGrado(
+      idCiclo, this.gradoSeleccionado
+    ).subscribe({
       next: () => {
         this.gradoSeleccionado = 0;
         this.mensaje = 'Grado agregado al año lectivo';
@@ -197,7 +261,8 @@ export class CiclosPagina implements OnInit {
         this.listar();
       },
       error: (e) => {
-        this.error = e.error?.mensaje || 'No se pudo agregar el grado';
+        this.error = e.error?.mensaje ||
+          'No se pudo agregar el grado';
         this.administrando = false;
         this.detector.detectChanges();
       }
@@ -213,8 +278,10 @@ export class CiclosPagina implements OnInit {
       return;
     }
 
-    if (!confirm('¿Quitar ' + grado.nombre + ' del año ' +
-      this.cicloSeleccionado.anio + '?')) {
+    if (!confirm(
+      '¿Quitar ' + grado.nombre + ' del año ' +
+      this.cicloSeleccionado.anio + '?'
+    )) {
       return;
     }
 
@@ -225,14 +292,17 @@ export class CiclosPagina implements OnInit {
     this.administrando = true;
     this.detector.detectChanges();
 
-    this.ciclosService.quitarGrado(idCiclo, grado.idGrado).subscribe({
+    this.ciclosService.quitarGrado(
+      idCiclo, grado.idGrado
+    ).subscribe({
       next: () => {
         this.mensaje = 'Grado quitado del año lectivo';
         this.actualizarGrados(idCiclo);
         this.listar();
       },
       error: (e) => {
-        this.error = e.error?.mensaje || 'No se pudo quitar el grado';
+        this.error = e.error?.mensaje ||
+          'No se pudo quitar el grado';
         this.administrando = false;
         this.detector.detectChanges();
       }
@@ -247,7 +317,8 @@ export class CiclosPagina implements OnInit {
         this.detector.detectChanges();
       },
       error: (e) => {
-        this.error = e.error?.mensaje || 'No se pudieron actualizar los grados';
+        this.error = e.error?.mensaje ||
+          'No se pudieron actualizar los grados';
         this.administrando = false;
         this.detector.detectChanges();
       }
@@ -266,7 +337,9 @@ export class CiclosPagina implements OnInit {
   }
 
   activar(ciclo: CicloEscolar) {
-    if (this.cambiandoEstado || this.guardando || this.administrando) {
+    if (this.cambiandoEstado ||
+        this.guardando ||
+        this.administrando) {
       return;
     }
 
@@ -274,21 +347,19 @@ export class CiclosPagina implements OnInit {
       return;
     }
 
-    if (this.ciclos.some(c => c.estado === 'ACTIVO')) {
-      this.error = 'Ya existe un año lectivo activo. Debes cerrarlo primero';
-      this.mensaje = '';
-      this.detector.detectChanges();
-      return;
-    }
-
     if (ciclo.cantidadGrados === 0) {
-      this.error = 'Primero debes asignar grados a este año lectivo';
+      this.error =
+        'Primero debes asignar grados a este año lectivo';
       this.mensaje = '';
       this.detector.detectChanges();
       return;
     }
 
-    if (!confirm('¿Quieres activar el año lectivo ' + ciclo.anio + '?')) {
+    // El backend verifica que no exista otro ciclo ACTIVO,
+    // aunque ese ciclo esté en otra página.
+    if (!confirm(
+      '¿Quieres activar el año lectivo ' + ciclo.anio + '?'
+    )) {
       return;
     }
 
@@ -296,7 +367,9 @@ export class CiclosPagina implements OnInit {
   }
 
   cerrar(ciclo: CicloEscolar) {
-    if (this.cambiandoEstado || this.guardando || this.administrando) {
+    if (this.cambiandoEstado ||
+        this.guardando ||
+        this.administrando) {
       return;
     }
 
@@ -304,8 +377,10 @@ export class CiclosPagina implements OnInit {
       return;
     }
 
-    if (!confirm('¿Seguro que deseas cerrar el año lectivo ' +
-      ciclo.anio + '? No se podrá volver a activar.')) {
+    if (!confirm(
+      '¿Seguro que deseas cerrar el año lectivo ' +
+      ciclo.anio + '? No se podrá volver a activar.'
+    )) {
       return;
     }
 
@@ -318,9 +393,12 @@ export class CiclosPagina implements OnInit {
     this.cambiandoEstado = true;
     this.detector.detectChanges();
 
-    this.ciclosService.cambiarEstado(id, estado).subscribe({
+    this.ciclosService.cambiarEstado(
+      id, estado
+    ).subscribe({
       next: () => {
         this.cambiandoEstado = false;
+
         this.mensaje = estado === 'ACTIVO'
           ? 'Año lectivo activado correctamente'
           : 'Año lectivo cerrado correctamente';
@@ -334,7 +412,8 @@ export class CiclosPagina implements OnInit {
       },
       error: (e) => {
         this.cambiandoEstado = false;
-        this.error = e.error?.mensaje || 'No se pudo cambiar el estado';
+        this.error = e.error?.mensaje ||
+          'No se pudo cambiar el estado';
         this.detector.detectChanges();
       }
     });

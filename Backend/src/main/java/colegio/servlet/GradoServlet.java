@@ -1,3 +1,4 @@
+
 package colegio.servlet;
 
 import colegio.dto.PeticionGrado;
@@ -38,6 +39,25 @@ public class GradoServlet extends HttpServlet {
             String ruta = req.getPathInfo();
 
             if (ruta == null || ruta.equals("/")) {
+                int pagina = leerParametro(req, "pagina", 1);
+                int tamano = leerParametro(req, "tamano", 10);
+
+                if (pagina < 1 || tamano < 1 || tamano > 50) {
+                    throw new DatosInvalidosException(
+                            "Pagina o tamaño invalido"
+                    );
+                }
+
+                Json.escribir(resp, 200, Map.of(
+                        "datos", service.listar(pagina, tamano),
+                        "total", service.contar(),
+                        "pagina", pagina,
+                        "tamano", tamano
+                ));
+                return;
+            }
+
+            if (ruta.equals("/catalogo")) {
                 Json.escribir(resp, 200, service.listar());
                 return;
             }
@@ -136,6 +156,25 @@ public class GradoServlet extends HttpServlet {
             Json.error(resp, 409, e.getMessage());
         } catch (SQLException e) {
             Json.error(resp, 500, "Error al actualizar el grado");
+        }
+    }
+
+    private int leerParametro(HttpServletRequest req,
+                              String nombre, int defecto)
+            throws DatosInvalidosException {
+
+        String valor = req.getParameter(nombre);
+
+        if (valor == null || valor.isBlank()) {
+            return defecto;
+        }
+
+        try {
+            return Integer.parseInt(valor);
+        } catch (NumberFormatException e) {
+            throw new DatosInvalidosException(
+                    "Parametro invalido: " + nombre
+            );
         }
     }
 

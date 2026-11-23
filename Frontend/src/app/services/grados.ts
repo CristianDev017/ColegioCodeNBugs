@@ -1,3 +1,4 @@
+
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Grado, PeticionGrado } from '../models/grado';
@@ -19,9 +20,26 @@ export class Grados {
     });
   }
 
+  // Catalogo completo utilizado por Ciclos escolares.
   listar() {
-    return this.http.get<Grado[]>(this.url, {
+    return this.http.get<Grado[]>(`${this.url}/catalogo`, {
       headers: this.obtenerHeaders()
+    });
+  }
+
+  // Consulta paginada para la pantalla de Grados.
+  listarPaginado(pagina = 1, tamano = 10) {
+    return this.http.get<{
+      datos: Grado[];
+      total: number;
+      pagina: number;
+      tamano: number;
+    }>(this.url, {
+      headers: this.obtenerHeaders(),
+      params: {
+        pagina: String(pagina),
+        tamano: String(tamano)
+      }
     });
   }
 

@@ -1,3 +1,4 @@
+
 package colegio.dao;
 
 import colegio.conexion.Conexion;
@@ -15,10 +16,43 @@ public class CursoDAO {
     private static final String CONSULTA =
             "SELECT id_curso, nombre, descripcion, activo FROM curso ";
 
-    public List<Curso> listar() throws SQLException {
+    public List<Curso> listar(int pagina, int tamano) throws SQLException {
         List<Curso> cursos = new ArrayList<>();
 
-        String sql = CONSULTA + "ORDER BY id_curso";
+        String sql = CONSULTA + "ORDER BY id_curso LIMIT ? OFFSET ?";
+
+        try (Connection con = Conexion.obtenerConexion();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, tamano);
+            ps.setInt(2, (pagina - 1) * tamano);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    cursos.add(convertir(rs));
+                }
+            }
+        }
+
+        return cursos;
+    }
+
+    public int contar() throws SQLException {
+        String sql = "SELECT COUNT(*) FROM curso";
+
+        try (Connection con = Conexion.obtenerConexion();
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            rs.next();
+            return rs.getInt(1);
+        }
+    }
+
+    public List<Curso> listarCatalogo() throws SQLException {
+        List<Curso> cursos = new ArrayList<>();
+
+        String sql = CONSULTA + "ORDER BY nombre";
 
         try (Connection con = Conexion.obtenerConexion();
              PreparedStatement ps = con.prepareStatement(sql);

@@ -1,3 +1,4 @@
+
 package colegio.servlet;
 
 import colegio.dto.PeticionCurriculo;
@@ -39,7 +40,17 @@ public class CurriculoServlet extends HttpServlet {
             String ruta = request.getPathInfo();
 
             if (ruta == null || ruta.equals("/")) {
-                Json.escribir(response, 200, service.listar());
+                int pagina = leerParametro(request, "pagina", 1);
+                int tamano = leerParametro(request, "tamano", 10);
+
+                validarPaginacion(pagina, tamano);
+
+                Json.escribir(response, 200, Map.of(
+                        "datos", service.listar(pagina, tamano),
+                        "total", service.contar(),
+                        "pagina", pagina,
+                        "tamano", tamano
+                ));
                 return;
             }
 
@@ -47,8 +58,17 @@ public class CurriculoServlet extends HttpServlet {
 
             if (partes.length == 3 && partes[2].equals("cursos")) {
                 int id = obtenerId(partes[1]);
+                int pagina = leerParametro(request, "pagina", 1);
+                int tamano = leerParametro(request, "tamano", 10);
 
-                Json.escribir(response, 200, service.listarCursos(id));
+                validarPaginacion(pagina, tamano);
+
+                Json.escribir(response, 200, Map.of(
+                        "datos", service.listarCursos(id, pagina, tamano),
+                        "total", service.contarCursos(id),
+                        "pagina", pagina,
+                        "tamano", tamano
+                ));
                 return;
             }
 
@@ -60,7 +80,8 @@ public class CurriculoServlet extends HttpServlet {
             Json.error(response, 404, e.getMessage());
         } catch (SQLException e) {
             e.printStackTrace();
-            Json.error(response, 500, "Error al consultar los curriculos");
+            Json.error(response, 500,
+                    "Error al consultar los curriculos");
         }
     }
 
@@ -76,7 +97,6 @@ public class CurriculoServlet extends HttpServlet {
             String ruta = request.getPathInfo();
 
             if (ruta == null || ruta.equals("/")) {
-
                 PeticionCurriculo datos = gson.fromJson(
                         request.getReader(), PeticionCurriculo.class
                 );
@@ -116,7 +136,8 @@ public class CurriculoServlet extends HttpServlet {
             Json.error(response, 409, e.getMessage());
         } catch (SQLException e) {
             e.printStackTrace();
-            Json.error(response, 500, "Error al guardar el curriculo");
+            Json.error(response, 500,
+                    "Error al guardar el curriculo");
         }
     }
 
@@ -139,7 +160,6 @@ public class CurriculoServlet extends HttpServlet {
             String[] partes = ruta.split("/");
 
             if (partes.length == 4 && partes[2].equals("cursos")) {
-
                 int idCurriculo = obtenerId(partes[1]);
                 int idCurso = obtenerId(partes[3]);
 
@@ -159,11 +179,42 @@ public class CurriculoServlet extends HttpServlet {
             Json.error(response, 404, e.getMessage());
         } catch (SQLException e) {
             e.printStackTrace();
-            Json.error(response, 500, "Error al retirar el curso");
+            Json.error(response, 500,
+                    "Error al retirar el curso");
         }
     }
 
-    private int obtenerId(String valor) throws DatosInvalidosException {
+    private int leerParametro(HttpServletRequest request,
+                              String nombre, int defecto)
+            throws DatosInvalidosException {
+
+        String valor = request.getParameter(nombre);
+
+        if (valor == null || valor.isBlank()) {
+            return defecto;
+        }
+
+        try {
+            return Integer.parseInt(valor);
+        } catch (NumberFormatException e) {
+            throw new DatosInvalidosException(
+                    "Parametro invalido: " + nombre
+            );
+        }
+    }
+
+    private void validarPaginacion(int pagina, int tamano)
+            throws DatosInvalidosException {
+
+        if (pagina < 1 || tamano < 1 || tamano > 50) {
+            throw new DatosInvalidosException(
+                    "Pagina o tamaño invalido"
+            );
+        }
+    }
+
+    private int obtenerId(String valor)
+            throws DatosInvalidosException {
 
         try {
             int id = Integer.parseInt(valor);

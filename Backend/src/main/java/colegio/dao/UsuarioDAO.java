@@ -1,3 +1,4 @@
+
 package colegio.dao;
 
 import colegio.conexion.Conexion;
@@ -41,12 +42,15 @@ public class UsuarioDAO {
         }
     }
 
-    public List<Usuario> listar() throws SQLException {
+    public List<Usuario> listar(int pagina, int tamano) throws SQLException {
         List<Usuario> usuarios = new ArrayList<>();
-        String sql = CONSULTA_USUARIOS + "ORDER BY u.id_usuario";
+        String sql = CONSULTA_USUARIOS + "ORDER BY u.id_usuario LIMIT ? OFFSET ?";
 
         try (Connection con = Conexion.obtenerConexion();
              PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, tamano);
+            ps.setInt(2, (pagina - 1) * tamano);
 
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -54,6 +58,15 @@ public class UsuarioDAO {
             }
         }
         return usuarios;
+    }
+
+    public int contar() throws SQLException {
+        try (Connection con = Conexion.obtenerConexion();
+             PreparedStatement ps = con.prepareStatement("SELECT COUNT(*) FROM usuario");
+             ResultSet rs = ps.executeQuery()) {
+            rs.next();
+            return rs.getInt(1);
+        }
     }
 
     public Usuario buscarPorId(int idUsuario) throws SQLException {

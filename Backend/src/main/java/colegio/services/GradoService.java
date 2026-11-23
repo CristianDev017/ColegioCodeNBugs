@@ -1,3 +1,4 @@
+
 package colegio.services;
 
 import colegio.dao.GradoDAO;
@@ -13,6 +14,14 @@ import java.util.List;
 public class GradoService {
 
     private GradoDAO dao = new GradoDAO();
+
+    public List<Grado> listar(int pagina, int tamano) throws SQLException {
+        return dao.listar(pagina, tamano);
+    }
+
+    public int contar() throws SQLException {
+        return dao.contar();
+    }
 
     public List<Grado> listar() throws SQLException {
         return dao.listar();

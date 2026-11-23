@@ -1,6 +1,7 @@
 
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+
 import {
   Seccion,
   PeticionSeccion,
@@ -24,16 +25,33 @@ export class Secciones {
     });
   }
 
-  listar() {
-    return this.http.get<Seccion[]>(this.url, {
-      headers: this.obtenerHeaders()
+  listar(pagina = 1, tamano = 10) {
+    return this.http.get<{
+      datos: Seccion[];
+      total: number;
+      pagina: number;
+      tamano: number;
+    }>(this.url, {
+      headers: this.obtenerHeaders(),
+      params: {
+        pagina: String(pagina),
+        tamano: String(tamano)
+      }
     });
   }
 
+  listarCatalogo() {
+    return this.http.get<Seccion[]>(
+      `${this.url}/catalogo`,
+      { headers: this.obtenerHeaders() }
+    );
+  }
+
   listarOpciones() {
-    return this.http.get<OpcionSeccion[]>(`${this.url}/opciones`, {
-      headers: this.obtenerHeaders()
-    });
+    return this.http.get<OpcionSeccion[]>(
+      `${this.url}/opciones`,
+      { headers: this.obtenerHeaders() }
+    );
   }
 
   crear(datos: PeticionSeccion) {

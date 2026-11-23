@@ -20,9 +20,18 @@ export class Usuarios {
     });
   }
 
-  listar() {
-    return this.http.get<Usuario[]>(this.url, {
-      headers: this.obtenerHeaders()
+  listar(pagina = 1, tamano = 10) {
+    return this.http.get<{
+      datos: Usuario[];
+      total: number;
+      pagina: number;
+      tamano: number;
+    }>(this.url, {
+      headers: this.obtenerHeaders(),
+      params: {
+        pagina: String(pagina),
+        tamano: String(tamano)
+      }
     });
   }
 

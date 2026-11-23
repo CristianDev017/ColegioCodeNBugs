@@ -1,3 +1,4 @@
+
 package colegio.services;
 
 import colegio.dao.CursoDAO;
@@ -14,8 +15,16 @@ public class CursoService {
 
     private CursoDAO dao = new CursoDAO();
 
-    public List<Curso> listar() throws SQLException {
-        return dao.listar();
+    public List<Curso> listar(int pagina, int tamano) throws SQLException {
+        return dao.listar(pagina, tamano);
+    }
+
+    public int contar() throws SQLException {
+        return dao.contar();
+    }
+
+    public List<Curso> listarCatalogo() throws SQLException {
+        return dao.listarCatalogo();
     }
 
     public Curso buscarPorId(int id)

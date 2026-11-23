@@ -1,7 +1,9 @@
+
 package colegio.dao;
 
 import colegio.conexion.Conexion;
 import colegio.model.Carrera;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -11,34 +13,60 @@ import java.util.List;
 
 public class CarreraDAO {
 
-    public List<Carrera> listar() throws SQLException {
-
+    // Listado paginado para la tabla de Carreras
+    public List<Carrera> listar(int pagina, int tamano) throws SQLException {
         List<Carrera> carreras = new ArrayList<>();
 
-        String sql = "SELECT * FROM carrera";
+        String sql = "SELECT * FROM carrera " +
+                "ORDER BY id_carrera LIMIT ? OFFSET ?";
+
+        try (Connection con = Conexion.obtenerConexion();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, tamano);
+            ps.setInt(2, (pagina - 1) * tamano);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    carreras.add(convertir(rs));
+                }
+            }
+        }
+
+        return carreras;
+    }
+
+    public int contar() throws SQLException {
+        String sql = "SELECT COUNT(*) FROM carrera";
+
+        try (Connection con = Conexion.obtenerConexion();
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            rs.next();
+            return rs.getInt(1);
+        }
+    }
+
+    // Catalogo completo para seleccionar carreras en Grados
+    public List<Carrera> listar() throws SQLException {
+        List<Carrera> carreras = new ArrayList<>();
+
+        String sql = "SELECT * FROM carrera ORDER BY nombre, id_carrera";
 
         try (Connection con = Conexion.obtenerConexion();
              PreparedStatement ps = con.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
-                Carrera carrera = new Carrera(
-                        rs.getInt("id_carrera"),
-                        rs.getString("nombre"),
-                        rs.getString("descripcion"),
-                        rs.getBoolean("activo")
-                );
-
-                carreras.add(carrera);
+                carreras.add(convertir(rs));
             }
-
         }
 
         return carreras;
     }
 
     public void crear(Carrera carrera) throws SQLException {
-
         String sql = "INSERT INTO carrera (nombre, descripcion) VALUES (?, ?)";
 
         try (Connection con = Conexion.obtenerConexion();
@@ -49,12 +77,11 @@ public class CarreraDAO {
 
             ps.executeUpdate();
         }
-
     }
 
     public boolean editar(Carrera carrera) throws SQLException {
-
-        String sql = "UPDATE carrera SET nombre = ?, descripcion = ? WHERE id_carrera = ?";
+        String sql = "UPDATE carrera SET nombre = ?, descripcion = ? " +
+                "WHERE id_carrera = ?";
 
         try (Connection con = Conexion.obtenerConexion();
              PreparedStatement ps = con.prepareStatement(sql)) {
@@ -67,7 +94,8 @@ public class CarreraDAO {
         }
     }
 
-    public boolean cambiarEstado(int idCarrera, boolean activo) throws SQLException {
+    public boolean cambiarEstado(int idCarrera, boolean activo)
+            throws SQLException {
 
         String sql = "UPDATE carrera SET activo = ? WHERE id_carrera = ?";
 
@@ -81,9 +109,7 @@ public class CarreraDAO {
         }
     }
 
-
     public boolean existeNombre(String nombre) throws SQLException {
-
         String sql = "SELECT id_carrera FROM carrera WHERE nombre = ?";
 
         try (Connection con = Conexion.obtenerConexion();
@@ -97,9 +123,11 @@ public class CarreraDAO {
         }
     }
 
-    public boolean existeNombreEnOtraCarrera(String nombre, int idCarrera) throws SQLException {
+    public boolean existeNombreEnOtraCarrera(String nombre, int idCarrera)
+            throws SQLException {
 
-        String sql = "SELECT id_carrera FROM carrera WHERE nombre = ? AND id_carrera <> ?";
+        String sql = "SELECT id_carrera FROM carrera " +
+                "WHERE nombre = ? AND id_carrera <> ?";
 
         try (Connection con = Conexion.obtenerConexion();
              PreparedStatement ps = con.prepareStatement(sql)) {
@@ -113,9 +141,7 @@ public class CarreraDAO {
         }
     }
 
-
     public Carrera buscarPorId(int idCarrera) throws SQLException {
-
         String sql = "SELECT * FROM carrera WHERE id_carrera = ?";
 
         try (Connection con = Conexion.obtenerConexion();
@@ -124,14 +150,8 @@ public class CarreraDAO {
             ps.setInt(1, idCarrera);
 
             try (ResultSet rs = ps.executeQuery()) {
-
                 if (rs.next()) {
-                    return new Carrera(
-                            rs.getInt("id_carrera"),
-                            rs.getString("nombre"),
-                            rs.getString("descripcion"),
-                            rs.getBoolean("activo")
-                    );
+                    return convertir(rs);
                 }
             }
         }
@@ -139,8 +159,12 @@ public class CarreraDAO {
         return null;
     }
 
-
-
-
-
+    private Carrera convertir(ResultSet rs) throws SQLException {
+        return new Carrera(
+                rs.getInt("id_carrera"),
+                rs.getString("nombre"),
+                rs.getString("descripcion"),
+                rs.getBoolean("activo")
+        );
+    }
 }

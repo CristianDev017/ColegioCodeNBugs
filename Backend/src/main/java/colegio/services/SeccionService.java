@@ -1,3 +1,4 @@
+
 package colegio.services;
 
 import colegio.dao.SeccionDAO;
@@ -15,8 +16,17 @@ public class SeccionService {
 
     private final SeccionDAO dao = new SeccionDAO();
 
-    public List<Seccion> listar() throws SQLException {
-        return dao.listar();
+    public List<Seccion> listar(int pagina, int tamano)
+            throws SQLException {
+        return dao.listar(pagina, tamano);
+    }
+
+    public int contar() throws SQLException {
+        return dao.contar();
+    }
+
+    public List<Seccion> listarCatalogo() throws SQLException {
+        return dao.listarCatalogo();
     }
 
     public List<Map<String, Object>> listarGradosDisponibles()

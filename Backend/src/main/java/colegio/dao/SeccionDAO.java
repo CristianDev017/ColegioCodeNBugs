@@ -1,3 +1,4 @@
+
 package colegio.dao;
 
 import colegio.conexion.Conexion;
@@ -27,12 +28,49 @@ public class SeccionDAO {
                     "JOIN nivel n ON n.id_nivel = g.id_nivel " +
                     "LEFT JOIN carrera c ON c.id_carrera = g.id_carrera ";
 
-    public List<Seccion> listar() throws SQLException {
+    public List<Seccion> listar(int pagina, int tamano)
+            throws SQLException {
 
         List<Seccion> secciones = new ArrayList<>();
 
         String sql = CONSULTA +
-                "ORDER BY ce.anio DESC, g.nombre, s.nombre";
+                "ORDER BY ce.anio DESC, g.nombre, s.nombre, s.id_seccion " +
+                "LIMIT ? OFFSET ?";
+
+        try (Connection con = Conexion.obtenerConexion();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, tamano);
+            ps.setInt(2, (pagina - 1) * tamano);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    secciones.add(convertir(rs));
+                }
+            }
+        }
+
+        return secciones;
+    }
+
+    public int contar() throws SQLException {
+        String sql = "SELECT COUNT(*) FROM seccion";
+
+        try (Connection con = Conexion.obtenerConexion();
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            rs.next();
+            return rs.getInt(1);
+        }
+    }
+
+    public List<Seccion> listarCatalogo() throws SQLException {
+
+        List<Seccion> secciones = new ArrayList<>();
+
+        String sql = CONSULTA +
+                "ORDER BY ce.anio DESC, g.nombre, s.nombre, s.id_seccion";
 
         try (Connection con = Conexion.obtenerConexion();
              PreparedStatement ps = con.prepareStatement(sql);
@@ -89,7 +127,6 @@ public class SeccionDAO {
              ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
-
                 Map<String, Object> opcion = new LinkedHashMap<>();
 
                 opcion.put("idCicloGrado", rs.getInt("id_ciclo_grado"));
@@ -170,7 +207,6 @@ public class SeccionDAO {
             ps.setInt(1, idCicloGrado);
             ps.setString(2, nombre);
             ps.setInt(3, cupo);
-
             ps.executeUpdate();
         }
     }

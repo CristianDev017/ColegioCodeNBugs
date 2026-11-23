@@ -1,11 +1,9 @@
 
 <div class="container mt-4">
-  <a routerLink="/superadmin" class="btn btn-outline-secondary mb-3">
-    Volver al inicio
-  </a>
+  <a routerLink="/superadmin" class="btn btn-outline-secondary mb-3"> Volver al inicio </a>
 
   <h3>Administracion de Usuarios</h3>
-  <hr>
+  <hr />
 
   <div *ngIf="mensaje" class="alert alert-success">
     {{ mensaje }}
@@ -21,7 +19,6 @@
 
       <form (ngSubmit)="guardar()">
         <div class="row">
-
           <div class="col-md-6 mb-3">
             <label class="form-label">Nombre de usuario</label>
             <input
@@ -30,7 +27,8 @@
               name="username"
               [(ngModel)]="username"
               maxlength="50"
-              required>
+              required
+            />
           </div>
 
           <div class="col-md-6 mb-3">
@@ -41,7 +39,8 @@
               name="correo"
               [(ngModel)]="correo"
               maxlength="100"
-              required>
+              required
+            />
           </div>
 
           <div class="col-md-6 mb-3" *ngIf="idEditar === 0">
@@ -51,27 +50,23 @@
               class="form-control"
               name="password"
               [(ngModel)]="password"
-              required>
+              required
+            />
           </div>
 
           <div class="col-md-6 mb-3">
             <label class="form-label">Rol</label>
-            <select
-              class="form-select"
-              name="idRol"
-              [(ngModel)]="idRol"
-              required>
+            <select class="form-select" name="idRol" [(ngModel)]="idRol" required>
               <option [ngValue]="0">Selecciona un rol</option>
               <option *ngFor="let rol of roles" [ngValue]="rol.id">
                 {{ rol.nombre }}
               </option>
             </select>
           </div>
-
         </div>
 
         <button type="submit" class="btn btn-primary" [disabled]="guardando">
-          {{ guardando ? 'Guardando...' : (idEditar === 0 ? 'Guardar' : 'Actualizar') }}
+          {{ guardando ? 'Guardando...' : idEditar === 0 ? 'Guardar' : 'Actualizar' }}
         </button>
 
         <button
@@ -79,7 +74,8 @@
           type="button"
           class="btn btn-secondary ms-2"
           [disabled]="guardando"
-          (click)="limpiar()">
+          (click)="limpiar()"
+        >
           Cancelar
         </button>
       </form>
@@ -87,6 +83,7 @@
   </div>
 
   <h5>Usuarios registrados</h5>
+  <p *ngIf="cargando" class="text-muted">Cargando usuarios...</p>
 
   <div class="table-responsive">
     <table class="table table-striped align-middle">
@@ -110,7 +107,8 @@
           <td>
             <span
               class="badge"
-              [ngClass]="usuario.estado === 'ACTIVO' ? 'bg-success' : 'bg-secondary'">
+              [ngClass]="usuario.estado === 'ACTIVO' ? 'bg-success' : 'bg-secondary'"
+            >
               {{ usuario.estado }}
             </span>
           </td>
@@ -118,7 +116,8 @@
             <button
               type="button"
               class="btn btn-sm btn-warning me-2"
-              (click)="seleccionar(usuario)">
+              (click)="seleccionar(usuario)"
+            >
               Editar
             </button>
 
@@ -126,18 +125,46 @@
               type="button"
               class="btn btn-sm"
               [ngClass]="usuario.estado === 'ACTIVO' ? 'btn-danger' : 'btn-success'"
-              (click)="cambiarEstado(usuario)">
+              (click)="cambiarEstado(usuario)"
+            >
               {{ usuario.estado === 'ACTIVO' ? 'Desactivar' : 'Activar' }}
             </button>
           </td>
         </tr>
 
-        <tr *ngIf="usuarios.length === 0">
-          <td colspan="6" class="text-center text-muted">
-            No hay usuarios para mostrar
-          </td>
+        <tr *ngIf="!cargando && usuarios.length === 0">
+          <td colspan="6" class="text-center text-muted">No hay usuarios para mostrar</td>
         </tr>
       </tbody>
     </table>
+  </div>
+
+  <div
+    *ngIf="total > 0"
+    class="d-flex justify-content-between align-items-center mt-3 mb-4"
+  >
+    <span class="text-muted">
+      Página {{ pagina }} de {{ totalPaginas }} ({{ total }} usuarios)
+    </span>
+
+    <div>
+      <button
+        type="button"
+        class="btn btn-outline-secondary me-2"
+        [disabled]="cargando || pagina === 1"
+        (click)="cambiarPagina(pagina - 1)"
+      >
+        Anterior
+      </button>
+
+      <button
+        type="button"
+        class="btn btn-outline-secondary"
+        [disabled]="cargando || pagina === totalPaginas"
+        (click)="cambiarPagina(pagina + 1)"
+      >
+        Siguiente
+      </button>
+    </div>
   </div>
 </div>

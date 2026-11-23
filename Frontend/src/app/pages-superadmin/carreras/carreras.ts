@@ -15,6 +15,16 @@ import { Carrera } from '../../models/carrera';
 export class CarrerasPagina implements OnInit {
 
   carreras: Carrera[] = [];
+
+  pagina = 1;
+  tamano = 10;
+  total = 0;
+  cargando = false;
+
+  get totalPaginas(): number {
+    return Math.max(1, Math.ceil(this.total / this.tamano));
+  }
+
   nombre = '';
   descripcion = '';
   idEditar = 0;
@@ -32,16 +42,46 @@ export class CarrerasPagina implements OnInit {
   }
 
   listar() {
-    this.carrerasService.listar().subscribe({
-      next: (datos) => {
-        this.carreras = datos;
+    this.cargando = true;
+    this.detector.detectChanges();
+
+    this.carrerasService.listarPaginado(
+      this.pagina, this.tamano
+    ).subscribe({
+      next: (respuesta) => {
+        this.carreras = respuesta.datos;
+        this.total = respuesta.total;
+        this.cargando = false;
+
+        if (this.pagina > this.totalPaginas) {
+          this.pagina = this.totalPaginas;
+          this.listar();
+          return;
+        }
+
         this.detector.detectChanges();
       },
       error: (e) => {
-        this.error = e.error?.mensaje || 'No se pudieron cargar las carreras';
+        this.cargando = false;
+        this.error = e.error?.mensaje ||
+          'No se pudieron cargar las carreras';
         this.detector.detectChanges();
       }
     });
+  }
+
+  cambiarPagina(nuevaPagina: number) {
+    if (
+      this.cargando ||
+      nuevaPagina < 1 ||
+      nuevaPagina > this.totalPaginas ||
+      nuevaPagina === this.pagina
+    ) {
+      return;
+    }
+
+    this.pagina = nuevaPagina;
+    this.listar();
   }
 
   guardar() {
@@ -76,7 +116,8 @@ export class CarrerasPagina implements OnInit {
           this.listar();
         },
         error: (e) => {
-          this.error = e.error?.mensaje || 'No se pudo crear la carrera';
+          this.error = e.error?.mensaje ||
+            'No se pudo crear la carrera';
           this.guardando = false;
           this.detector.detectChanges();
         }
@@ -91,7 +132,8 @@ export class CarrerasPagina implements OnInit {
           this.listar();
         },
         error: (e) => {
-          this.error = e.error?.mensaje || 'No se pudo actualizar la carrera';
+          this.error = e.error?.mensaje ||
+            'No se pudo actualizar la carrera';
           this.guardando = false;
           this.detector.detectChanges();
         }
@@ -100,6 +142,10 @@ export class CarrerasPagina implements OnInit {
   }
 
   seleccionar(carrera: Carrera) {
+    if (this.guardando) {
+      return;
+    }
+
     this.idEditar = carrera.idCarrera;
     this.nombre = carrera.nombre;
     this.descripcion = carrera.descripcion || '';
@@ -110,6 +156,10 @@ export class CarrerasPagina implements OnInit {
   }
 
   cambiarEstado(carrera: Carrera) {
+    if (this.guardando) {
+      return;
+    }
+
     const accion = carrera.activo ? 'desactivar' : 'activar';
 
     if (!confirm('¿Quieres ' + accion + ' esta carrera?')) {
@@ -118,15 +168,22 @@ export class CarrerasPagina implements OnInit {
 
     this.mensaje = '';
     this.error = '';
+    this.guardando = true;
+    this.detector.detectChanges();
 
-    this.carrerasService.cambiarEstado(carrera.idCarrera, !carrera.activo).subscribe({
+    this.carrerasService.cambiarEstado(
+      carrera.idCarrera, !carrera.activo
+    ).subscribe({
       next: () => {
+        this.guardando = false;
         this.mensaje = 'Estado actualizado correctamente';
         this.detector.detectChanges();
         this.listar();
       },
       error: (e) => {
-        this.error = e.error?.mensaje || 'No se pudo cambiar el estado';
+        this.guardando = false;
+        this.error = e.error?.mensaje ||
+          'No se pudo cambiar el estado';
         this.detector.detectChanges();
       }
     });

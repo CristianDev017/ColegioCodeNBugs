@@ -1,3 +1,4 @@
+
 package colegio.servlet;
 
 import colegio.dto.PeticionSeccion;
@@ -38,12 +39,34 @@ public class SeccionServlet extends HttpServlet {
             String ruta = request.getPathInfo();
 
             if (ruta == null || ruta.equals("/")) {
-                Json.escribir(response, 200, service.listar());
+
+                int pagina = leerParametro(request, "pagina", 1);
+                int tamano = leerParametro(request, "tamano", 10);
+
+                if (pagina < 1 || tamano < 1 || tamano > 50) {
+                    throw new DatosInvalidosException(
+                            "Pagina o tamaño invalido"
+                    );
+                }
+
+                int total = service.contar();
+
+                Json.escribir(response, 200, Map.of(
+                        "datos", service.listar(pagina, tamano),
+                        "total", total,
+                        "pagina", pagina,
+                        "tamano", tamano
+                ));
                 return;
             }
 
             if (ruta.equals("/opciones")) {
                 Json.escribir(response, 200, service.listarGradosDisponibles());
+                return;
+            }
+
+            if (ruta.equals("/catalogo")) {
+                Json.escribir(response, 200, service.listarCatalogo());
                 return;
             }
 
@@ -155,6 +178,24 @@ public class SeccionServlet extends HttpServlet {
         } catch (SQLException e) {
             e.printStackTrace();
             Json.error(response, 500, "Error al actualizar la seccion");
+        }
+    }
+
+    private int leerParametro(HttpServletRequest request, String nombre,
+                              int defecto) throws DatosInvalidosException {
+
+        String valor = request.getParameter(nombre);
+
+        if (valor == null || valor.isBlank()) {
+            return defecto;
+        }
+
+        try {
+            return Integer.parseInt(valor);
+        } catch (NumberFormatException e) {
+            throw new DatosInvalidosException(
+                    "Parametro invalido: " + nombre
+            );
         }
     }
 
